@@ -4,6 +4,15 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const { sequelize } = require('./models');
+sequelize.sync({ alter: true })
+    .then(() => {
+      console.log('데이터베이스 연결 성공.');
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+
 var indexRouter = require('./routes')
 
 var app = express();
@@ -26,7 +35,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
