@@ -21,19 +21,19 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(10),
             allowNull: false,
         },
-        weatherMenu: {
+        seasonMenu: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        online: {
+        isOnline: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        drink: {
+        isDrink: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        vegan: {
+        isVegan: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
@@ -57,6 +57,27 @@ module.exports = (sequelize, DataTypes) => {
             },
             get: function () {
                 return JSON.parse(this.getDataValue('totalMenu'));
+            }
+        },
+        address:{
+            type:DataTypes.STRING,
+            allowNull:false
+        },
+        latitude:{
+            type:DataTypes.DOUBLE,
+            allowNull:false
+        },
+        longitude:{
+            type:DataTypes.DOUBLE,
+            allowNull:false
+        },
+        bakeryImg:{
+            type:DataTypes.STRING(1000),
+            set:function(val){
+                return this.setDataValue('bakeryImgList',JSON.stringify(val));
+            },
+            get:function(){
+                return JSON.parse(this.getDataValue('bakeryImgList'));
             }
         }
     }, {

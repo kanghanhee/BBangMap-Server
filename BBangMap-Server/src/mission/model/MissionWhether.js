@@ -1,8 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('MissionWhether', {
-        missionCount:{
-            type:DataTypes.INTEGER,
-            allowNull : false
+        missionVisitedList:{
+            type:DataTypes.STRING,
+            set:function(val){
+                return this.setDataValue('missionVisitList', JSON.stringify(val));
+            },
+            get:function(){
+                return JSON.parse(this.getDataValue('missionVisitList'));
+            }
         },
         missionSuccessWhether:{
             type:DataTypes.BOOLEAN,

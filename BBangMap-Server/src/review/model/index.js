@@ -9,15 +9,15 @@ module.exports = (sequelize, DataTypes) => {
                 return JSON.parse(this.getDataValue('purchaseBreadList'));
             }
         },
-        vegan: {
+        isVegan: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        online: {
+        isOnline: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        reviewImg: {
+        reviewImgList: {
             type: DataTypes.STRING(1000),
             set: function (val) {
                 return this.setDataValue('reviewImg', JSON.stringify(val));

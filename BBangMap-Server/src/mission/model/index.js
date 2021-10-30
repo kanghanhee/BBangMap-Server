@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
         missionContent:{
             type:DataTypes.STRING(1000),
             allowNull: false
+        },
+        missionDate:{
+            type:DataTypes.DATE,
+            allowNull: false
         }
     },{
         freezeTableName: true,
