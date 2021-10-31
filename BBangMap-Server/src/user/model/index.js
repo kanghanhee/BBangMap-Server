@@ -3,12 +3,12 @@ module.exports = (sequelize, DataTypes) => {
         //닉네임
         nickName: {
             type: DataTypes.STRING(30),
-            unique: true,
+            unique: 'nickName',
             allowNull: false
         },
         uuid: {
             type: DataTypes.STRING(50),
-            unique: true,
+            unique: 'uuid',
             allowNull: false
         },
         //프로필이미지
