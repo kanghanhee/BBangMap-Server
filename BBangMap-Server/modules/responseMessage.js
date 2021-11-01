@@ -7,5 +7,8 @@ module.exports = {
     INTERNAL_SERVER_ERROR: "서버 내부 오류",
 
     /*토큰*/
-    INVALID_UUID: "존재하지 않는 UUID입니다."
+    INVALID_UUID: "존재하지 않는 UUID입니다.",
+
+    /*빵집*/
+    SUCCESS_GET_BAKERY: "빵집불러오기 성공"
 }
