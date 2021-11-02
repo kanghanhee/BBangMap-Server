@@ -14,7 +14,7 @@ module.exports = {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message))
         }
     },
-    searchBakery: async (req, res) => {
+    bakerySearch: async (req, res) => {
         try {
             let {bakeryName} = req.query;
             let bakeryList = await bakeryService.getSearchBakeryList(bakeryName);
