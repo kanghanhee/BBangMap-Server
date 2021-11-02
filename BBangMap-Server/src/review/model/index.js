@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        reviewImgList: {
+        reviewImg: {
             type: DataTypes.STRING(1000),
             set: function (val) {
                 return this.setDataValue('reviewImg', JSON.stringify(val));

@@ -17,10 +17,6 @@ module.exports = (sequelize, DataTypes) => {
                 return JSON.parse(this.getDataValue('offDay'));
             }
         },
-        waiting: {
-            type: DataTypes.STRING(10),
-            allowNull: false,
-        },
         seasonMenu: {
             type: DataTypes.BOOLEAN,
             allowNull: false
@@ -35,10 +31,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         isVegan: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
-        },
-        soldOut: {
-            type: DataTypes.STRING,
             allowNull: false
         },
         bestMenu: {
@@ -74,10 +66,10 @@ module.exports = (sequelize, DataTypes) => {
         bakeryImg:{
             type:DataTypes.STRING(1000),
             set:function(val){
-                return this.setDataValue('bakeryImgList',JSON.stringify(val));
+                return this.setDataValue('bakeryImg',JSON.stringify(val));
             },
             get:function(){
-                return JSON.parse(this.getDataValue('bakeryImgList'));
+                return JSON.parse(this.getDataValue('bakeryImg'));
             }
         }
     }, {

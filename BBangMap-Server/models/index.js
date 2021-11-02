@@ -16,7 +16,7 @@ db.Review = require('../src/review/model')(sequelize, Sequelize)
 db.Mission = require('../src/mission/model')(sequelize, Sequelize)
 db.MissionWhether = require('../src/mission/model/MissionWhether')(sequelize, Sequelize)
 db.SaveBakery = require('../src/user/model/SaveBakery')(sequelize, Sequelize)
-db.InviteBakery = require('../src/user/model/InviteBakery')(sequelize, Sequelize)
+db.VisitBakery = require('../src/user/model/VisitBakery')(sequelize, Sequelize)
 db.SaveReivew = require('../src/user/model/SaveReview')(sequelize, Sequelize)
 db.MissionBakery = require('../src/mission/model/MissionBakery')(sequelize, Sequelize)
 
@@ -25,8 +25,8 @@ db.User.belongsToMany(db.Bakery, {through: 'SaveBakery', as: 'SavedBakery'});
 db.Bakery.belongsToMany(db.User, {through: 'SaveBakery', as: 'SaverBakery'});
 
 /* 방문한 빵집 리스트 user:bakery(1:N) */
-db.User.belongsToMany(db.Bakery, {through: 'InviteBakery', as: 'InvitedBakery'});
-db.Bakery.belongsToMany(db.User, {through: 'InviteBakery', as: 'InviterBakery'});
+db.User.belongsToMany(db.Bakery, {through: 'VisitBakery', as: 'VisitedBakery'});
+db.Bakery.belongsToMany(db.User, {through: 'VisitBakery', as: 'VisiterBakery'});
 
 /* 작성한 후기 리스트 user:review(1:N) */
 db.User.hasMany(db.Review, {onDelete: 'cascade'});
@@ -42,8 +42,8 @@ db.Review.belongsToMany(db.User, {through: 'SaveReview', as: 'SaverReview'});
 db.User.belongsToMany(db.Review, {through: 'LikeReview', as: 'Liked'});
 db.Review.belongsToMany(db.User, {through: 'LikeReview', as: 'Liker'});
 
-/* 후기의 빵집 review:bakery(1:1) */
-db.Bakery.hasOne(db.Review, {onDelete: 'cascade'});
+/* 후기의 빵집 review:bakery(N:1) */
+db.Bakery.hasMany(db.Review, {onDelete: 'cascade'});
 db.Review.belongsTo(db.Bakery)
 
 /* 사용자와 미션여부 user:missionWhether(1:N) */

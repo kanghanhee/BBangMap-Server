@@ -1,7 +1,7 @@
 const {Bakery, User} = require('../../../models')
 
 module.exports={
-    getUserIncludeSavedBakery : async()=>{
+    findUserIncludeSavedBakery : async()=>{
         return await User.findOne({
             include: {
                 model : Bakery,
