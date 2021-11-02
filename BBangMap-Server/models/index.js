@@ -21,14 +21,10 @@ db.SaveReivew = require('../src/user/model/SaveReview')(sequelize, Sequelize)
 db.MissionBakery = require('../src/mission/model/MissionBakery')(sequelize, Sequelize)
 
 /* 보관한 빵집 리스트 user:bakery(1:N) */
-// db.User.hasMany(db.SaveBakery, {onDelete: 'cascade'});
-// db.SaveBakery.belongsTo(db.User);
 db.User.belongsToMany(db.Bakery, {through: 'SaveBakery', as: 'SavedBakery'});
 db.Bakery.belongsToMany(db.User, {through: 'SaveBakery', as: 'SaverBakery'});
 
 /* 방문한 빵집 리스트 user:bakery(1:N) */
-// db.User.hasMany(db.InviteBakery, {onDelete: 'cascade'});
-// db.InviteBakery.belongsTo(db.User);
 db.User.belongsToMany(db.Bakery, {through: 'InviteBakery', as: 'InvitedBakery'});
 db.Bakery.belongsToMany(db.User, {through: 'InviteBakery', as: 'InviterBakery'});
 
