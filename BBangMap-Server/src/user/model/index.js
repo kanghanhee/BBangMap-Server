@@ -20,27 +20,27 @@ module.exports = (sequelize, DataTypes) => {
         rank: {
             type: DataTypes.INTEGER,
             define: 0
-        },
-        //보관한 빵집 리스트
-        saveBakeryList: {
-            type: DataTypes.STRING,
-            set: function (val) {
-                return this.setDataValue('saveBakeryList', JSON.stringify(val));
-            },
-            get: function () {
-                return JSON.parse(this.getDataValue('saveBakeryList'));
-            }
-        },
-        //방문한 빵집 리스트
-        inviteBakeryList: {
-            type: DataTypes.STRING,
-            set: function (val) {
-                return this.setDataValue('inviteBakeryList', JSON.stringify(val));
-            },
-            get: function () {
-                return JSON.parse(this.getDataValue('inviteBakeryList'));
-            }
         }
+        // //보관한 빵집 리스트
+        // saveBakeryList: {
+        //     type: DataTypes.STRING,
+        //     set: function (val) {
+        //         return this.setDataValue('saveBakeryList', JSON.stringify(val));
+        //     },
+        //     get: function () {
+        //         return JSON.parse(this.getDataValue('saveBakeryList'));
+        //     }
+        // },
+        // //방문한 빵집 리스트
+        // inviteBakeryList: {
+        //     type: DataTypes.STRING,
+        //     set: function (val) {
+        //         return this.setDataValue('inviteBakeryList', JSON.stringify(val));
+        //     },
+        //     get: function () {
+        //         return JSON.parse(this.getDataValue('inviteBakeryList'));
+        //     }
+        // }
     }, {
         freezeTableName: true,
         timestamps: true
