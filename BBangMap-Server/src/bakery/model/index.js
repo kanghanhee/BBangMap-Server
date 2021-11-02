@@ -17,10 +17,6 @@ module.exports = (sequelize, DataTypes) => {
                 return JSON.parse(this.getDataValue('offDay'));
             }
         },
-        waiting: {
-            type: DataTypes.STRING(10),
-            allowNull: false,
-        },
         seasonMenu: {
             type: DataTypes.BOOLEAN,
             allowNull: false
@@ -35,10 +31,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         isVegan: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
-        },
-        soldOut: {
-            type: DataTypes.STRING,
             allowNull: false
         },
         bestMenu: {
