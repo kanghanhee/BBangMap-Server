@@ -1,12 +1,13 @@
 const {Bakery, User} = require('../../../models')
 
 module.exports={
-    findUserIncludeSavedBakery : async()=>{
+    findUserIncludeSavedBakery : async(user)=>{
         return await User.findOne({
+            where : {id : user.id},
             include: {
                 model : Bakery,
                 as : 'SavedBakery',
-                attributes : ['id','bakeryName']
+                attributes : {}
             }
         })
     }

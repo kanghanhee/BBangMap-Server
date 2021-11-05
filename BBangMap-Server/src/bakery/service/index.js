@@ -6,11 +6,12 @@ const bakeryMapListDto = require('../dto/bakeryMapListDto')
 const bakerySearchListDto = require('../dto/bakerySearchListDto')
 const bakeryDetailDto = require('../dto/bakeryDetailDto')
 const bakeryImgListDto = require('../dto/bakeryImgListDto')
+const savedBakeryListDto = require('../dto/savedBakeryListDto')
 
 module.exports = {
-    getBakeryMap: async (latitude, longitude) => {
-        let bakery = await userUtils.findUserIncludeSavedBakery();
-        let savedBakeryList = bakery.SavedBakery.map(saveBakery => saveBakery.id);
+    getBakeryMap: async (user, latitude, longitude) => {
+        let findUser = await userUtils.findUserIncludeSavedBakery(user);
+        let savedBakeryList = findUser.SavedBakery.map(saveBakery => saveBakery.id);
 
         let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude);
 
@@ -29,5 +30,10 @@ module.exports = {
     getBakeryImgList: async (bakeryId) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);
         return bakeryImgListDto(bakery);
+    },
+    getSavedBakeryList: async (user) => {
+        let findUser = await userUtils.findUserIncludeSavedBakery(user);
+        let savedBakeryList = findUser.SavedBakery;
+        return savedBakeryListDto(savedBakeryList);
     }
 }
