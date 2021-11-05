@@ -41,5 +41,8 @@ module.exports = {
     isVisitedBakery: async (bakery, invitedBakeryList) => {
         const isContainBakery = (invitedBakeryList) => invitedBakeryList.BakeryId === bakery.id;
         return invitedBakeryList.some(isContainBakery);
+    },
+    savedBakery: async(userId, bakeryId)=>{
+        await SaveBakery.create({UserId : userId, BakeryId : bakeryId})
     }
 }

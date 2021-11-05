@@ -11,5 +11,6 @@ module.exports = {
 
     /*빵집*/
     SUCCESS_GET_BAKERY: "빵집불러오기 성공",
-    SUCCESS_GET_BAKERY_IMG: "빵집 이미지 불러오기 성공"
+    SUCCESS_GET_BAKERY_IMG: "빵집 이미지 불러오기 성공",
+    SUCCESS_SAVED_BAKERY : "빵집 보관하기 성공"
 }

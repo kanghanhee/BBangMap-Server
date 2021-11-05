@@ -8,5 +8,6 @@ router.get('/search',authUtil.checkUuid, bakeryController.bakerySearch);
 router.get('/detail',authUtil.checkUuid, bakeryController.bakeryDetail);
 router.get('/img/list',authUtil.checkUuid, bakeryController.bakeryImgList);
 router.get('/user/saved',authUtil.checkUuid, bakeryController.savedBakeryList);
+router.post('/:bakeryId/saved',authUtil.checkUuid, bakeryController.savedBakery);
 
 module.exports = router;

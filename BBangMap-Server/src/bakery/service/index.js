@@ -35,5 +35,9 @@ module.exports = {
         let findUser = await userUtils.findUserIncludeSavedBakery(user);
         let savedBakeryList = findUser.SavedBakery;
         return savedBakeryListDto(savedBakeryList);
+    },
+    savedBakery: async (bakeryId, user) => {
+        let userId = user.id;
+        await bakeryUtils.savedBakery(userId, bakeryId);
     }
 }
