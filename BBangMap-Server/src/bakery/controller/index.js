@@ -60,5 +60,15 @@ module.exports = {
         }catch(err){
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
+    },
+    unSavedBakery : async(req,res)=>{
+        try{
+            let {bakeryId} = req.params;
+            let user = req.header.user;
+            await bakeryService.deleteSaveBakery(bakeryId, user);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_BAKERY));
+        }catch(err){
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
     }
 }

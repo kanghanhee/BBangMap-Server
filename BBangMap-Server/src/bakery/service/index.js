@@ -39,5 +39,9 @@ module.exports = {
     savedBakery: async (bakeryId, user) => {
         let userId = user.id;
         await bakeryUtils.savedBakery(userId, bakeryId);
+    },
+    deleteSaveBakery: async(bakeryId, user)=>{
+        let userId = user.id;
+        await bakeryUtils.deleteSaveBakery(userId, bakeryId);
     }
 }

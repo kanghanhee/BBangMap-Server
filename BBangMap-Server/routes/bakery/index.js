@@ -9,5 +9,6 @@ router.get('/detail',authUtil.checkUuid, bakeryController.bakeryDetail);
 router.get('/img/list',authUtil.checkUuid, bakeryController.bakeryImgList);
 router.get('/user/saved',authUtil.checkUuid, bakeryController.savedBakeryList);
 router.post('/:bakeryId/saved',authUtil.checkUuid, bakeryController.savedBakery);
+router.delete('/:bakeryId/saved',authUtil.checkUuid, bakeryController.unSavedBakery);
 
 module.exports = router;

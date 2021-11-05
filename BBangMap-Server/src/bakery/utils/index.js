@@ -42,7 +42,15 @@ module.exports = {
         const isContainBakery = (invitedBakeryList) => invitedBakeryList.BakeryId === bakery.id;
         return invitedBakeryList.some(isContainBakery);
     },
-    savedBakery: async(userId, bakeryId)=>{
-        await SaveBakery.create({UserId : userId, BakeryId : bakeryId})
+    savedBakery: async (userId, bakeryId) => {
+        await SaveBakery.create({UserId: userId, BakeryId: bakeryId})
+    },
+    deleteSaveBakery: async (userId, bakeryId) => {
+        await SaveBakery.destroy({
+            where:{
+                UserId : userId,
+                BakeryId : bakeryId
+            }
+        })
     }
 }
