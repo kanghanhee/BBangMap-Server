@@ -10,5 +10,6 @@ module.exports = {
     INVALID_UUID: "존재하지 않는 UUID입니다.",
 
     /*빵집*/
-    SUCCESS_GET_BAKERY: "빵집불러오기 성공"
+    SUCCESS_GET_BAKERY: "빵집불러오기 성공",
+    SUCCESS_GET_BAKERY_IMG: "빵집 이미지 불러오기 성공"
 }

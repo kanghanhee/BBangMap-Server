@@ -5,6 +5,7 @@ const bakeryUtils = require('../utils')
 const bakeryMapListDto = require('../dto/bakeryMapListDto')
 const bakerySearchListDto = require('../dto/bakerySearchListDto')
 const bakeryDetailDto = require('../dto/bakeryDetailDto')
+const bakeryImgListDto = require('../dto/bakeryImgListDto')
 
 module.exports = {
     getBakeryMap: async (latitude, longitude) => {
@@ -24,5 +25,9 @@ module.exports = {
         let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
         let visitedBakeryList = await bakeryUtils.findUsersVisitedBakeryList(user);
         return bakeryDetailDto(bakery, savedBakeryList, visitedBakeryList);
+    },
+    getBakeryImgList: async (bakeryId) => {
+        let bakery = await bakeryUtils.findBakeryById(bakeryId);
+        return bakeryImgListDto(bakery);
     }
 }

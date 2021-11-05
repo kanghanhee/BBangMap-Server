@@ -26,11 +26,18 @@ module.exports = {
         try {
             let {bakeryId} = req.query;
             let user = req.header.user;
-            console.log('user! : ',user)
             let bakeryDetailDto = await bakeryService.getBakeryDetail(bakeryId, user);
-            console.log('!!!!!!!! result : ',bakeryDetailDto)
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakeryDetailDto));
         } catch (err) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    },
+    bakeryImgList: async(req,res)=>{
+        try{
+            let {bakeryId} = req.query;
+            let bakeryImgListDto = await bakeryService.getBakeryImgList(bakeryId);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_IMG, bakeryImgListDto))
+        }catch(err){
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     }
