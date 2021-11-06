@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('InviteBakery', {
+    return sequelize.define('VisitBakery', {
         UserId: {
             type: DataTypes.INTEGER,
             references: {
