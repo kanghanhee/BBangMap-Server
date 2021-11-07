@@ -70,5 +70,14 @@ module.exports = {
         }catch(err){
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
+    },
+    registerBakery : async(req,res)=>{
+        try{
+            let body = req.body;
+            await bakeryService.createBakery(body);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_REGISTRATION_BAKERY));
+        }catch(err){
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
     }
 }
