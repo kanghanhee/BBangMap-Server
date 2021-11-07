@@ -19,26 +19,31 @@ module.exports = {
             console.error();
         }
     },
-
-    getMonthlyMission: async (user) => {
+    //미션 메인페이지
+    getMissionMain: async (user) => {
         try {
-            //미션정보
-            const mission = await missionUtil.findMissionByDate();
-            // if mission ==null
-            //미션 빵집 정보
-            const missionBakery = await missionUtil.findMissionBakeryByMission(mission.id);
-            console.log(missionBakery);
-            //사용자가 이달의 빵집 달성했는지
+            const monthlyMission = this.getMonthlyMission(user);
             const visitedBakeryList = await missionUtil.isVisitedBakery(user, mission.id);
             console.log(visitedBakeryList);
-            //사용자 이달의 빵집 달성 개수
-            const successCount = visitedBakeryList.length;
-            //전체 미션 아이디, 배지 이미지
-            const succeededMission = this.getUserSucceededMission(user);
-            //dto
-            // getMonthlyMission(mission,missionBakery,visitedBakeryList,successCount,BadgeList);
+
+            const badgeList = this.getUserSucceededMission(user);
+
+            MonthlyMissionDto(mission, missionBakery, visitedBakeryList, badgeList);
         } catch (err) {
             console.error();
+        }
+    },
+    //이달의 미션 & 미션 빵집
+    getMonthlyMission: async (user) => {
+        try {
+            const mission = await missionUtil.findMissionByDate();
+            // if mission ==null -> throw err           
+            const missionBakery = await missionUtil.findMissionBakeryByMission(mission.id);
+
+            missionBakeryDto(missionBakery);
+
+        } catch (err) {
+            console.err();
         }
     },
     //사용자가 달성한 미션
@@ -52,11 +57,17 @@ module.exports = {
         } catch (error) {
             console.error()
         }
+    },
+    //미션 삭제
+    //미션 달성시 체크
+    checkSucceededMission: async (user, missionId) => {
+        try {
+            const isSucceeded = await missionUtil.isSucceededMission(user, missionId);
+        } catch (err) {
+            console.error()
+        }
     }
 
-    //미션 삭제
-
-    //이달의 미션
 
 
 

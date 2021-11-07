@@ -21,11 +21,11 @@ module.exports = {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
         }
     },
-    monthlyMission: async (req, res) => {
+    missionMain: async (req, res) => {
         try {
             //uuid check 
             let user = req.header.user;
-            const result = await missionService.getMonthlyMission(user);
+            const result = await missionService.getMissionMain(user);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MONTHLY_MISSION, result));
         } catch (err) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
