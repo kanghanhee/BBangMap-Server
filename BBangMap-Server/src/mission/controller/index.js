@@ -30,8 +30,27 @@ module.exports = {
         } catch (err) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
         }
-    }
-
-
+    },
+    missionSucceeded: async (req, res) => {
+        try {
+            let user = req.header.user;
+            const {
+                missionId
+            } = req.params;
+            const result = await missionService.getUserSucceededMission(user, missionId);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_SUCCEEDED_MISSION, result));
+        } catch (err) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
+    },
+    userRank: async (req, res) => {
+        try {
+            let user = req.header.user;
+            const result = await missionService.getUserRank(user)
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_USER_RANK, result));
+        } catch (err) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
+    },
 
 }
