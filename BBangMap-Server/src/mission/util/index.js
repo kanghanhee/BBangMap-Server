@@ -59,7 +59,7 @@ module.exports = {
       },
     });
   },
-  //id로 빵집 조회
+  //빵집id로 빵집 조회
   findBakeryById: async (bakeryId) => {
     return await Bakery.findOne({
       where: {
@@ -149,4 +149,22 @@ module.exports = {
     }
     if (missionCount >= 3) return true;
   },
+  //빵집이 미션 빵집인지
+  isMissionBakery: async (mission, bakeryId) => {
+    const isMission = this.findMissionBakeryByMission(mission.id).filter(
+      (Bakery) => Bakery.BakeryId === Number(bakeryId)
+    )[0];
+    if (!isMission) return false;
+    else return true;
+  },
+  calculateGrade: async (user, mission) => {
+    //사용자 전체 미션 달성 개수 가져오기(뱃지 개수)
+    const userMissionCount = await this.findUserSucceededMission(user).length;
+    //사용자 전체 후기 작성 개수 가져오기
+
+    //조건문 걸기
+    //user.db접근해서 현재 등급과 다르다면 등급 바꾸기
+  },
+  //사용자 전체 작성 후기
+  findUserReview: async (user) => {},
 };
