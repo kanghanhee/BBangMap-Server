@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('User', {
         //닉네임
-        nickName: {
+        nickname: {
             type: DataTypes.STRING(30),
             unique: true,
             allowNull: false
@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(50),
             unique: true,
             allowNull: false
+        },
+        role: {
+            type: DataTypes.INTEGER,
+            define: 0
         },
         //프로필이미지
         profileImg: {
