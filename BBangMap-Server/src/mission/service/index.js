@@ -1,8 +1,10 @@
 const missionUtil = require("../util");
-const monthlyMissionDto = require("../dto/monthlyMissionDto");
-const missionMainDto = require("../dto/missionMainDto");
-const badgeListDto = require("../dto/badgeListDto");
-const { findUserSucceededMission } = require("../util");
+const {
+  userSucceededMissionDto,
+  monthlyMissionDto,
+  missionMainDto,
+  badgeListDto,
+} = require("../dto");
 module.exports = {
   //미션 추가
   postMission: async (
@@ -37,11 +39,13 @@ module.exports = {
         user,
         mission.id
       );
-      console.log(visitedBakeryList);
-
       const badgeList = this.getUserSucceededMission(user);
 
-      return missionMainDto(monthlyMission, visitedBakeryList, badgeList);
+      return missionMainDto(
+        monthlyMission,
+        visitedBakeryList,
+        badgeListDto(badgeList)
+      );
     } catch (err) {
       console.error();
     }
@@ -60,13 +64,14 @@ module.exports = {
     }
   },
   //사용자가 달성한 미션
-  getUserSucceededMission: async (user) => {
+  getUserSucceededMission: async (user, missionId) => {
     try {
-      const succeededMission = await findUserSucceededMission(user);
-      const badgeList = await succeededMission.map((MissionId) =>
-        badgeListDto(missionUtil.findMissionById(MissionId))
+      const visitedBakeryList = await missionUtil.isVisitedMissionBakery(
+        user,
+        missionId
       );
-      return badgeList;
+      const mission = await missionUtil.findMissionById(missionId);
+      return userSucceededMissionDto(mission, visitedBakeryList);
     } catch (error) {
       console.error();
     }

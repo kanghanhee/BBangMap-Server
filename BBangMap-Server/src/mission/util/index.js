@@ -71,7 +71,6 @@ module.exports = {
   isVisitedMissionBakery: async (user, missionId) => {
     //사용자의 방문 빵집 == 해당 달의 미션 빵집
     const missionBakeryList = await this.findMissionBakeryByMission(missionId);
-
     return await missionBakeryList.map((bakeryId) => {
       InviteBakery.findAll({
         where: {
@@ -105,7 +104,7 @@ module.exports = {
   //미션 빵집 사용자 방문 여부
   isVisitedBakeryDetail: async (user, missionId) => {
     const missionBakeryList = await findMissionBakeryByMission(missionId).map(
-      (BakeryId) => this.findBakeryById
+      (BakeryId) => this.findBakeryById(BakeryId)
     );
     const isVisited = await missionBakeryList.map((BakeryId) =>
       this.isVistedBakery(user, BakeryId)
