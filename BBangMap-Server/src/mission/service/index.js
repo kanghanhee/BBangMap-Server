@@ -102,5 +102,11 @@ module.exports = {
         }
     },
     //나의 등급(user-> rank,reviewCount,missionCount)
-
+    getUserRank: async (user) => {
+        try {
+            return missionUtil.calculateRank(user);
+        } catch (err) {
+            console.error()
+        }
+    }
 };
