@@ -31,6 +31,7 @@ module.exports = {
       console.error();
     }
   },
+  //미션 삭제
   //미션 메인페이지
   getMissionMain: async (user) => {
     try {
@@ -76,13 +77,25 @@ module.exports = {
       console.error();
     }
   },
-  //미션 삭제
-  //미션 달성시 체크
-  checkSucceededMission: async (user, missionId) => {
+
+  //미션 달성시 체크(후기 들어올때마다 후기개수&미션빵집 체크 -> 미션 빵집인지, 미션달성했는지,등급)
+  checkSucceededMission: async (user, bakeryId) => {
     try {
-      const isSucceeded = await missionUtil.isSucceededMission(user, missionId);
+      const mission = await missionUtil.findMissionByDate();
+      //빵집이 미션빵집인지 체크 Util
+      const isMissionBakery = await missionUtil.isMissionBakery(
+        mission,
+        bakeryId
+      );
+      // 사용자 빵집이 미션달성했는지 체크
+      const isSucceededMission = await missionUtil.isSucceededMission(
+        user,
+        mission.id
+      );
+      //등급산정 Util(후기개수, 미션빵집)
     } catch (err) {
       console.error();
     }
   },
+  //나의 등급(user-> rank,reviewCount,missionCount)
 };
