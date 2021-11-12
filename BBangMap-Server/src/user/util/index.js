@@ -3,6 +3,8 @@ const { Op } = require("sequelize");
 const { is } = require("sequelize/types/lib/operators");
 const { userRank } = require("../../mission/controller");
 const { adjective, second, bread } = require("../data");
+const path = require("path");
+const readFile = require("util").promisify(fs.readFile);
 
 module.exports = {
   //회원 중복체크
@@ -31,12 +33,38 @@ module.exports = {
     uuid: uuid;
     rank: 1;
     role: 2;
+    profileImg: "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg";
+    backgroundImg:"https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg";
   },
   //랜덤 닉네임
   randomNickname: async () => {
-    let firstWord = await readFile(__dirname + "/data" + adjective, "utf-8");
-    let secondWord = await readFile(__dirname + "/data" + second, "utf-8");
-    let lastWord = await readFile(__dirname + "/data" + bread, "utf-8");
-    const first = adjective[range(0, adjective.length - 1)];
+    const path = require("path");
+    const fs = require("fs");
+
+    const readFile = (fileName) => {
+      return new Promise((resolve, reject) => {
+        fs.readFile(fileName + ".txt", "utf-8", (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+    };
+    const rand = (min, max) => {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
+    const randomNickname = async () => {
+      const firstContents = await readFile("./data/adj");
+      //   console.log(firstContents);
+      let firstWordList = firstContents.split("\n").slice(0, -1);
+      //   console.log(firstWordList[0]);
+      const first = firstWordList[rand(0, firstWordList.length - 1)];
+      console.log(first);
+    };
+
+    randomNickname();
   },
 };

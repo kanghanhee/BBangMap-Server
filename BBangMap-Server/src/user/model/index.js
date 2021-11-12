@@ -13,12 +13,18 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: false,
       },
+      //역할(1=admin, 2=user)
       role: {
         type: DataTypes.INTEGER,
         define: 0,
       },
-      //프로필이미지
+      //프로필 이미지
       profileImg: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+      },
+      //프로필 배경 이미지
+      backgroundImg: {
         type: DataTypes.STRING(100),
         allowNull: true,
       },
