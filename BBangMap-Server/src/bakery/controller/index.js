@@ -42,7 +42,7 @@ module.exports = {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
-    savedBakeryList: async (req, res) => {
+    storedBakeryList: async (req, res) => {
         try {
             let user = req.header.user;
             let savedBakeryListDto = await bakeryService.getSavedBakeryList(user);
@@ -51,7 +51,7 @@ module.exports = {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
-    savedBakery: async (req, res) => {
+    storeBakery: async (req, res) => {
         try{
             let {bakeryId} = req.params;
             let user = req.header.user;
@@ -61,7 +61,7 @@ module.exports = {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
-    unSavedBakery : async(req,res)=>{
+    unStoreBakery : async(req,res)=>{
         try{
             let {bakeryId} = req.params;
             let user = req.header.user;
