@@ -1,6 +1,7 @@
 const modelUtil = require('../../../models/modelUtil')
 const userUtils = require('../../user/utils')
 const bakeryUtils = require('../utils')
+const {Bakery} = require('../../../models')
 
 const bakeryMapListDto = require('../dto/bakeryMapListDto')
 const bakerySearchListDto = require('../dto/bakerySearchListDto')
@@ -40,8 +41,25 @@ module.exports = {
         let userId = user.id;
         await bakeryUtils.savedBakery(userId, bakeryId);
     },
-    deleteSaveBakery: async(bakeryId, user)=>{
+    deleteSaveBakery: async (bakeryId, user) => {
         let userId = user.id;
         await bakeryUtils.deleteSaveBakery(userId, bakeryId);
+    },
+    createBakery: async (registerBakery) => {
+        await Bakery.create({
+            bakeryName : registerBakery.bakeryName,
+            openTime : registerBakery.openTime,
+            offDay : registerBakery.offDay,
+            seasonMenu : registerBakery.seasonMenu,
+            isOnline : registerBakery.isOnline,
+            isVegan : registerBakery.isVegan,
+            isDrink : registerBakery.isDrink,
+            bestMenu : registerBakery.bestMenu,
+            totalMenu : registerBakery.totalMenu,
+            address : registerBakery.address,
+            latitude : registerBakery.latitude,
+            longitude : registerBakery.longitude,
+            bakeryImg : registerBakery.bakeryImg
+        });
     }
 }
