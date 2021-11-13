@@ -1,5 +1,6 @@
 dist/*
 *.log
 
-node_modules
-config
+.DS_Store
+node_modules/
+config/

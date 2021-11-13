@@ -10,6 +10,6 @@ router.get('/imgs',authUtil.checkUuid, bakeryController.bakeryImgList);
 router.get('/storage',authUtil.checkUuid, bakeryController.storedBakeryList);
 router.post('/:bakeryId/storage',authUtil.checkUuid, bakeryController.storeBakery);
 router.delete('/:bakeryId/storage',authUtil.checkUuid, bakeryController.unStoreBakery);
-router.post('/registration',authUtil.validAdmin, bakeryController.registerBakery)
+router.post('/registration',authUtil.validAdmin, bakeryController.registerBakery);
 
 module.exports = router;
