@@ -1,8 +1,8 @@
-const express = require("express")
+const express = require("express");
 const router = express.Router();
+const authUtil = require("../../middlewares/authUtil");
+const reviewController = require("../../src/review/controller");
 
-router.get('/', (req,res)=>{
-    res.status(200).send("리뷰 API");
-});
+router.get("/", authUtil.checkUuid, reviewController.reviewAll);
 
 module.exports = router;
