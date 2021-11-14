@@ -1,12 +1,12 @@
 const reviewUtils = require("../utils");
 
 const reviewListDto = require("../dto/reviewListDto");
+const reviewDetailDto = require("../dto/reviewDetailDto");
 
 module.exports = {
   getReviewAll: async () => {
     let reviewList = await reviewUtils.findReviewAll();
 
-    console.log(reviewList);
     return reviewListDto(reviewList);
   },
   getSearchReviewList: async (searchWord, isOnline, isVegan) => {
@@ -17,5 +17,10 @@ module.exports = {
     );
 
     return reviewListDto(reviewList);
+  },
+  getReviewDetail: async (reviewId) => {
+    let review = await reviewUtils.findReviewById(reviewId);
+
+    return reviewDetailDto(review);
   },
 };

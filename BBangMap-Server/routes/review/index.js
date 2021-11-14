@@ -5,5 +5,6 @@ const reviewController = require("../../src/review/controller");
 
 router.get("/", authUtil.checkUuid, reviewController.reviewAll);
 router.get("/search", authUtil.checkUuid, reviewController.reviewSearch);
+router.get("/detail", authUtil.checkUuid, reviewController.reviewDetail);
 
 module.exports = router;

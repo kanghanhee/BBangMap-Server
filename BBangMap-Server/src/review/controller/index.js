@@ -45,4 +45,24 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
+  reviewDetail: async (req, res) => {
+    try {
+      let { reviewId } = req.query;
+      //let user = req.header.user;
+      let reviewDetailDto = await reviewService.getReviewDetail(reviewId);
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(
+            statusCode.OK,
+            responseMessage.SUCCESS_GET_REIVEIW,
+            reviewDetailDto
+          )
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
 };

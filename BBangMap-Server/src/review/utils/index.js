@@ -1,4 +1,4 @@
-const { Bakery, Review } = require("../../../models");
+const { Bakery, Review, User } = require("../../../models");
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -23,6 +23,23 @@ module.exports = {
           where: {
             bakeryName: { [Op.like]: `%${searchWord}%` },
           },
+          attributes: ["id", "bakeryName"],
+        },
+      ],
+    });
+  },
+  findReviewById: async (reviewId) => {
+    return Review.findOne({
+      where: {
+        id: reviewId,
+      },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "nickName"],
+        },
+        {
+          model: Bakery,
           attributes: ["id", "bakeryName"],
         },
       ],
