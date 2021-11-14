@@ -22,4 +22,27 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
+  reviewSearch: async (req, res) => {
+    try {
+      let { searchWord, isOnline, isVegan } = req.query;
+      let reviewSearchListDto = await reviewService.getSearchReviewList(
+        searchWord,
+        isOnline,
+        isVegan
+      );
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(
+            statusCode.OK,
+            responseMessage.SUCCESS_GET_REIVEIW,
+            reviewSearchListDto
+          )
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
 };
