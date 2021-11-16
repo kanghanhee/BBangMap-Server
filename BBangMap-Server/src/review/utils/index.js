@@ -62,4 +62,7 @@ module.exports = {
       savedReviewList.ReviewId === review.id;
     return savedReviewList.some(isContainReview);
   },
+  savedReview: async (userId, reviewId) => {
+    await SaveReivew.create({ UserId: userId, ReviewId: reviewId });
+  },
 };

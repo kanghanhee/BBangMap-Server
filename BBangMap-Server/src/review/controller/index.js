@@ -86,7 +86,7 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
-  storedReviewList: async (req, res) => {
+  savedReviewList: async (req, res) => {
     try {
       let user = req.header.user;
       let savedReviewListDto = await reviewService.getSavedReviewList(user);
@@ -99,6 +99,20 @@ module.exports = {
             savedReviewListDto
           )
         );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  saveReview: async (req, res) => {
+    try {
+      let { reviewId } = req.params;
+      let user = req.header.user;
+      await reviewService.savedReview(reviewId, user);
+      res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REIVEIW));
     } catch (err) {
       res
         .status(statusCode.INTERNAL_SERVER_ERROR)

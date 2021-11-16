@@ -38,4 +38,8 @@ module.exports = {
 
     return savedReviewListDto(savedReviewList);
   },
+  savedReview: async (reviewId, user) => {
+    let userId = user.id;
+    await reviewUtils.savedReview(userId, reviewId);
+  },
 };
