@@ -13,5 +13,9 @@ router.post(
   authUtil.checkUuid,
   reviewController.saveReview
 );
-
+router.delete(
+  "/storage/:reviewId",
+  authUtil.checkUuid,
+  reviewController.unSaveReview
+);
 module.exports = router;

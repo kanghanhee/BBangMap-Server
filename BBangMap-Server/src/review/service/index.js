@@ -42,4 +42,8 @@ module.exports = {
     let userId = user.id;
     await reviewUtils.savedReview(userId, reviewId);
   },
+  deleteSavedReview: async (reviewId, user) => {
+    let userId = user.id;
+    await reviewUtils.deleteSavedReview(userId, reviewId);
+  },
 };
