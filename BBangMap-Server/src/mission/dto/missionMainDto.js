@@ -1,11 +1,11 @@
-const missionMainDto = (mission, visitedBakeryList, badgeList) => {
+const missionMainDto = (mission, bakery, badgeList, missionAchieveCount) => {
   return {
     missionId: mission.missionId,
     missionTitle: mission.missionTitle,
     missionContent: mission.missionContent,
-    missionAchieveCount: visitedBakeryList.length,
+    missionAchieveCount: missionAchieveCount,
     missionBadgeImg: mission.missionBadgeImg,
-    missionBakeryList: mission.missionBakery,
+    missionBakeryList: bakery,
     missionBadgeList: badgeList,
   };
 };

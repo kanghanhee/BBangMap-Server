@@ -10,6 +10,7 @@ module.exports = {
     EMPTY_TOKEN: "빈 토큰",
     EXPIRED_TOKEN: "토큰 기간 만료",
     INVALID_TOKEN: "유효하지 않은 토큰",
+    INVALID_UUID: "존재하지 않는 UUID입니다.",
 
     /*미션*/
     SUCCESS_CREATE_MISSION: "미션 추가 성공",

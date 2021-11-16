@@ -1,7 +1,7 @@
-const badgeListDto = (badgeList) => {
+const badgeListDto = (mission) => {
     return {
-        missionId: id,
-        missionBadgeImg: badgeImg
+        missionId: mission.id,
+        missionBadgeImg: mission.badgeImg
     }
 }
 module.exports = badgeListDto

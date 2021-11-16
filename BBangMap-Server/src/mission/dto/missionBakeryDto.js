@@ -1,6 +1,8 @@
-const missionBakeryDto = (missionBakery) => {
+const missionBakeryDto = (missionBakeryInfo, isSucceeded) => {
     return {
-        missionBakeryId: BakeryId,
-
+        missionBakeryId: missionBakeryInfo.id,
+        missionBakeryName: missionBakeryInfo.bakeryName,
+        isSucceeded: isSucceeded
     }
 }
+module.exports = missionBakeryDto;

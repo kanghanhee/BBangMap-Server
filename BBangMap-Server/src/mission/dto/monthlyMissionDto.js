@@ -1,10 +1,9 @@
-const monthlyMissionDto = (mission, missionBakery) => {
+const monthlyMissionDto = (mission) => {
   return {
     missionId: mission.id,
     missionTitle: mission.missionTitle,
-    missionContent: missionContent,
-    missionBadgeImg: mission.missionBadgeImg,
-    missionBakeryList: missionBakery,
+    missionContent: mission.missionContent,
+    missionBadgeImg: mission.badgeImg,
   };
 };
 module.exports = monthlyMissionDto;

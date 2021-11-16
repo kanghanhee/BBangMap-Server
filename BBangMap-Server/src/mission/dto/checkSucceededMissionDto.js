@@ -4,7 +4,7 @@ const {
 
 const checkSucceededMissionDto = (bakery, mission, rank) => {
     return {
-        rank: rank.rank,
+        rank: rank.grade,
         isMissionBakery: bakery,
         isSuccessMission: mission
     }
