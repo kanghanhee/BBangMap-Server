@@ -3,7 +3,8 @@ const userUtils = require("../../user/utils");
 
 const reviewListDto = require("../dto/reviewListDto");
 const reviewDetailDto = require("../dto/reviewDetailDto");
-const savedReviewListDto = require("../dto/savedReviewListDto");
+const savedReviewOfBakeryListDto = require("../dto/savedReviewOfBakeryListDto");
+const savedReviewFolderListDto = require("../dto/savedReviewFolderListDto");
 const reviewOfBakeryListDto = require("../dto/reviewOfBakeryListDto");
 
 module.exports = {
@@ -32,11 +33,20 @@ module.exports = {
 
     return reviewDetailDto(review, savedReviewList);
   },
-  getSavedReviewList: async (user) => {
+  getSavedReviewFolderList: async (user) => {
     let findUser = await userUtils.findUserIncludeSavedReview(user);
-    let savedReviewList = findUser.SavedReview;
+    let savedReviewFolderList = findUser.SavedReview;
 
-    return savedReviewListDto(savedReviewList);
+    return savedReviewFolderListDto(savedReviewFolderList);
+  },
+  getSavedReviewOfBakeryList: async (bakeryId, user) => {
+    let findUser = await userUtils.findUserIncludeSavedReviewOfBakery(
+      bakeryId,
+      user
+    );
+    let savedReviewOfBakeryList = findUser.SavedReview;
+
+    return savedReviewOfBakeryListDto(savedReviewOfBakeryList);
   },
   savedReview: async (reviewId, user) => {
     let userId = user.id;

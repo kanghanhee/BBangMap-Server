@@ -26,4 +26,22 @@ module.exports = {
       },
     });
   },
+  findUserIncludeSavedReviewOfBakery: async (bakeryId, user) => {
+    return await User.findOne({
+      where: { id: user.id },
+      include: [
+        {
+          model: Review,
+          as: "SavedReview",
+          where: { BakeryId: bakeryId },
+          attributes: {},
+          include: {
+            model: Bakery,
+            as: "Bakery",
+            attributes: ["bakeryName"],
+          },
+        },
+      ],
+    });
+  },
 };

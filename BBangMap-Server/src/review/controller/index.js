@@ -86,10 +86,34 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
-  savedReviewList: async (req, res) => {
+  savedReviewFolderList: async (req, res) => {
     try {
       let user = req.header.user;
-      let savedReviewListDto = await reviewService.getSavedReviewList(user);
+      let savedReviewFolderListDto =
+        await reviewService.getSavedReviewFolderList(user);
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(
+            statusCode.OK,
+            responseMessage.SUCCESS_GET_REVIEW,
+            savedReviewFolderListDto
+          )
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  savedReviewOfBakeryList: async (req, res) => {
+    try {
+      let { bakeryId } = req.params;
+      let user = req.header.user;
+      let savedReviewListDto = await reviewService.getSavedReviewOfBakeryList(
+        bakeryId,
+        user
+      );
       res
         .status(statusCode.OK)
         .send(
