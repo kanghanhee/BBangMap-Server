@@ -17,6 +17,7 @@ router.get(
   authUtil.checkUuid,
   reviewController.savedReviewOfBakeryList
 );
+router.get("/my", authUtil.checkUuid, reviewController.myReview);
 router.post(
   "/storage/:reviewId",
   authUtil.checkUuid,

@@ -57,6 +57,17 @@ module.exports = {
       where: { UserId: user.id },
     });
   },
+  findMyReviewList: async (user) => {
+    return Review.findAll({
+      where: { UserId: user.id },
+      include: [
+        {
+          model: Bakery,
+          attributes: ["bakeryName"],
+        },
+      ],
+    });
+  },
   isSavedReview: async (review, savedReviewList) => {
     const isContainReview = (savedReviewList) =>
       savedReviewList.ReviewId === review.id;
