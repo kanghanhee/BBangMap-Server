@@ -7,7 +7,16 @@ router.get("/", authUtil.checkUuid, reviewController.reviewAll);
 router.get("/bakery", authUtil.checkUuid, reviewController.reviewOfBakery);
 router.get("/search", authUtil.checkUuid, reviewController.reviewSearch);
 router.get("/detail", authUtil.checkUuid, reviewController.reviewDetail);
-router.get("/storage", authUtil.checkUuid, reviewController.savedReviewList);
+router.get(
+  "/storage",
+  authUtil.checkUuid,
+  reviewController.savedReviewFolderList
+);
+router.get(
+  "/storage/:bakeryId",
+  authUtil.checkUuid,
+  reviewController.savedReviewOfBakeryList
+);
 router.post(
   "/storage/:reviewId",
   authUtil.checkUuid,
