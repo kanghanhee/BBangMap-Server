@@ -1,7 +1,9 @@
 const reviewUtils = require("../utils");
+const userUtils = require("../../user/utils");
 
 const reviewListDto = require("../dto/reviewListDto");
 const reviewDetailDto = require("../dto/reviewDetailDto");
+const savedReviewListDto = require("../dto/savedReviewListDto");
 
 module.exports = {
   getReviewAll: async () => {
@@ -18,9 +20,16 @@ module.exports = {
 
     return reviewListDto(reviewList);
   },
-  getReviewDetail: async (reviewId) => {
+  getReviewDetail: async (reviewId, user) => {
     let review = await reviewUtils.findReviewById(reviewId);
+    let savedReviewList = await reviewUtils.findUsersSavedReviewList(user);
 
-    return reviewDetailDto(review);
+    return reviewDetailDto(review, savedReviewList);
+  },
+  getSavedReviewList: async (user) => {
+    let findUser = await userUtils.findUserIncludeSavedReview(user);
+    let savedReviewList = findUser.SavedReview;
+
+    return savedReviewListDto(savedReviewList);
   },
 };

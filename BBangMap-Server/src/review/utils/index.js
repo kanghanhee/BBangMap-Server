@@ -1,4 +1,4 @@
-const { Bakery, Review, User } = require("../../../models");
+const { Bakery, Review, User, SaveReivew } = require("../../../models");
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
       include: [
         {
           model: Bakery,
-          attributes: ["id", "bakeryName"],
+          attributes: ["bakeryName"],
         },
       ],
     });
@@ -23,7 +23,7 @@ module.exports = {
           where: {
             bakeryName: { [Op.like]: `%${searchWord}%` },
           },
-          attributes: ["id", "bakeryName"],
+          attributes: ["bakeryName"],
         },
       ],
     });
@@ -36,13 +36,23 @@ module.exports = {
       include: [
         {
           model: User,
-          attributes: ["id", "nickName"],
+          attributes: ["nickName"],
         },
         {
           model: Bakery,
-          attributes: ["id", "bakeryName"],
+          attributes: ["bakeryName"],
         },
       ],
     });
+  },
+  findUsersSavedReviewList: async (user) => {
+    return SaveReivew.findAll({
+      where: { UserId: user.id },
+    });
+  },
+  isSavedReview: async (review, savedReviewList) => {
+    const isContainReview = (savedReviewList) =>
+      savedReviewList.ReviewId === review.id;
+    return savedReviewList.some(isContainReview);
   },
 };
