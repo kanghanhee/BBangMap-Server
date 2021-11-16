@@ -2,6 +2,13 @@ const { Bakery, Review, User, SaveReivew } = require("../../../models");
 const { Op } = require("sequelize");
 
 module.exports = {
+  findReviewOfBakery: async (bakeryId) => {
+    return Review.findAll({
+      where: {
+        BakeryId: bakeryId,
+      },
+    });
+  },
   findReviewAll: async () => {
     return Review.findAll({
       include: [

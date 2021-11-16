@@ -4,6 +4,27 @@ const statusCode = require("../../../modules/statusCode");
 const reviewService = require("../service");
 
 module.exports = {
+  reviewOfBakery: async (req, res) => {
+    try {
+      let { bakeryId } = req.query;
+      let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(
+        bakeryId
+      );
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(
+            statusCode.OK,
+            responseMessage.SUCCESS_GET_REIVEIW,
+            reviewOfBakeryListDto
+          )
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
   reviewAll: async (req, res) => {
     try {
       let reivewAllListDto = await reviewService.getReviewAll();
@@ -45,26 +66,6 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
-  /*reviewDetail: async (req, res) => {
-    try {
-      let { reviewId } = req.query;
-      let user = req.header.user;
-      let reviewDetailDto = await reviewService.getReviewDetail(reviewId, user);
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_GET_REIVEIW,
-            reviewDetailDto
-          )
-        );
-    } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
-    }
-  },*/
   reviewDetail: async (req, res) => {
     try {
       let { reviewId } = req.query;
