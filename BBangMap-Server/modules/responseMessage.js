@@ -17,4 +17,5 @@ module.exports = {
   /*후기*/
   SUCCESS_GET_REVIEW: "후기불러오기 성공",
   SUCCESS_SAVED_REVIEW: "후기 보관하기 성공",
+  SUCCESS_UNSAVED_REVIEW: "보관된 후기 삭제 성공",
 };
