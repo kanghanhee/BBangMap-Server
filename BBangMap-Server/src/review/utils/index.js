@@ -65,4 +65,12 @@ module.exports = {
   savedReview: async (userId, reviewId) => {
     await SaveReivew.create({ UserId: userId, ReviewId: reviewId });
   },
+  deleteSavedReview: async (userId, reviewId) => {
+    await SaveReivew.destroy({
+      where: {
+        UserId: userId,
+        ReviewId: reviewId,
+      },
+    });
+  },
 };

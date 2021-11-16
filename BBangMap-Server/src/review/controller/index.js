@@ -1,6 +1,6 @@
 const util = require("../../../modules/util");
-const responseMessage = require("../../../modules/responseMessage");
 const statusCode = require("../../../modules/statusCode");
+const responseMessage = require("../../../modules/responseMessage");
 const reviewService = require("../service");
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
         .send(
           util.success(
             statusCode.OK,
-            responseMessage.SUCCESS_GET_REIVEIW,
+            responseMessage.SUCCESS_GET_REVIEW,
             reviewOfBakeryListDto
           )
         );
@@ -33,7 +33,7 @@ module.exports = {
         .send(
           util.success(
             statusCode.OK,
-            responseMessage.SUCCESS_GET_REIVEIW,
+            responseMessage.SUCCESS_GET_REVIEW,
             reivewAllListDto
           )
         );
@@ -56,7 +56,7 @@ module.exports = {
         .send(
           util.success(
             statusCode.OK,
-            responseMessage.SUCCESS_GET_REIVEIW,
+            responseMessage.SUCCESS_GET_REVIEW,
             reviewSearchListDto
           )
         );
@@ -76,7 +76,7 @@ module.exports = {
         .send(
           util.success(
             statusCode.OK,
-            responseMessage.SUCCESS_GET_REIVEIW,
+            responseMessage.SUCCESS_GET_REVIEW,
             reviewDetailDto
           )
         );
@@ -95,7 +95,7 @@ module.exports = {
         .send(
           util.success(
             statusCode.OK,
-            responseMessage.SUCCESS_GET_REIVEIW,
+            responseMessage.SUCCESS_GET_REVIEW,
             savedReviewListDto
           )
         );
@@ -112,7 +112,25 @@ module.exports = {
       await reviewService.savedReview(reviewId, user);
       res
         .status(statusCode.OK)
-        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REIVEIW));
+        .send(
+          util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_REVIEW)
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  unSaveReview: async (req, res) => {
+    try {
+      let { reviewId } = req.params;
+      let user = req.header.user;
+      await reviewService.deleteSavedReview(reviewId, user);
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW)
+        );
     } catch (err) {
       res
         .status(statusCode.INTERNAL_SERVER_ERROR)
