@@ -46,11 +46,22 @@ module.exports = {
     userRank: async (req, res) => {
         try {
             let user = req.header.user;
-            const result = await missionService.getUserRank(user)
+            const result = await missionService.getUserGrade(user)
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_USER_RANK, result));
         } catch (err) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
         }
     },
-
+    checkRank: async (req, res) => {
+        try {
+            let user = req.header.user;
+            const {
+                bakeryId
+            } = req.params;
+            const result = await missionService.checkSucceededMission(user, bakeryId)
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_USER_RANK, result));
+        } catch (err) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
+    }
 }

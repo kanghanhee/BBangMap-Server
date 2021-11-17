@@ -119,28 +119,66 @@ module.exports = {
       },
     });
   },
-  // //후기 작성 시, 배지 달성 체크
-  // isSucceededMission: async (user, missionId) => {
-  //   const missionCount = isVisitedBakery(user, missionId).length;
-  //   if ((missionCount = 3)) {
-  //     await MissionWhether.create({
-  //       UserId: user.id,
-  //     }, {
-  //       MissionId: missionId,
-  //     }, {
-  //       missionSuccessWhether: true,
-  //     });
-  //   }
-  //   if (missionCount >= 3) return true;
-  // },
-  // //빵집이 미션 빵집인지
-  // isMissionBakery: async (mission, bakeryId) => {
-  //   const isMission = this.findMissionBakeryByMission(mission.id).filter(
-  //     (Bakery) => Bakery.BakeryId === Number(bakeryId)
-  //   )[0];
-  //   if (!isMission) return false;
-  //   else return true;
-  // },
+  //후기 작성/삭제 시, 배지 달성 체크
+  isSucceededMission: async (user, missionId, missionAchieveCount) => {
+    const achieveMission = await MissionWhether.findOne({
+        where: {
+          [Op.and]: [{
+            MissionId: missionId
+          }, {
+            UserId: user.id
+          }],
+        }
+      })
+      .then(function (userMission) {
+
+        if (!userMission) return MissionWhether.create({
+          missionAchieveCount: missionAchieveCount,
+          UserId: user.id,
+          MissionId: missionId,
+          missionSuccessWhether: false
+        });
+        return MissionWhether.update({
+          missionAchieveCount: missionAchieveCount
+        }, {
+          where: {
+            [Op.and]: [{
+              MissionId: missionId
+            }, {
+              userId: user.id
+            }],
+          }
+        });
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  getMissionAcheiveCount: async (user, missionId) => {
+    return MissionWhether.findOne({
+      where: {
+        [Op.and]: [{
+          MissionId: missionId
+        }, {
+          userId: user.id
+        }],
+      }
+    })
+  },
+  //빵집이 미션 빵집인지
+  isMissionBakery: async (mission, bakeryId) => {
+    const isMission = await MissionBakery.findOne({
+      where: {
+        [Op.and]: [{
+          MissionId: mission.id
+        }, {
+          BakeryId: bakeryId
+        }],
+      }
+    })
+    if (!isMission) return false;
+    else return true;
+  },
   //등급 산정 + 체크
   calculateGrade: async (userMissionCount, userReviewCount) => {
     let grade; //등급
@@ -149,7 +187,7 @@ module.exports = {
     else grade = 1;
 
     const result = {
-      rank: grade,
+      grade: grade,
       reviewCount: userReviewCount,
       missionCount: userMissionCount
     }
@@ -158,13 +196,16 @@ module.exports = {
   //등급 변경
   updateUserGrade: async (user, newGrade) => {
     await User.update({
-      grade: newGrade
+      grade: Number(newGrade)
     }, {
       where: {
         id: user.id
       }
-    });
+    }).then(function (rowsUpdated) {
+      res.json(rowsUpdated)
+    })
   },
+
 
   //사용자 작성 후기
   findUserReview: async (user) => {
