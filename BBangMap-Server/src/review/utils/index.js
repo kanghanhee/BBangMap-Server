@@ -84,4 +84,12 @@ module.exports = {
       },
     });
   },
+  deleteMyReview: async (userId, reviewId) => {
+    await Review.destroy({
+      where: {
+        UserId: userId,
+        id: reviewId,
+      },
+    });
+  },
 };

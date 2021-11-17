@@ -28,4 +28,10 @@ router.delete(
   authUtil.checkUuid,
   reviewController.unSaveReview
 );
+router.delete(
+  "/my/:reviewId",
+  authUtil.checkUuid,
+  reviewController.deleteMyReveiw
+);
+
 module.exports = router;
