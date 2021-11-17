@@ -17,6 +17,7 @@ router.get(
   authUtil.checkUuid,
   reviewController.savedReviewOfBakeryList
 );
+router.get("/my", authUtil.checkUuid, reviewController.myReview);
 router.post(
   "/storage/:reviewId",
   authUtil.checkUuid,
@@ -27,4 +28,10 @@ router.delete(
   authUtil.checkUuid,
   reviewController.unSaveReview
 );
+router.delete(
+  "/my/:reviewId",
+  authUtil.checkUuid,
+  reviewController.deleteMyReveiw
+);
+
 module.exports = router;

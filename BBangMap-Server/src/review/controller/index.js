@@ -129,6 +129,25 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
+  myReview: async (req, res) => {
+    try {
+      let user = req.header.user;
+      let myReviewListDto = await reviewService.getMyReviewList(user);
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(
+            statusCode.OK,
+            responseMessage.SUCCESS_GET_REVIEW,
+            myReviewListDto
+          )
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
   saveReview: async (req, res) => {
     try {
       let { reviewId } = req.params;
@@ -154,6 +173,22 @@ module.exports = {
         .status(statusCode.OK)
         .send(
           util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW)
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  deleteMyReveiw: async (req, res) => {
+    try {
+      let { reviewId } = req.params;
+      let user = req.header.user;
+      await reviewService.deleteMyReview(reviewId, user);
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_REVIEW)
         );
     } catch (err) {
       res
