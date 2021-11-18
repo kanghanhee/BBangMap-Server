@@ -134,19 +134,20 @@ module.exports = {
     },
     //나의 등급
     getUserGrade: async (user) => {
-        const userMissionCount = await missionUtil.findUserSucceededMission(user);
-        const userReviewCount = await missionUtil.findUserReview(user);
-        const calculated = await missionUtil.calculateGrade(userMissionCount.count, userReviewCount.count);
-        // const calculated = await missionUtil.calculateGrade(20, 20);
+        try {
+            const userMissionCount = await missionUtil.findUserSucceededMission(user);
+            const userReviewCount = await missionUtil.findUserReview(user);
+            console.log("hi")
+            const calculated = await missionUtil.calculateGrade(userMissionCount.count, userReviewCount.count);
+            // const calculated = await missionUtil.calculateGrade(20, 20);
 
-        if (user.grade !== calculated.grade) {
-            try {
+            if (user.grade !== calculated.grade) {
+
                 await missionUtil.updateUserGrade(user, calculated.grade)
-            } catch (err) {
-                console.log(err)
             }
+        } catch (err) {
+            console.log(err)
         }
-        console.log(calculated)
-        return calculated
+        // return calculated
     }
 };

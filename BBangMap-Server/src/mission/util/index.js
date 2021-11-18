@@ -195,13 +195,13 @@ module.exports = {
   },
   //등급 변경
   updateUserGrade: async (user, newGrade) => {
-      await User.update({
-        grade: newGrade
-      }, {
-        where: {
-          id: user.id,
-        }
-      });
+    await User.update({
+      grade: newGrade
+    }, {
+      where: {
+        id: user.id,
+      }
+    });
   },
 
 
