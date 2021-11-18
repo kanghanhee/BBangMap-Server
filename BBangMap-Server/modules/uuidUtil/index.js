@@ -1,4 +1,6 @@
-const {User} = require('../../models')
+const {
+    User
+} = require('../../models')
 
 const uuidUtil = {
     validUuId: async (uuid) => {
