@@ -6,11 +6,9 @@ const {
   InviteBakery,
   Sequelize,
   Bakery,
-  Review
+  Review,
 } = require("../../../models");
-const {
-  Op
-} = require("sequelize");
+const { Op } = require("sequelize");
 
 module.exports = {
   //미션 추가
@@ -60,7 +58,7 @@ module.exports = {
       where: {
         MissionId: missionId,
       },
-      attributes: ['BakeryId']
+      attributes: ["BakeryId"],
     });
   },
   //빵집id로 빵집 조회
@@ -93,23 +91,26 @@ module.exports = {
   isVisitedBakery: async (user, bakeryId) => {
     const isVisited = await InviteBakery.findOne({
       where: {
-        [Op.and]: [{
+        [Op.and]: [
+          {
             BakeryId: bakeryId,
           },
           {
             UserId: user.id,
           },
         ],
-      }
+      },
     });
-    if (!isVisited) return false; //isNull
+    if (!isVisited) return false;
+    //isNull
     else return true;
   },
   //사용자 전체 달성 미션 조회
   findUserSucceededMission: async (user) => {
     return await MissionWhether.findAndCountAll({
       where: {
-        [Op.and]: [{
+        [Op.and]: [
+          {
             missionSuccessWhether: true,
           },
           {
@@ -122,98 +123,112 @@ module.exports = {
   //후기 작성/삭제 시, 배지 달성 체크
   isSucceededMission: async (user, missionId, missionAchieveCount) => {
     const achieveMission = await MissionWhether.findOne({
-        where: {
-          [Op.and]: [{
-            MissionId: missionId
-          }, {
-            UserId: user.id
-          }],
-        }
-      })
+      where: {
+        [Op.and]: [
+          {
+            MissionId: missionId,
+          },
+          {
+            UserId: user.id,
+          },
+        ],
+      },
+    })
       .then(function (userMission) {
-
-        if (!userMission) return MissionWhether.create({
-          missionAchieveCount: missionAchieveCount,
-          UserId: user.id,
-          MissionId: missionId,
-          missionSuccessWhether: false
-        });
-        return MissionWhether.update({
-          missionAchieveCount: missionAchieveCount
-        }, {
-          where: {
-            [Op.and]: [{
-              MissionId: missionId
-            }, {
-              userId: user.id
-            }],
+        if (!userMission)
+          return MissionWhether.create({
+            missionAchieveCount: missionAchieveCount,
+            UserId: user.id,
+            MissionId: missionId,
+            missionSuccessWhether: false,
+          });
+        return MissionWhether.update(
+          {
+            missionAchieveCount: missionAchieveCount,
+          },
+          {
+            where: {
+              [Op.and]: [
+                {
+                  MissionId: missionId,
+                },
+                {
+                  userId: user.id,
+                },
+              ],
+            },
           }
-        });
+        );
       })
-      .catch(err => {
-        console.log(err)
-      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   getMissionAcheiveCount: async (user, missionId) => {
     return MissionWhether.findOne({
       where: {
-        [Op.and]: [{
-          MissionId: missionId
-        }, {
-          userId: user.id
-        }],
-      }
-    })
+        [Op.and]: [
+          {
+            MissionId: missionId,
+          },
+          {
+            userId: user.id,
+          },
+        ],
+      },
+    });
   },
   //빵집이 미션 빵집인지
   isMissionBakery: async (mission, bakeryId) => {
     const isMission = await MissionBakery.findOne({
       where: {
-        [Op.and]: [{
-          MissionId: mission.id
-        }, {
-          BakeryId: bakeryId
-        }],
-      }
-    })
+        [Op.and]: [
+          {
+            MissionId: mission.id,
+          },
+          {
+            BakeryId: bakeryId,
+          },
+        ],
+      },
+    });
     if (!isMission) return false;
     else return true;
   },
   //등급 산정 + 체크
-  calculateGrade: async (userMissionCount, userReviewCount) => {
-    let grade; //등급
-    if (userMissionCount >= 30 && userReviewCount >= 30) grade = 3;
-    else if (userMissionCount >= 20 && userReviewCount >= 20) grade = 2;
-    else grade = 1;
+  calculateRank: async (userMissionCount, userReviewCount) => {
+    let rank; //등급
+    if (userMissionCount >= 30 && userReviewCount >= 30) rank = 3;
+    else if (userMissionCount >= 20 && userReviewCount >= 20) rank = 2;
+    else rank = 1;
 
     const result = {
-      grade: grade,
+      rank: rank,
       reviewCount: userReviewCount,
-      missionCount: userMissionCount
-    }
-    return result
+      missionCount: userMissionCount,
+    };
+    return result;
   },
   //등급 변경
-  updateUserGrade: async (user, newGrade) => {
-    await User.update({
-      grade: newGrade
-    }, {
-      where: {
-        id: user.id,
+  updateUserRank: async (user, newRank) => {
+    await User.update(
+      {
+        rank: newRank,
+      },
+      {
+        where: {
+          id: user.id,
+        },
       }
-    });
+    );
   },
-
 
   //사용자 작성 후기
   findUserReview: async (user) => {
-    return userReview = await Review.findAndCountAll({
+    return (userReview = await Review.findAndCountAll({
       where: {
-        UserId: user.id
-      }
-    })
+        UserId: user.id,
+      },
+    }));
   },
-
-
-
 };
