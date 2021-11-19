@@ -29,12 +29,16 @@ module.exports = {
   },
   //회원 등록(role:1-> admin, 2: user)
   createUser: async (uuid, nickname) => {
-    nickName: nickname;
-    uuid: uuid;
-    rank: 1;
-    role: 2;
-    profileImg: "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg";
-    backgroundImg:"https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg";
+    const newUser = User.create({
+      nickName: nickname,
+      uuid: uuid,
+      rank: 1,
+      role: 2,
+      profileImg:
+        "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
+      backgroundImg:
+        "https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg",
+    });
   },
   //랜덤 닉네임
   randomNickname: async () => {

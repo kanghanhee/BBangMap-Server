@@ -1,25 +1,37 @@
 const userUtil = require("../util");
 const responseMessage = require("../../../modules/responseMessage");
 const statusCode = require("../../../modules/statusCode");
+
 module.exports = {
   //회원가입
   signUp: async (uuid, nickname) => {
-    try {
-      this.checkNickname(nickname);
-      //db create
-      const newUser = await userUtil.createUser(uuid, nickname);
-    } catch (err) {
-      console.error();
+    const checkUuid = await userUtil.isExistUser(uuid);
+    const checkNickname = await userUtil.isExistNickname(nickname);
+    //이미 가입된 회원
+    if (checkUuid)
+      throw {
+        statusCode: statusCode.CONFLICT,
+        responseMessage: responseMessage.ALREADY_USER,
+      };
+    //이미 있는 닉네임
+    else if (checkNickname)
+      throw {
+        statusCode: statusCode.CONFLICT,
+        responseMessage: responseMessage.ALREADY_NICKNAME,
+      };
+    //회원가입 실행
+    else {
+      await userUtil.createUser(uuid, nickname);
     }
   },
   //닉네임 중복체크
   checkNickname: async (nickname) => {
-    try {
-      const existNickname = await userUtil.isExistNickname(nickname);
-      if (existNickname) throw Error;
-      // if(existNickname) -> error 409
-      // throw 409,중복된 닉네임입니다.
-    } catch (err) {}
+    const checkNickname = await userUtil.isExistNickname(nickname);
+    if (checkNickname)
+      throw {
+        statusCode: statusCode.CONFLICT,
+        responseMessage: responseMessage.ALREADY_NICKNAME,
+      };
   },
   //회원 탈퇴
   deleteUser: async (user) => {
@@ -45,9 +57,24 @@ module.exports = {
     }
   },
   //랜덤 닉네임
-  randomNickname: async () => {
-    //while(true){}
-    //배열
-    //닉네임 중복 시,새로 가져오기
+  createRandomNickname: async () => {
+    //readFile
+    const firstList = await readFile("./data/adj");
+    const secondList = await readFile("./data/second");
+    const thirdList = await readFile("./data/bread");
+    let newNickname = "";
+    while (true) {
+      //random word
+      let firstWord = userUtil.randomNickname(first);
+      let secondWord = userUtil.randomNickname(second);
+      let thirdWord = userUtil.randomNickname(third);
+
+      newNickname = newFirst + newSecond + newThird;
+      console.log(newNickname);
+      let checkNickname = await userUtil.isExistNickname(newNickname);
+      if (!checkNickname) break;
+    }
+    return newNickname;
   },
+  readMyPage: async () => {},
 };
