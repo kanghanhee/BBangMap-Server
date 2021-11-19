@@ -2,8 +2,8 @@ const { User } = require("../../../models");
 const { Op } = require("sequelize");
 const { is } = require("sequelize/types/lib/operators");
 const { userRank } = require("../../mission/controller");
-const { adjective, second, bread } = require("../data");
 const path = require("path");
+const fs = require("fs");
 const readFile = require("util").promisify(fs.readFile);
 
 module.exports = {
@@ -34,41 +34,42 @@ module.exports = {
       uuid: uuid,
       rank: 1,
       role: 2,
-      profileImg:
-        "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
-      backgroundImg:
-        "https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg",
+    });
+  },
+  //파일 읽기
+  readWordFile: async (fileName) => {
+    return new Promise((resolve, reject) => {
+      fs.readFile(fileName + ".txt", "utf-8", (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
     });
   },
   //랜덤 닉네임
-  randomNickname: async () => {
-    const path = require("path");
-    const fs = require("fs");
-
-    const readFile = (fileName) => {
-      return new Promise((resolve, reject) => {
-        fs.readFile(fileName + ".txt", "utf-8", (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        });
-      });
-    };
+  randomNickname: async (stringWords) => {
     const rand = (min, max) => {
       return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
+    const pickWord = async (stringWords) => {
+      let wordList= stringWords.split("\n").slice(0, -1);
+      const word = wordList[rand(0, wordList.length - 1)];
+      console.log(word);
+      return word
     };
-
-    const randomNickname = async () => {
-      const firstContents = await readFile("./data/adj");
-      //   console.log(firstContents);
-      let firstWordList = firstContents.split("\n").slice(0, -1);
-      //   console.log(firstWordList[0]);
-      const first = firstWordList[rand(0, firstWordList.length - 1)];
-      console.log(first);
-    };
-
-    randomNickname();
+    return await pickWord(stringWords);
+  },
+  //db프로필 수정
+  saveUpdateUser: async (updateUser) => {
+    await User.update(
+      {
+        nickName: updateUser.nickname,
+        profileImg: updateUser.profileImg,
+        backgroundImg: updateUser.backgroundImg,
+      },
+      { where: { id: updateUser.id } }
+    );
   },
 };

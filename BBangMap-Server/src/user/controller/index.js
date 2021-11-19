@@ -2,13 +2,14 @@ const util = require("../../../modules/util");
 const responseMessage = require("../../../modules/responseMessage");
 const statusCode = require("../../../modules/statusCode");
 const missionService = require("../service");
+const { profileImg, bgImg } = require("../model/index");
 
 module.exports = {
   //회원가입
   signUp: async (req, res) => {
     try {
       let user = req.header.user;
-      const result = await missionService.signUp(user);
+      await missionService.signUp(user);
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_SIGN_UP));
