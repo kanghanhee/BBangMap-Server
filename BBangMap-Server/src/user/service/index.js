@@ -35,15 +35,13 @@ module.exports = {
   },
   //회원 탈퇴
   deleteUser: async (user) => {
-    try {
-      //후기 리스트 id 변경
-      //좋아요 리스트 삭제
-      //보관 내역 삭제
-      //미션 내역(뱃지 리스트, userMission) 삭제
-      //사용자 삭제
-    } catch (err) {}
+    const deleteOthers = userUtil.deleteCascade(user);
+    const reviewList = userUtil.deleteSetNull(user);
+    //후기 리스트 -> set null, NOT IN 속성 사용
+    // 나머지는 cascade
+    //좋아요 리스트,보관내역(빵집,후기),미션 내역,사용자 정보 삭제
   },
-  //프로필 수정(배경사진, 프로필사진, 닉네임-> 이미지는 다른 방식으로 해결해야함)
+  //프로필 수정
   updateUser: async (user, newBgImg, newProfileImg, newNickname) => {
     try {
       //닉네임 중복검사
@@ -92,10 +90,10 @@ module.exports = {
     }
     return newNickname;
   },
-  readMyPage: async () => {
+  readMyPage: async (user) => {
     //닉네임,등급,유저이미지,배경이미지
-    //후기개수
-    //빵집 보관함개수
-    //후기 보관함 개수
+    //내가 쓴 후기개수(review. userId=id)
+    //빵집 보관함개수()(saveBakery.findAll userID=id.length)
+    //후기 보관함 개수(saveReview.findAll userId=id .length)
   },
 };

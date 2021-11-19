@@ -72,4 +72,12 @@ module.exports = {
       { where: { id: updateUser.id } }
     );
   },
+  //db cascade 삭제
+  deleteCascade:async(user)=>{
+
+  },
+  //db set null 삭제
+  deleteSetNull:async(user)=>{
+    
+  }
 };
