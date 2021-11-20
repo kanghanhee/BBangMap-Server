@@ -73,18 +73,21 @@ module.exports = {
   //랜덤 닉네임
   createRandomNickname: async () => {
     //readFile
-    const firstList = await userUtil.readWordFile("./data/adj");
-    const secondList = await userUtil.readWordFile("./data/second");
-    const thirdList = await userUtil.readWordFile("./data/bread");
+    const firstList = await userUtil.readWordFile(
+      __dirname + "/../data/adjective"
+    );
+    const secondList = await userUtil.readWordFile(
+      __dirname + "/../data/second"
+    );
+    const thirdList = await userUtil.readWordFile(__dirname + "/../data/bread");
     let newNickname = "";
     while (true) {
       //random word
-      let firstWord = userUtil.randomNickname(firstList);
-      let secondWord = userUtil.randomNickname(secondList);
-      let thirdWord = userUtil.randomNickname(thirdList);
+      let firstWord = await userUtil.randomNickname(firstList);
+      let secondWord = await userUtil.randomNickname(secondList);
+      let thirdWord = await userUtil.randomNickname(thirdList);
 
       newNickname = firstWord + secondWord + thirdWord;
-      console.log(newNickname);
       let checkNickname = await userUtil.isExistNickname(newNickname);
       if (!checkNickname) break;
     }
