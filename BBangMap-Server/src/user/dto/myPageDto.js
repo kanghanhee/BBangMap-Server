@@ -1,8 +1,14 @@
-const myPageDto = (user, reviewCount, savedBakeryCount, savedReviewCount) => {
+const myPageDto = (
+  user,
+  grade,
+  reviewCount,
+  savedBakeryCount,
+  savedReviewCount
+) => {
   return {
     profileImg: user.profileImg,
     nickname: user.nickName,
-    rank: user.grade,
+    rank: grade,
     backgroundImg: user.backgroundImg,
     myReviewCount: reviewCount,
     savedBakeryCount: savedBakeryCount,
