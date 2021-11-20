@@ -95,14 +95,19 @@ module.exports = {
     return newNickname;
   },
   readMyPage: async (user) => {
-    //닉네임,등급,유저이미지,배경이미지
-    //내가 쓴 후기개수(review. userId=id)
     const review = await userUtil.getMyReview(user);
-    //빵집 보관함개수()(saveBakery.findAll userID=id.length)
     const savedBakery = await userUtil.getSavedBakery(user);
-    //후기 보관함 개수(saveReview.findAll userId=id .length)
     const savedReview = await userUtil.getSavedReview(user);
-
-    return myPageDto(user, review.count, savedBakery.count, savedReview.count);
+    let grade = "";
+    if (user.grade == 1) grade = "중력분";
+    else if (user.grade == 2) grade = "강력분";
+    else grade = "박력분";
+    return myPageDto(
+      user,
+      grade,
+      review.count,
+      savedBakery.count,
+      savedReview.count
+    );
   },
 };
