@@ -30,8 +30,12 @@ module.exports = {
     const newUser = User.create({
       nickName: nickname,
       uuid: uuid,
-      rank: 1,
+      grade: 1,
       role: 2,
+      profileImg:
+        "https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427__340.jpg",
+      backgroundImg:
+        "https://www.stockvault.net/data/2019/08/24/268592/preview16.jpg",
     });
   },
   //파일 읽기

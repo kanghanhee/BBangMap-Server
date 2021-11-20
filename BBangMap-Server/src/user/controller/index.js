@@ -8,8 +8,8 @@ module.exports = {
   //회원가입
   signUp: async (req, res) => {
     try {
-      let user = req.header.user;
-      await missionService.signUp(user);
+      let { uuid, nickname } = req.body;
+      await missionService.signUp(uuid, nickname);
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_SIGN_UP));
