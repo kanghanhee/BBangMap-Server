@@ -1,7 +1,8 @@
-const { User } = require("../../../models");
+const { User, Review, SaveBakery, SaveReview } = require("../../../models");
 const { Op } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
+
 const readFile = require("util").promisify(fs.readFile);
 
 module.exports = {
@@ -27,7 +28,7 @@ module.exports = {
   },
   //회원 등록(role:1-> admin, 2: user)
   createUser: async (uuid, nickname) => {
-    const newUser = User.create({
+    await User.create({
       nickName: nickname,
       uuid: uuid,
       grade: 1,
@@ -81,4 +82,22 @@ module.exports = {
   deleteCascade: async (user) => {},
   //db set null 삭제
   deleteSetNull: async (user) => {},
+  //내가쓴후기개수
+  getMyReview: async (user) => {
+    return await Review.findAndCountAll({
+      where: { UserId: user.id },
+    });
+  },
+  //빵집 보관함 개수
+  getSavedBakery: async (user) => {
+    return await SaveBakery.findAndCountAll({
+      where: { UserId: user.id },
+    });
+  },
+  //리뷰 보관함 개수
+  getSavedReview: async (user) => {
+    return await SaveReview.findAndCountAll({
+      where: { UserId: user.id },
+    });
+  },
 };

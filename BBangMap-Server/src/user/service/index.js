@@ -1,6 +1,7 @@
 const userUtil = require("../util");
 const responseMessage = require("../../../modules/responseMessage");
 const statusCode = require("../../../modules/statusCode");
+const myPageDto = require("../dto/myPageDto");
 
 module.exports = {
   //회원가입
@@ -96,7 +97,12 @@ module.exports = {
   readMyPage: async (user) => {
     //닉네임,등급,유저이미지,배경이미지
     //내가 쓴 후기개수(review. userId=id)
+    const review = await userUtil.getMyReview(user);
     //빵집 보관함개수()(saveBakery.findAll userID=id.length)
+    const savedBakery = await userUtil.getSavedBakery(user);
     //후기 보관함 개수(saveReview.findAll userId=id .length)
+    const savedReview = await userUtil.getSavedReview(user);
+
+    return myPageDto(user, review.count, savedBakery.count, savedReview.count);
   },
 };
