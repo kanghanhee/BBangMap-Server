@@ -1,7 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "User",
-    {
+    "User", {
       //닉네임
       nickName: {
         type: DataTypes.STRING(30),
@@ -18,28 +17,20 @@ module.exports = (sequelize, DataTypes) => {
       profileImg: {
         type: DataTypes.STRING(100),
         allowNull: true,
-        define:
-          "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
+        define: "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
       },
       backgroundImg: {
         type: DataTypes.STRING(100),
         allowNull: true,
-        define:
-          "https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg",
+        define: "https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg",
       },
       //역할(1=admin,2=user)
       role: {
         type: DataTypes.INTEGER,
         define: 0,
       },
-      //방문한 빵집 리스트
-      //inviteBakeryList: {
-      //type: DataTypes.STRING,
-      //set: function (val) {
-      // return this.setDataValue("inviteBakeryList", JSON.stringify(val));
-      //     },
       //등급
-      rank: {
+      grade: {
         type: DataTypes.INTEGER,
         define: 0,
       },
@@ -63,8 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       //         return JSON.parse(this.getDataValue('inviteBakeryList'));
       //     }
       // }
-    },
-    {
+    }, {
       freezeTableName: true,
       timestamps: true,
     }
