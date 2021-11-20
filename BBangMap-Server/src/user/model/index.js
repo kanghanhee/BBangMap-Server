@@ -1,7 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "User",
-    {
+    "User", {
       //닉네임
       nickName: {
         type: DataTypes.STRING(30),
@@ -23,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       //등급
-      rank: {
+      grade: {
         type: DataTypes.INTEGER,
         define: 0,
       },
@@ -47,8 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       //     return JSON.parse(this.getDataValue("inviteBakeryList"));
       //   },
       // },
-    },
-    {
+    }, {
       freezeTableName: true,
       timestamps: true,
     }

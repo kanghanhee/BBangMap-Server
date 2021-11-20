@@ -96,7 +96,9 @@ module.exports = {
           user,
           bakery.BakeryId
         );
-        if (isVisited) isVisitedList.push(bakeryInfo.bakeryName);
+        if (isVisited) {
+          isVisitedList.push(bakeryInfo.bakeryName);
+        }
       })
     );
     if (isVisitedList == null) {
@@ -106,6 +108,11 @@ module.exports = {
   },
 
   //미션 달성시 체크
+  //{
+  // 	"rank" : String,
+  // 	"isMissonBakery" : Boolean,  
+  // 	"isSuccessMission" : Boolean // 이달의 미션 완료
+  // }
   checkSucceededMission: async (user, bakeryId) => {
     try {
       const mission = await missionUtil.findMissionByDate();
@@ -130,21 +137,19 @@ module.exports = {
         })
       );
 
-      // 사용자가 미션달성했는지 산정
-      const test = await missionUtil.isSucceededMission(
-        user,
-        mission.id,
-        missionAchieveCount
-      );
-      console.log("test", test);
       //미션 몇개 달성
       let isSucceeded;
       if (missionAchieveCount >= 3) isSucceeded = true;
       else isSucceeded = false;
 
       //등급산정 Util(후기개수, 미션빵집)
-      const rank = await missionUtil.calculateRank(user);
-      console.log(checkSucceededMissionDto(isMissionBakery, isSucceeded, rank));
+      const userMissionCount = await missionUtil.findUserSucceededMission(user); //전체 미션개수
+      const userReviewCount = await missionUtil.findUserReview(user);
+      const rank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
+      if (user.grade !== rank.rank) {
+        await missionUtil.updateUserRank(user, rank.rank);
+      }
+
       return checkSucceededMissionDto(isMissionBakery, isSucceeded, rank);
     } catch (err) {
       console.error();
@@ -161,12 +166,12 @@ module.exports = {
       );
       // const calculated = await missionUtil.calculateRank(20, 20);
 
-      if (user.rank !== calculated.rank) {
+      if (user.grade !== calculated.rank) {
         await missionUtil.updateUserRank(user, calculated.rank);
       }
+      return calculated
     } catch (err) {
       console.log(err);
     }
-    // return calculated
   },
 };
