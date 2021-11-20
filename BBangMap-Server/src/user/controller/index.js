@@ -77,8 +77,8 @@ module.exports = {
   //닉네임 중복검사
   checkNickname: async (req, res) => {
     try {
-      let user = req.header.user;
-      const result = await missionService.checkNickname(user);
+      let { nickname } = req.body;
+      const result = await missionService.checkNickname(nickname);
       res
         .status(statusCode.OK)
         .send(
