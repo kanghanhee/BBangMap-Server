@@ -13,7 +13,13 @@ module.exports = {
   SUCCESS_GET_BAKERY: "빵집불러오기 성공",
   SUCCESS_GET_BAKERY_IMG: "빵집 이미지 불러오기 성공",
   SUCCESS_SAVED_BAKERY: "빵집 보관하기 성공",
-  SUCCESS_REGISTRATION_BAKERY: "빵집 등록 성공",
+   SUCCESS_REGISTRATION_BAKERY: "빵집 등록 성공",
+
+  /*후기*/
+  SUCCESS_GET_REVIEW: "후기불러오기 성공",
+  SUCCESS_SAVED_REVIEW: "후기 보관하기 성공",
+  SUCCESS_UNSAVED_REVIEW: "보관된 후기 삭제 성공",
+  SUCCESS_DELETE_REVIEW: "후기 삭제 성공",
 
   /*사용자*/
   SUCCESS_SIGN_UP: "회원가입 성공",
