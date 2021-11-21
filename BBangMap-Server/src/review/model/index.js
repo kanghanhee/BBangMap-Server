@@ -1,42 +1,46 @@
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('Review', {
-        purchaseBreadList: {
-            type: DataTypes.STRING,
-            set: function (val) {
-                return this.setDataValue('purchaseBreadList', JSON.stringify(val));
-            },
-            get: function () {
-                return JSON.parse(this.getDataValue('purchaseBreadList'));
-            }
+  return sequelize.define(
+    "Review",
+    {
+      purchaseBreadList: {
+        type: DataTypes.STRING,
+        set: function (val) {
+          return this.setDataValue("purchaseBreadList", JSON.stringify(val));
         },
-        isVegan: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false
+        get: function () {
+          return JSON.parse(this.getDataValue("purchaseBreadList"));
         },
-        isOnline: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false
+      },
+      isVegan: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      isOnline: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      reviewImgList: {
+        type: DataTypes.STRING(1000),
+        set: function (val) {
+          return this.setDataValue("reviewImgList", JSON.stringify(val));
         },
-        reviewImg: {
-            type: DataTypes.STRING(1000),
-            set: function (val) {
-                return this.setDataValue('reviewImg', JSON.stringify(val));
-            },
-            get: function () {
-                return JSON.parse(this.getDataValue('reviewImg'));
-            }
+        get: function () {
+          return JSON.parse(this.getDataValue("reviewImgList"));
         },
-        content: {
-            type: DataTypes.STRING(1000),
-            allowNull: false
-        },
-        star: {
-            type: DataTypes.DOUBLE,
-            allowNull: true
-        },
-        //추천수 추가
-    }, {
-        freezeTableName: true,
-        timestamps: true
-    })
-}
+      },
+      content: {
+        type: DataTypes.STRING(1000),
+        allowNull: false,
+      },
+      star: {
+        type: DataTypes.DOUBLE,
+        allowNull: true,
+      },
+      //추천수 추가
+    },
+    {
+      freezeTableName: true,
+      timestamps: true,
+    }
+  );
+};
