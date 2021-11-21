@@ -10,17 +10,17 @@ const bakeryImgListDto = require('../dto/bakeryImgListDto')
 const savedBakeryListDto = require('../dto/savedBakeryListDto')
 
 module.exports = {
-    getBakeryMap: async (user, latitude, longitude) => {
+    getBakeryMap: async (user, latitude, longitude, radius) => {
         let findUser = await userUtils.findUserIncludeSavedBakery(user);
         let savedBakeryList = findUser.SavedBakery.map(saveBakery => saveBakery.id);
 
-        let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude);
+        let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
 
         return bakeryMapListDto(bakeryList, savedBakeryList);
     },
-    getSearchBakeryList: async (bakeryName) => {
+    getSearchBakeryList: async (bakeryName, latitude, longitude) => {
         let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
-        return bakerySearchListDto(searchBakeryList);
+        return bakerySearchListDto(searchBakeryList, latitude, longitude);
     },
     getBakeryDetail: async (bakeryId, user) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);
