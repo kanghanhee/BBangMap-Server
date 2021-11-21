@@ -6,9 +6,9 @@ const bakeryService = require('../service')
 module.exports = {
     bakeryMap: async (req, res) => {
         try {
-            let {latitude, longitude} = req.query;
+            let {latitude, longitude, radius} = req.query;
             let user = req.header.user;
-            let bakeryMapListDto = await bakeryService.getBakeryMap(user, latitude, longitude);
+            let bakeryMapListDto = await bakeryService.getBakeryMap(user, latitude, longitude, radius);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakeryMapListDto))
         } catch (err) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message))
@@ -16,8 +16,8 @@ module.exports = {
     },
     bakerySearch: async (req, res) => {
         try {
-            let {bakeryName} = req.query;
-            let bakerySearchListDto = await bakeryService.getSearchBakeryList(bakeryName);
+            let {bakeryName, latitude, longitude} = req.query;
+            let bakerySearchListDto = await bakeryService.getSearchBakeryList(bakeryName, latitude, longitude);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
         } catch (err) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
