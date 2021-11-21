@@ -6,9 +6,10 @@ const bakeryController = require("../../src/bakery/controller")
 router.get('/map', authUtil.checkUuid, bakeryController.bakeryMap);
 router.get('/search',authUtil.checkUuid, bakeryController.bakerySearch);
 router.get('/detail',authUtil.checkUuid, bakeryController.bakeryDetail);
-router.get('/img/list',authUtil.checkUuid, bakeryController.bakeryImgList);
-router.get('/user/saved',authUtil.checkUuid, bakeryController.savedBakeryList);
-router.post('/:bakeryId/saved',authUtil.checkUuid, bakeryController.savedBakery);
-router.delete('/:bakeryId/saved',authUtil.checkUuid, bakeryController.unSavedBakery);
+router.get('/imgs',authUtil.checkUuid, bakeryController.bakeryImgList);
+router.get('/storage',authUtil.checkUuid, bakeryController.storedBakeryList);
+router.post('/:bakeryId/storage',authUtil.checkUuid, bakeryController.storeBakery);
+router.delete('/:bakeryId/storage',authUtil.checkUuid, bakeryController.unStoreBakery);
+router.post('/registration',authUtil.validAdmin, bakeryController.registerBakery);
 
 module.exports = router;
