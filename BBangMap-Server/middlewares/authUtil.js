@@ -22,7 +22,7 @@ const authUtil = {
 
         if (user == null) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INVALID_UUID));
 
-        if(user.role != 0) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.UNAUTHORIZED));
+        if (user.role != 0) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.UNAUTHORIZED));
 
         req.header.user = user;
 
