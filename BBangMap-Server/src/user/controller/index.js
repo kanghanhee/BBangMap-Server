@@ -2,13 +2,19 @@ const util = require("../../../modules/util");
 const responseMessage = require("../../../modules/responseMessage");
 const statusCode = require("../../../modules/statusCode");
 const missionService = require("../service");
-const { profileImg, bgImg } = require("../model/index");
+const {
+  profileImg,
+  bgImg
+} = require("../model/index");
 
 module.exports = {
   //회원가입
   signUp: async (req, res) => {
     try {
-      let { uuid, nickname } = req.body;
+      let {
+        uuid,
+        nickname
+      } = req.body;
       await missionService.signUp(uuid, nickname);
       res
         .status(statusCode.OK)
@@ -28,7 +34,14 @@ module.exports = {
   updateUser: async (req, res) => {
     try {
       let user = req.header.user;
-      const result = await missionService.updateUser(user);
+      let profileImgName = "";
+      let bgImgName = "";
+      let nickname = "";
+      console.log("sol", req.files['profileImg'])
+      if (req.files['profileImg']) profileImgName = req.files['profileImg'][0].location;
+      if (req.files['backgroundImg']) bgImgName = req.files['backgroundImg'][0].location;
+      if (req.body.nickname) nickname = req.body.nickname;
+      const result = await missionService.updateUser(user, profileImgName, bgImgName, nickname);
       res
         .status(statusCode.OK)
         .send(
@@ -77,7 +90,9 @@ module.exports = {
   //닉네임 중복검사
   checkNickname: async (req, res) => {
     try {
-      let { nickname } = req.body;
+      let {
+        nickname
+      } = req.body;
       const result = await missionService.checkNickname(nickname);
       res
         .status(statusCode.OK)
