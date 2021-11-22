@@ -84,10 +84,22 @@ module.exports = {
       console.log(err)
     }
   },
-  //db cascade 삭제
-  deleteCascade: async (user) => {},
+
   //db set null 삭제
-  deleteSetNull: async (user) => {},
+  reviewSetNull: async (user) => {
+    Review.update({
+      UserId: null
+    }, {
+      where: {
+        UserId: user.id
+      }
+    })
+  },
+  //db cascade 삭제(not in review)
+  deleteCascade: async (user) => {
+
+  },
+
   //내가쓴후기개수
   getMyReview: async (user) => {
     return await Review.findAndCountAll({
