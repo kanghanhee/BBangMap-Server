@@ -135,7 +135,6 @@ module.exports = {
         bakeryId
       );
 
-      // if mission ==null -> throw err
       const missionBakeryList = await missionUtil.findMissionBakeryByMission(
         mission.id
       );
@@ -159,11 +158,13 @@ module.exports = {
       const userMissionCount = await missionUtil.findUserSucceededMission(user); //전체 미션개수
       const userReviewCount = await missionUtil.findUserReview(user);
       const rank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
+      let isChangedRank = false;
       if (user.grade !== rank.rank) {
+        isChangedRank = true
         await missionUtil.updateUserRank(user, rank.rank);
       }
 
-      return checkSucceededMissionDto(isMissionBakery, isSucceeded, rank);
+      return checkSucceededMissionDto(isMissionBakery, isSucceeded, isChangedRank, rank, mission);
     } catch (err) {
       console.error();
     }
