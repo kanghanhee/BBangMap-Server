@@ -45,7 +45,7 @@ module.exports = {
   },
   reviewSearch: async (req, res) => {
     try {
-      let { searchWord, isOnline, isVegan } = req.query;
+      let { searchWord } = req.query;
       let reviewSearchListDto = await reviewService.getSearchReviewList(
         searchWord,
         isOnline,
