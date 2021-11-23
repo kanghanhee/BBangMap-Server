@@ -69,15 +69,7 @@ module.exports = {
       ],
     });
   },
-  addReview: async (
-    bakeryId,
-    isVegan,
-    isOnline,
-    purchaseBreadList,
-    star,
-    content,
-    reviewImg
-  ) => {
+  addReview: async (bakeryId, purchaseBreadList, star, content, reviewImg) => {
     await Review.create({
       BakeryId: bakeryId,
       isVegan: isVegan,
@@ -87,6 +79,10 @@ module.exports = {
       content: content,
       reviewImg: reviewImg,
     });
+  },
+  isMyReview: async (review, myReviewList) => {
+    const isMyReview = (myReviewList) => myReviewList.id === review.id;
+    return myReviewList.some(isMyReview);
   },
   isSavedReview: async (review, savedReviewList) => {
     const isContainReview = (savedReviewList) =>
