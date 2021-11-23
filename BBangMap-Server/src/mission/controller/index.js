@@ -86,14 +86,14 @@ module.exports = {
           )
         );
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(
-          util.fail(
-            statusCode.INTERNAL_SERVER_ERROR,
-            responseMessage.INTERNAL_SERVER_ERROR
-          )
-        );
+      console.log(err);
+      if (err.statusCode == null) {
+        err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
+        err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
+      }
+      return res
+        .status(err.statusCode)
+        .send(util.fail(err.statusCode, err.responseMessage));
     }
   },
   userRank: async (req, res) => {

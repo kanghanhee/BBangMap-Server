@@ -6,6 +6,8 @@ const checkSucceededMissionDto = require("../dto/checkSucceededMissionDto");
 const badgeListDto = require("../dto/badgeListDto");
 const userSucceededMissionDto = require("../dto/userSucceededMissionDto");
 const monthlyMissionDto = require("../dto/monthlyMissionDto");
+const responseMessage = require("../../../modules/responseMessage");
+const statusCode = require("../../../modules/statusCode");
 // const
 //    { findBakeryByBakeryId } = require("../util");
 module.exports = {
@@ -89,11 +91,17 @@ module.exports = {
   //사용자가 달성한 미션
   getUserSucceededMission: async (user, missionId) => {
     const missionInfo = await missionUtil.findMissionById(missionId);
-    let isVisitedList;
+    let isVisitedList = [];
+    const missionSuccessWhether = await missionUtil.getMissionAcheiveCount(user, missionId);
+
+    if (missionSuccessWhether.missionAchieveCount < 3) throw {
+      statusCode: statusCode.BAD_REQUEST,
+      responseMessage: responseMessage.NOT_SUCCEEDED,
+    };
+
     const missionBakeryList = await missionUtil.findMissionBakeryByMission(
       missionId
     );
-
     await Promise.all(
       missionBakeryList.map(async (bakery) => {
         let bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
@@ -106,6 +114,7 @@ module.exports = {
         }
       })
     );
+    console.log(isVisitedList)
     if (isVisitedList == null) {
       isVisitedList = {};
     }
@@ -126,7 +135,6 @@ module.exports = {
         bakeryId
       );
 
-      //calculateMissionAchieveCount
       // if mission ==null -> throw err
       const missionBakeryList = await missionUtil.findMissionBakeryByMission(
         mission.id
