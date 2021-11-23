@@ -33,12 +33,17 @@ module.exports = {
   getMissionMain: async (user) => {
     try {
       const mission = await missionUtil.findMissionByDate();
-      // if mission ==null -> throw err
+
+      if (!mission) throw {
+        statusCode: statusCode.BAD_REQUEST,
+        responseMessage: responseMessage.NO_MISSION,
+      };
       const missionBakeryList = await missionUtil.findMissionBakeryByMission(
         mission.id
       );
+      console.log(mission)
 
-      let missionAchieveCount = await missionUtil.getMissionAcheiveCount(
+      let missionSuccessWhether = await missionUtil.getMissionAcheiveCount(
         user,
         mission.id
       );
@@ -75,7 +80,7 @@ module.exports = {
         monthlyMission,
         bakeryListInfo,
         badgeList,
-        missionAchieveCount
+        missionSuccessWhether.missionAchieveCount
       );
     } catch (err) {
       console.log(err);

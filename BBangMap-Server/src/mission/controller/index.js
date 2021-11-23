@@ -6,8 +6,15 @@ const missionService = require("../service");
 module.exports = {
   createMission: async (req, res) => {
     try {
-      const { missionTitle, missionContent, missionDate, badgeImg } = req.body;
-      const { bakeryList } = req.body;
+      const {
+        missionTitle,
+        missionContent,
+        missionDate,
+        badgeImg
+      } = req.body;
+      const {
+        bakeryList
+      } = req.body;
       const result = await missionService.postMission(
         missionTitle,
         missionContent,
@@ -50,20 +57,21 @@ module.exports = {
         );
     } catch (err) {
       console.log(err);
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(
-          util.fail(
-            statusCode.INTERNAL_SERVER_ERROR,
-            responseMessage.INTERNAL_SERVER_ERROR
-          )
-        );
+      if (err.statusCode == null) {
+        err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
+        err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
+      }
+      return res
+        .status(err.statusCode)
+        .send(util.fail(err.statusCode, err.responseMessage));
     }
   },
   missionSucceeded: async (req, res) => {
     try {
       let user = req.header.user;
-      const { missionId } = req.params;
+      const {
+        missionId
+      } = req.params;
       const result = await missionService.getUserSucceededMission(
         user,
         missionId
@@ -115,7 +123,9 @@ module.exports = {
   checkRank: async (req, res) => {
     try {
       let user = req.header.user;
-      const { bakeryId } = req.params;
+      const {
+        bakeryId
+      } = req.params;
       const result = await missionService.checkSucceededMission(user, bakeryId);
       res
         .status(statusCode.OK)

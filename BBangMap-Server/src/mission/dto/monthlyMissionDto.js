@@ -3,7 +3,8 @@ const monthlyMissionDto = (mission) => {
     missionId: mission.id,
     missionTitle: mission.missionTitle,
     missionContent: mission.missionContent,
-    missionBadgeImg: mission.badgeImg,
+    missionActiveStampImg: mission.missionActiveStampImg,
+    missionInactiveStampImg: mission.missionInactiveStampImg
   };
 };
 module.exports = monthlyMissionDto;

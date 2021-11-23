@@ -40,4 +40,5 @@ module.exports = {
     SUCCESS_GET_MONTHLY_MISSION: "이달의 미션 메인 조회 성공",
     SUCCESS_GET_SUCCEEDED_MISSION: "달성한 미션 조회 성공",
     SUCCESS_GET_USER_RANK: "등급 조회 성공",
+    NO_MISSION:"미션이 존재하지 않습니다."
 }

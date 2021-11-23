@@ -15,6 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         badgeImg: {
             type: DataTypes.STRING(1000),
             allowNull: true
+        },
+        missionActiveStampImg: {
+            type: DataTypes.STRING(1000),
+            allowNull: true
+        },
+        missionInactiveStampImg: {
+            type: DataTypes.STRING(1000),
+            allowNull: true
         }
     }, {
         freezeTableName: true,
