@@ -68,6 +68,25 @@ module.exports = {
       ],
     });
   },
+  addReview: async (
+    bakeryId,
+    isVegan,
+    isOnline,
+    purchaseBreadList,
+    star,
+    content,
+    reviewImg
+  ) => {
+    await Review.create({
+      BakeryId: bakeryId,
+      isVegan: isVegan,
+      isOnline: isOnline,
+      purchaseBreadList: purchaseBreadList,
+      star: star,
+      content: content,
+      reviewImg: reviewImg,
+    });
+  },
   isSavedReview: async (review, savedReviewList) => {
     const isContainReview = (savedReviewList) =>
       savedReviewList.ReviewId === review.id;

@@ -148,6 +148,47 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
+  addReview: async (req, res) => {
+    let {
+      bakeryId,
+      isVegan,
+      isOnline,
+      purchaseBreadList,
+      star,
+      content,
+      reviewImg,
+    } = req.body;
+
+    if (!content || !isVegan || !isOnline)
+      return res
+        .status(statusCode.BAD_REQUEST)
+        .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    try {
+      let review = await reviewService.addReview(
+        bakeryId,
+        isVegan,
+        isOnline,
+        purchaseBreadList,
+        star,
+        content,
+        reviewImg
+      );
+
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(
+            statusCode.OK,
+            responseMessage.SUCCESS_ADD_REVIEW,
+            review
+          )
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
   saveReview: async (req, res) => {
     try {
       let { reviewId } = req.params;
