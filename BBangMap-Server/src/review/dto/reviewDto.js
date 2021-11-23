@@ -3,7 +3,7 @@ const reviewDto = (review) => {
     reviewId: review.id,
     bakeryName: review.Bakery.bakeryName,
     content: review.content,
-    reviewImg: review.reviewImgList[0],
+    reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList[0],
     reviewCreatedDate: review.createdAt,
     purchase: review.purchaseBreadList,
   };
