@@ -5,15 +5,19 @@ const uuidUtil = require('../modules/uuidUtil')
 
 const authUtil = {
     checkUuid: async (req, res, next) => {
-        var uuid = req.headers.uuid;
+        try {
+            var uuid = req.headers.uuid;
 
-        var user = await uuidUtil.validUuId(uuid);
+            var user = await uuidUtil.validUuId(uuid);
 
-        if (user == null) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INVALID_UUID));
+            if (user == null) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INVALID_UUID));
 
-        req.header.user = user;
+            req.header.user = user;
 
-        next();
+            next();
+        } catch (e) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, e.message))
+        }
     },
     validAdmin: async (req, res, next) => {
         var uuid = req.headers.uuid;
@@ -22,7 +26,7 @@ const authUtil = {
 
         if (user == null) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INVALID_UUID));
 
-        if (user.role != 0) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.UNAUTHORIZED));
+        if (user.role !== 0) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.UNAUTHORIZED));
 
         req.header.user = user;
 
