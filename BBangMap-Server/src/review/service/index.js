@@ -54,6 +54,27 @@ module.exports = {
 
     return myReviewListDto(myReviewList);
   },
+  addReview: async (
+    bakeryId,
+    isVegan,
+    isOnline,
+    purchaseBreadList,
+    star,
+    content,
+    reviewImg
+  ) => {
+    let addReview = await reviewUtils.addReview(
+      bakeryId,
+      isVegan,
+      isOnline,
+      purchaseBreadList,
+      star,
+      content,
+      reviewImg
+    );
+
+    return addReview;
+  },
   savedReview: async (reviewId, user) => {
     let userId = user.id;
     await reviewUtils.savedReview(userId, reviewId);

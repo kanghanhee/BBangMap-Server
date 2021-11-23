@@ -6,15 +6,21 @@ const userUpload = require("../../modules/multer/userMulter");
 const a = require("../../modules/multer/userMulter");
 
 router.post("/", userController.signUp); //회원가입
+const profileUpload = userUpload.fields([{
+  name: 'profileImg',
+  maxCount: 1
+}, {
+  name: 'backgroundImg',
+  maxCount: 1
+}]);
+
 router.put(
   "/",
   authUtil.checkUuid,
-  userUpload.fields([
-    { name: "profileImg", maxCount: 1 },
-    { name: "backgroundImg", maxCount: 1 },
-  ]),
+  profileUpload,
   userController.updateUser
 ); //프로필 수정
+
 router.delete("/", authUtil.checkUuid, userController.deleteUser); //프로필 삭제
 
 router.post("/nickname", userController.checkNickname); //닉네임 중복검사
