@@ -19,13 +19,19 @@ module.exports = {
     missionTitle,
     missionContent,
     missionDate,
-    badgeImg
+    badgeImg,
+    badgeName,
+    missionActiveStampImg,
+    missionInactiveStampImg,
   ) => {
     return await Mission.create({
       missionTitle: missionTitle,
       missionContent: missionContent,
       missionDate: new Date(missionDate),
       badgeImg: badgeImg,
+      badgeName: badgeName,
+      missionActiveStampImg: missionActiveStampImg,
+      missionInactiveStampImg: missionInactiveStampImg,
     });
   },
   //미션 빵집 추가

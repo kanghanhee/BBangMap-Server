@@ -17,13 +17,19 @@ module.exports = {
     missionContent,
     missionDate,
     badgeImg,
+    badgeName,
+    missionActiveStampImg,
+    missionInactiveStampImg,
     bakeryList
   ) => {
     const mission = await missionUtil.createMission(
       missionTitle,
       missionContent,
       new Date(missionDate),
-      badgeImg
+      badgeImg,
+      badgeName,
+      missionActiveStampImg,
+      missionInactiveStampImg,
     );
 
     await bakeryList.map((bakery) =>
