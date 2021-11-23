@@ -24,6 +24,7 @@ module.exports = {
           attributes: ["bakeryName"],
         },
       },
+      group: ["SavedReview.BakeryId"],
     });
   },
   findUserIncludeSavedReviewOfBakery: async (bakeryId, user) => {
