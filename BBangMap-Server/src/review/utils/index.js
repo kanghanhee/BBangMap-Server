@@ -1,4 +1,4 @@
-const { Bakery, Review, User, SaveReivew } = require("../../../models");
+const { Bakery, Review, User, SaveReview } = require("../../../models");
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -19,20 +19,21 @@ module.exports = {
       ],
     });
   },
-  findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
+  findReviewListBySearchWord: async (searchWord) => {
     return Review.findAll({
-      where: {
-        [Op.and]: [{ isOnline: isOnline }, { isVegan: isVegan }],
-      },
       include: [
         {
           model: Bakery,
-          where: {
-            bakeryName: { [Op.like]: `%${searchWord}%` },
-          },
+          as: "Bakery",
           attributes: ["bakeryName"],
         },
       ],
+      where: {
+        [Op.or]: [
+          { [`$Bakery.bakeryName$`]: { [Op.like]: `%${searchWord}%` } },
+          { purchaseBreadList: { [Op.like]: `%${searchWord}%` } },
+        ],
+      },
     });
   },
   findReviewById: async (reviewId) => {
@@ -53,7 +54,7 @@ module.exports = {
     });
   },
   findUsersSavedReviewList: async (user) => {
-    return SaveReivew.findAll({
+    return SaveReview.findAll({
       where: { UserId: user.id },
     });
   },
@@ -93,10 +94,10 @@ module.exports = {
     return savedReviewList.some(isContainReview);
   },
   savedReview: async (userId, reviewId) => {
-    await SaveReivew.create({ UserId: userId, ReviewId: reviewId });
+    await SaveReview.create({ UserId: userId, ReviewId: reviewId });
   },
   deleteSavedReview: async (userId, reviewId) => {
-    await SaveReivew.destroy({
+    await SaveReview.destroy({
       where: {
         UserId: userId,
         ReviewId: reviewId,
