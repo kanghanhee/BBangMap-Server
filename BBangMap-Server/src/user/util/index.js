@@ -1,5 +1,12 @@
-const { User, Review, SaveBakery, SaveReview } = require("../../../models");
-const { Op } = require("sequelize");
+const {
+  User,
+  Review,
+  SaveBakery,
+  SaveReview
+} = require("../../../models");
+const {
+  Op
+} = require("sequelize");
 const path = require("path");
 const fs = require("fs");
 
@@ -33,10 +40,8 @@ module.exports = {
       uuid: uuid,
       grade: 1,
       role: 2,
-      profileImg:
-        "https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427__340.jpg",
-      backgroundImg:
-        "https://www.stockvault.net/data/2019/08/24/268592/preview16.jpg",
+      profileImg: "https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427__340.jpg",
+      backgroundImg: "https://www.stockvault.net/data/2019/08/24/268592/preview16.jpg",
     });
   },
   //파일 읽기
@@ -56,27 +61,28 @@ module.exports = {
     (rand = (min, max) => {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }),
-      (pickWord = async (stringWords) => {
-        let wordList = stringWords.split("\r\n").slice(0, -1);
-        const word = wordList[rand(0, wordList.length - 1)];
-        return word;
-      });
+    (pickWord = async (stringWords) => {
+      let wordList = stringWords.split("\r\n").slice(0, -1);
+      const word = wordList[rand(0, wordList.length - 1)];
+      return word;
+    });
     return await pickWord(stringWords);
   },
   //db프로필 수정
   saveUpdateUser: async (updateUser) => {
-    await User.update(
-      {
+    try {
+      await User.update({
         nickName: updateUser.nickname,
         profileImg: updateUser.profileImg,
         backgroundImg: updateUser.backgroundImg,
-      },
-      {
+      }, {
         where: {
           id: updateUser.id,
         },
-      }
-    );
+      });
+    } catch (err) {
+      console.log(err)
+    }
   },
   //db cascade 삭제
   deleteCascade: async (user) => {},
@@ -85,19 +91,25 @@ module.exports = {
   //내가쓴후기개수
   getMyReview: async (user) => {
     return await Review.findAndCountAll({
-      where: { UserId: user.id },
+      where: {
+        UserId: user.id
+      },
     });
   },
   //빵집 보관함 개수
   getSavedBakery: async (user) => {
     return await SaveBakery.findAndCountAll({
-      where: { UserId: user.id },
+      where: {
+        UserId: user.id
+      },
     });
   },
   //리뷰 보관함 개수
   getSavedReview: async (user) => {
     return await SaveReview.findAndCountAll({
-      where: { UserId: user.id },
+      where: {
+        UserId: user.id
+      },
     });
   },
 };

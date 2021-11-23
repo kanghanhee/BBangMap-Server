@@ -33,6 +33,7 @@ module.exports = {
         statusCode: statusCode.CONFLICT,
         responseMessage: responseMessage.ALREADY_NICKNAME,
       };
+    //error : 현재 닉네임과 동일합니다.
   },
   //회원 탈퇴
   deleteUser: async (user) => {
@@ -43,33 +44,33 @@ module.exports = {
     //좋아요 리스트,보관내역(빵집,후기),미션 내역,사용자 정보 삭제
   },
   //프로필 수정
-  updateUser: async (user, newBgImg, newProfileImg, newNickname) => {
+  updateUser: async (user, newProfileImg, newBgImg, newNickname) => {
     try {
-      //닉네임 중복검사
-      const checkNickname = await userUtil.isExistNickname(nickname);
-      if (checkNickname)
+      //닉네임 중복검사(본인 제외)
+      const checkNickname = await userUtil.isExistNickname(newNickname);
+      if (checkNickname && newNickname !== user.nickName)
         throw {
           statusCode: statusCode.CONFLICT,
           responseMessage: responseMessage.ALREADY_NICKNAME,
         };
-      //이미지 저장
-      console.log(req.profileImg.filename);
-      console.log(req.backgroundImg.filename);
-      if (newProfileImg == null) newProfileImg = user.profileImg; //변경 없음
-      if (newBgImg == null) newBgImg = user.backgroudImg;
-      if (newNickname == null) newNickname = user.nickName;
-      //새로운 유저 정보
+      if (!newProfileImg) newProfileImg = user.profileImg; //변경 없음
+      if (!newBgImg) newBgImg = user.backgroundImg;
+      if (!newNickname) newNickname = user.nickName;
+
+      // 새로운 유저 정보
       const updateUser = {
+        id: user.id,
         backgroundImg: newBgImg,
         profileImg: newProfileImg,
         nickname: newNickname,
       };
-
-      //유저정보 DB저장
+      console.log(updateUser)
+      // 유저정보 DB저장
       await userUtil.saveUpdateUser(updateUser);
     } catch (err) {
       console.error();
     }
+
   },
   //랜덤 닉네임
   createRandomNickname: async () => {
