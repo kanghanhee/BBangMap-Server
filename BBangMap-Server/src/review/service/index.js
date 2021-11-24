@@ -33,7 +33,6 @@ module.exports = {
     let savedReviewList = await reviewUtils.findUsersSavedReviewList(user);
     let myReviewList = await reviewUtils.findMyReviewList(user);
 
-    console.log(myReviewList);
     return reviewDetailDto(review, savedReviewList, myReviewList);
   },
   getSavedReviewFolderList: async (user) => {
@@ -57,24 +56,25 @@ module.exports = {
     return myReviewListDto(myReviewList);
   },
   addReview: async (
+    user,
     bakeryId,
     isVegan,
     isOnline,
     purchaseBreadList,
     star,
     content,
-    reviewImg
+    reviewImgList
   ) => {
     let addReview = await reviewUtils.addReview(
+      user,
       bakeryId,
       isVegan,
       isOnline,
       purchaseBreadList,
       star,
       content,
-      reviewImg
+      reviewImgList
     );
-
     return addReview;
   },
   savedReview: async (reviewId, user) => {

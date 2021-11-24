@@ -45,7 +45,7 @@ module.exports = {
   },
   reviewSearch: async (req, res) => {
     try {
-      let { searchWord } = req.query;
+      let { searchWord, isOnline, isVegan } = req.query;
       let reviewSearchListDto = await reviewService.getSearchReviewList(
         searchWord,
         isOnline,
@@ -158,28 +158,35 @@ module.exports = {
       content,
       reviewImg,
     } = req.body;
+    let files = req.files["reviewImgList"];
 
-    if (!content || !isVegan || !isOnline)
-      return res
-        .status(statusCode.BAD_REQUEST)
-        .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    if (Array.isArray(files)) {
+      var reviewImgList = new Array();
+      console.log(files.length);
+
+      for (var i = 0; i < files.length; i++) {
+        reviewImgList.push(files[i].location);
+      }
+      console.log(reviewImgList);
+    }
     try {
+      let user = req.header.user;
       let review = await reviewService.addReview(
+        user,
         bakeryId,
         isVegan,
         isOnline,
         purchaseBreadList,
         star,
         content,
-        reviewImg
+        reviewImgList
       );
-
       res
         .status(statusCode.OK)
         .send(
           util.success(
             statusCode.OK,
-            responseMessage.SUCCESS_ADD_REVIEW,
+            responseMessage.SUCCUESS_CREATE_REVIEW,
             review
           )
         );
