@@ -19,7 +19,7 @@ module.exports = {
       ],
     });
   },
-  findReviewListBySearchWord: async (searchWord) => {
+  findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
     return Review.findAll({
       include: [
         {
@@ -29,9 +29,15 @@ module.exports = {
         },
       ],
       where: {
-        [Op.or]: [
-          { [`$Bakery.bakeryName$`]: { [Op.like]: `%${searchWord}%` } },
-          { purchaseBreadList: { [Op.like]: `%${searchWord}%` } },
+        [Op.and]: [
+          { isOnline: isOnline },
+          { isVegan: isVegan },
+          {
+            [Op.or]: [
+              { [`$Bakery.bakeryName$`]: { [Op.like]: `%${searchWord}%` } },
+              { purchaseBreadList: { [Op.like]: `%${searchWord}%` } },
+            ],
+          },
         ],
       },
     });

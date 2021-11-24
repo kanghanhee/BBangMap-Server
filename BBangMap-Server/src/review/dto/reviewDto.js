@@ -6,6 +6,8 @@ const reviewDto = (review) => {
     reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList[0],
     reviewCreatedDate: review.createdAt,
     purchase: review.purchaseBreadList,
+    isOnline: review.isOnline,
+    isVegan: review.isVegan,
   };
 };
 
