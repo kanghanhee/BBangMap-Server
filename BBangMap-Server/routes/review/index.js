@@ -34,16 +34,22 @@ router.post(
   authUtil.checkUuid,
   reviewController.saveReview
 );
+router.post("/like/:reviewId", authUtil.checkUuid, reviewController.likeReview);
 
+router.delete(
+  "/my/:reviewId",
+  authUtil.checkUuid,
+  reviewController.deleteMyReveiw
+);
 router.delete(
   "/storage/:reviewId",
   authUtil.checkUuid,
   reviewController.unSaveReview
 );
 router.delete(
-  "/my/:reviewId",
+  "/unlike/:reviewId",
   authUtil.checkUuid,
-  reviewController.deleteMyReveiw
+  reviewController.unLikeReview
 );
 
 module.exports = router;

@@ -186,7 +186,7 @@ module.exports = {
         .send(
           util.success(
             statusCode.OK,
-            responseMessage.SUCCUESS_CREATE_REVIEW,
+            responseMessage.SUCCESS_CREATE_REVIEW,
             review
           )
         );
@@ -212,6 +212,22 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
+  likeReview: async (req, res) => {
+    try {
+      let { reviewId } = req.params;
+      let user = req.header.user;
+      await reviewService.likedReview(reviewId, user);
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(statusCode.OK, responseMessage.SUCCESS_LIKED_REVIEW)
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
   unSaveReview: async (req, res) => {
     try {
       let { reviewId } = req.params;
@@ -221,6 +237,22 @@ module.exports = {
         .status(statusCode.OK)
         .send(
           util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW)
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  unLikeReview: async (req, res) => {
+    try {
+      let { reviewId } = req.params;
+      let user = req.header.user;
+      await reviewService.deleteLikedReview(reviewId, user);
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKED_REVIEW)
         );
     } catch (err) {
       res

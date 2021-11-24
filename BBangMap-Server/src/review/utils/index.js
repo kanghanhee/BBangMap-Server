@@ -1,4 +1,10 @@
-const { Bakery, Review, User, SaveReview } = require("../../../models");
+const {
+  Bakery,
+  Review,
+  User,
+  SaveReview,
+  LikeReview,
+} = require("../../../models");
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -64,6 +70,11 @@ module.exports = {
       where: { UserId: user.id },
     });
   },
+  findUsersLikedReviewList: async (user) => {
+    return LikeReview.findAll({
+      where: { UserId: user.id },
+    });
+  },
   findMyReviewList: async (user) => {
     return Review.findAll({
       where: { UserId: user.id },
@@ -105,8 +116,24 @@ module.exports = {
       savedReviewList.ReviewId === review.id;
     return savedReviewList.some(isContainReview);
   },
+  isLikedReview: async (review, likedReviewList) => {
+    const isContainReview = (likedReviewList) =>
+      likedReviewList.ReviewId === review.id;
+    return likedReviewList.some(isContainReview);
+  },
   savedReview: async (userId, reviewId) => {
     await SaveReview.create({ UserId: userId, ReviewId: reviewId });
+  },
+  likedReview: async (userId, reviewId) => {
+    await LikeReview.create({ UserId: userId, ReviewId: reviewId });
+  },
+  deleteLikedReview: async (userId, reviewId) => {
+    await LikeReview.destroy({
+      where: {
+        UserId: userId,
+        ReviewId: reviewId,
+      },
+    });
   },
   deleteSavedReview: async (userId, reviewId) => {
     await SaveReview.destroy({

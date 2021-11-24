@@ -32,8 +32,14 @@ module.exports = {
     let review = await reviewUtils.findReviewById(reviewId);
     let savedReviewList = await reviewUtils.findUsersSavedReviewList(user);
     let myReviewList = await reviewUtils.findMyReviewList(user);
+    let likedReviewList = await reviewUtils.findUsersLikedReviewList(user);
 
-    return reviewDetailDto(review, savedReviewList, myReviewList);
+    return reviewDetailDto(
+      review,
+      savedReviewList,
+      myReviewList,
+      likedReviewList
+    );
   },
   getSavedReviewFolderList: async (user) => {
     let findUser = await userUtils.findUserIncludeSavedReview(user);
@@ -81,9 +87,17 @@ module.exports = {
     let userId = user.id;
     await reviewUtils.savedReview(userId, reviewId);
   },
+  likedReview: async (reviewId, user) => {
+    let userId = user.id;
+    await reviewUtils.likedReview(userId, reviewId);
+  },
   deleteSavedReview: async (reviewId, user) => {
     let userId = user.id;
     await reviewUtils.deleteSavedReview(userId, reviewId);
+  },
+  deleteLikedReview: async (reviewId, user) => {
+    let userId = user.id;
+    await reviewUtils.deleteLikedReview(userId, reviewId);
   },
   deleteMyReview: async (reviewId, user) => {
     let userId = user.id;
