@@ -1,12 +1,10 @@
 const reviewDto = (review) => {
   return {
     reviewId: review.id,
-    bakeryInfo: review.Bakery,
+    bakeryName: review.Bakery.bakeryName,
     content: review.content,
-    reviewImg: review.reviewImgList[0],
+    reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList[0],
     reviewCreatedDate: review.createdAt,
-    isOnline: review.isOnline,
-    isVegan: review.isVegan,
     purchase: review.purchaseBreadList,
   };
 };

@@ -31,8 +31,10 @@ module.exports = {
   getReviewDetail: async (reviewId, user) => {
     let review = await reviewUtils.findReviewById(reviewId);
     let savedReviewList = await reviewUtils.findUsersSavedReviewList(user);
+    let myReviewList = await reviewUtils.findMyReviewList(user);
 
-    return reviewDetailDto(review, savedReviewList);
+    console.log(myReviewList);
+    return reviewDetailDto(review, savedReviewList, myReviewList);
   },
   getSavedReviewFolderList: async (user) => {
     let findUser = await userUtils.findUserIncludeSavedReview(user);
