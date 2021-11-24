@@ -1,6 +1,11 @@
 const reviewUtil = require("../utils");
 
-const reviewDetailDto = async (review, savedReviewList, myReviewList) => {
+const reviewDetailDto = async (
+  review,
+  savedReviewList,
+  myReviewList,
+  likedReviewList
+) => {
   return {
     reviewId: review.id,
     bakeryName:
@@ -13,6 +18,7 @@ const reviewDetailDto = async (review, savedReviewList, myReviewList) => {
     reviewCreatedDate: review.createdAt,
     isSavedReview: await reviewUtil.isSavedReview(review, savedReviewList),
     isMyReview: await reviewUtil.isMyReview(review, myReviewList),
+    isLikedReview: await reviewUtil.isLikedReview(review, likedReviewList),
   };
 };
 

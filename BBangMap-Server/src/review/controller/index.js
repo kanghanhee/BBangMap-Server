@@ -45,7 +45,7 @@ module.exports = {
   },
   reviewSearch: async (req, res) => {
     try {
-      let { searchWord } = req.query;
+      let { searchWord, isOnline, isVegan } = req.query;
       let reviewSearchListDto = await reviewService.getSearchReviewList(
         searchWord,
         isOnline,
@@ -158,28 +158,35 @@ module.exports = {
       content,
       reviewImg,
     } = req.body;
+    let files = req.files["reviewImgList"];
 
-    if (!content || !isVegan || !isOnline)
-      return res
-        .status(statusCode.BAD_REQUEST)
-        .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    if (Array.isArray(files)) {
+      var reviewImgList = new Array();
+      console.log(files.length);
+
+      for (var i = 0; i < files.length; i++) {
+        reviewImgList.push(files[i].location);
+      }
+      console.log(reviewImgList);
+    }
     try {
+      let user = req.header.user;
       let review = await reviewService.addReview(
+        user,
         bakeryId,
         isVegan,
         isOnline,
         purchaseBreadList,
         star,
         content,
-        reviewImg
+        reviewImgList
       );
-
       res
         .status(statusCode.OK)
         .send(
           util.success(
             statusCode.OK,
-            responseMessage.SUCCESS_ADD_REVIEW,
+            responseMessage.SUCCESS_CREATE_REVIEW,
             review
           )
         );
@@ -205,6 +212,22 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
+  likeReview: async (req, res) => {
+    try {
+      let { reviewId } = req.params;
+      let user = req.header.user;
+      await reviewService.likedReview(reviewId, user);
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(statusCode.OK, responseMessage.SUCCESS_LIKED_REVIEW)
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
   unSaveReview: async (req, res) => {
     try {
       let { reviewId } = req.params;
@@ -214,6 +237,22 @@ module.exports = {
         .status(statusCode.OK)
         .send(
           util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW)
+        );
+    } catch (err) {
+      res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  unLikeReview: async (req, res) => {
+    try {
+      let { reviewId } = req.params;
+      let user = req.header.user;
+      await reviewService.deleteLikedReview(reviewId, user);
+      res
+        .status(statusCode.OK)
+        .send(
+          util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKED_REVIEW)
         );
     } catch (err) {
       res
