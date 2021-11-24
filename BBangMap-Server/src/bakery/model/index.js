@@ -21,18 +21,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        // isOnline: {
-        //     type: DataTypes.BOOLEAN,
-        //     allowNull: false
-        // },
+        isOnline: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
         isDrink: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        // isVegan: {
-        //     type: DataTypes.BOOLEAN,
-        //     allowNull: false
-        // },
+        isVegan: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
         bestMenu: {
             type: DataTypes.STRING,
             set: function (val) {
