@@ -3,7 +3,6 @@ const router = express.Router();
 const userController = require("../../src/user/controller");
 const authUtil = require("../../middlewares/authUtil");
 const userUpload = require("../../modules/multer/userMulter");
-const a = require("../../modules/multer/userMulter");
 
 router.post("/", userController.signUp); //회원가입
 const profileUpload = userUpload.fields([{
