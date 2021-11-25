@@ -200,7 +200,7 @@ module.exports = {
           util.success(
             statusCode.OK,
             responseMessage.SUCCESS_CREATE_REVIEW,
-            result
+            missionResult
           )
         );
     } catch (err) {

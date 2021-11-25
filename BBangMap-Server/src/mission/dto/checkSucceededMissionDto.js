@@ -3,7 +3,7 @@ const checkSucceededMissionDto = (bakery, isSucceeded, isChangedRank, rank, miss
   return {
     rank: rank.rank,
     isMissionBakery: bakery,
-    isSuccessMission: isSucceeded,
+    isSucceededMission: isSucceeded,
     isChangedRank: isChangedRank,
     badgeName: mission.badgeName,
     badgeImg: mission.badgeImg
