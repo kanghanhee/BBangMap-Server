@@ -26,6 +26,7 @@ db.MissionWhether = require("../src/mission/model/MissionWhether")(
 db.SaveBakery = require("../src/user/model/SaveBakery")(sequelize, Sequelize);
 db.VisitBakery = require("../src/user/model/VisitBakery")(sequelize, Sequelize);
 db.SaveReview = require("../src/user/model/SaveReview")(sequelize, Sequelize);
+db.LikeReview = require("../src/review/model/LikeReview")(sequelize, Sequelize);
 db.MissionBakery = require("../src/mission/model/MissionBakery")(
   sequelize,
   Sequelize
