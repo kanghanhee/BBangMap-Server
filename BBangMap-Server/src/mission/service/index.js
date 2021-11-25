@@ -55,6 +55,9 @@ module.exports = {
         user,
         mission.id
       );
+      let missionAchieveCount = 0;
+      if (missionSuccessWhether) missionAchieveCount = missionSuccessWhether.missionAchieveCount;
+
       let bakeryListInfo = await Promise.all(
         missionBakeryList.map(async (bakery) => {
           let bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
@@ -70,13 +73,14 @@ module.exports = {
       const succeededMissionList = await missionUtil.findUserSucceededMission(
         user
       );
-
-      let badgeList;
+      console.log(succeededMissionList)
+      let badgeList = [];
       for (i = 0; i < succeededMissionList.length; i++) {
         const missionInfo = await missionUtil.findMissionById(
           succeededMissionList[i].MissionId
         );
         badgeList.push(badgeListDto(missionInfo));
+        console.log(badgeListDto(missionInfo))
       }
 
       if (badgeList == null) {
@@ -88,7 +92,7 @@ module.exports = {
         monthlyMission,
         bakeryListInfo,
         badgeList,
-        missionSuccessWhether.missionAchieveCount
+        missionAchieveCount
       );
     } catch (err) {
       console.log(err);
