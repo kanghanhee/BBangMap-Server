@@ -4,7 +4,7 @@ const bakerySearchDto = (searchBakery, latitude, longitude) => {
     return {
         bakeryId: searchBakery.id,
         bakeryName: searchBakery.bakeryName,
-        distance : bakeryUtils.getDistance(
+        distance : (latitude == null&& longitude == null) ? null : bakeryUtils.getDistance(
             searchBakery.latitude, searchBakery.longitude, latitude, longitude)
     }
 }
