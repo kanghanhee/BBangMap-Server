@@ -62,7 +62,7 @@ module.exports = {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }),
     (pickWord = async (stringWords) => {
-      let wordList = stringWords.split("\r\n").slice(0, -1);
+      let wordList = stringWords.split("\n").slice(0, -1);
       const word = wordList[rand(0, wordList.length - 1)];
       return word;
     });
