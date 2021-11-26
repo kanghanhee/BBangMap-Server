@@ -96,7 +96,7 @@ module.exports = {
         let checkNickname = await userUtil.isExistNickname(newNickname);
         if (!checkNickname) break;
       }
-      return newNickname;
+      return { nickname: newNickname };
     } catch (err) {
       console.log(err)
     }
