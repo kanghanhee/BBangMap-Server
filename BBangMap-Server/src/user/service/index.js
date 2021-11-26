@@ -39,7 +39,7 @@ module.exports = {
   deleteUser: async (user) => {
     const reviewList = userUtil.reviewSetNull(user);
     const deleteOthers = userUtil.deleteCascade(user);
-   
+
     //후기 리스트 -> set null, NOT IN 속성 사용
     // 나머지는 cascade, NOT IN 속성 사용
     //mission,likeReview,visitBakery
@@ -76,26 +76,30 @@ module.exports = {
   },
   //랜덤 닉네임
   createRandomNickname: async () => {
-    //readFile
-    const firstList = await userUtil.readWordFile(
-      __dirname + "/../data/adjective"
-    );
-    const secondList = await userUtil.readWordFile(
-      __dirname + "/../data/second"
-    );
-    const thirdList = await userUtil.readWordFile(__dirname + "/../data/bread");
-    let newNickname = "";
-    while (true) {
-      //random word
-      let firstWord = await userUtil.randomNickname(firstList);
-      let secondWord = await userUtil.randomNickname(secondList);
-      let thirdWord = await userUtil.randomNickname(thirdList);
+    try {
+      //readFile
+      const firstList = await userUtil.readWordFile(
+        __dirname + "/../data/adjective"
+      );
+      const secondList = await userUtil.readWordFile(
+        __dirname + "/../data/second"
+      );
+      const thirdList = await userUtil.readWordFile(__dirname + "/../data/bread");
+      let newNickname = "";
+      while (true) {
+        //random word
+        let firstWord = await userUtil.randomNickname(firstList);
+        let secondWord = await userUtil.randomNickname(secondList);
+        let thirdWord = await userUtil.randomNickname(thirdList);
 
-      newNickname = firstWord + secondWord + thirdWord;
-      let checkNickname = await userUtil.isExistNickname(newNickname);
-      if (!checkNickname) break;
+        newNickname = firstWord + secondWord + thirdWord;
+        let checkNickname = await userUtil.isExistNickname(newNickname);
+        if (!checkNickname) break;
+      }
+      return { nickname: newNickname };
+    } catch (err) {
+      console.log(err)
     }
-    return { nickname: newNickname };
   },
   readMyPage: async (user) => {
     const review = await userUtil.getMyReview(user);
