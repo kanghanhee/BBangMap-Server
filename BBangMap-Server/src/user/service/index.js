@@ -95,7 +95,7 @@ module.exports = {
       let checkNickname = await userUtil.isExistNickname(newNickname);
       if (!checkNickname) break;
     }
-    return newNickname;
+    return { nickname: newNickname };
   },
   readMyPage: async (user) => {
     const review = await userUtil.getMyReview(user);
