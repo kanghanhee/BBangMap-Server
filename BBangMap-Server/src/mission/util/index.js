@@ -110,7 +110,7 @@ module.exports = {
       },
     });
 
-    return isVisited;
+    return isVisited != null;
   },
   //사용자 전체 달성 미션 조회
   findUserSucceededMission: async (user) => {
@@ -191,7 +191,7 @@ module.exports = {
         ],
       },
     });
-    return isMission;
+    return isMission != null;
   },
   //등급 산정 + 체크
   calculateRank: async (userMissionCount, userReviewCount) => {
