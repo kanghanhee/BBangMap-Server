@@ -110,13 +110,11 @@ module.exports = {
       },
     });
 
-    if (!isVisited) return false;
-    //isNull
-    else return true;
+    return isVisited;
   },
   //사용자 전체 달성 미션 조회
   findUserSucceededMission: async (user) => {
-    return await MissionWhether.findAll({
+    return await MissionWhether.findAndCountAll({
       where: {
         [Op.and]: [{
             missionSuccessWhether: true,
@@ -193,8 +191,7 @@ module.exports = {
         ],
       },
     });
-    if (!isMission) return false;
-    else return true;
+    return isMission;
   },
   //등급 산정 + 체크
   calculateRank: async (userMissionCount, userReviewCount) => {
