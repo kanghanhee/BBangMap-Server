@@ -8,7 +8,7 @@ const bakeryDetailReviewListDto = (review) =>{
 }
 
 const getReviewImg = (reviewImgList) => {
-    return reviewImgList.length>0 ? reviewImgList[0] : [];
+    return reviewImgList.length>0 ? reviewImgList[0] : null;
 }
 
 module.exports = bakeryDetailReviewListDto;
