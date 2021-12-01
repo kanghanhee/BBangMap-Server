@@ -12,7 +12,7 @@ const reviewDetailDto = async (
       review.BakeryId === null ? "빵집 정보 없음" : review.Bakery.bakeryName,
     purchaseBreadList: review.purchaseBreadList,
     content: review.content,
-    reviewImg: review.reviewImgList,
+    reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList,
     reviewerName:
       review.UserId === null ? "존재하지 않는 닉네임" : review.User.nickName,
     reviewCreatedDate: review.createdAt,

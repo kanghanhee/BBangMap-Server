@@ -2,14 +2,12 @@ const util = require("../../../modules/util");
 const statusCode = require("../../../modules/statusCode");
 const responseMessage = require("../../../modules/responseMessage");
 const reviewService = require("../service");
-const missionService = require("../../mission/service")
+const missionService = require("../../mission/service");
 
 module.exports = {
   reviewOfBakery: async (req, res) => {
     try {
-      let {
-        bakeryId
-      } = req.query;
+      let { bakeryId } = req.query;
       let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(
         bakeryId
       );
@@ -48,11 +46,7 @@ module.exports = {
   },
   reviewSearch: async (req, res) => {
     try {
-      let {
-        searchWord,
-        isOnline,
-        isVegan
-      } = req.query;
+      let { searchWord, isOnline, isVegan } = req.query;
       let reviewSearchListDto = await reviewService.getSearchReviewList(
         searchWord,
         isOnline,
@@ -75,9 +69,7 @@ module.exports = {
   },
   reviewDetail: async (req, res) => {
     try {
-      let {
-        reviewId
-      } = req.query;
+      let { reviewId } = req.query;
       let user = req.header.user;
       let reviewDetailDto = await reviewService.getReviewDetail(reviewId, user);
       res
@@ -117,9 +109,7 @@ module.exports = {
   },
   savedReviewOfBakeryList: async (req, res) => {
     try {
-      let {
-        bakeryId
-      } = req.params;
+      let { bakeryId } = req.params;
       let user = req.header.user;
       let savedReviewListDto = await reviewService.getSavedReviewOfBakeryList(
         bakeryId,
@@ -169,16 +159,17 @@ module.exports = {
       content,
       reviewImg,
     } = req.body;
-    let files = req.files["reviewImgList"];
+    let files = [];
+    if (req.files["reviewImgList"]) files = req.files["reviewImgList"];
 
     if (Array.isArray(files)) {
       var reviewImgList = new Array();
-      console.log(files.length);
+      //console.log(files.length);
 
       for (var i = 0; i < files.length; i++) {
         reviewImgList.push(files[i].location);
       }
-      console.log(reviewImgList);
+      //console.log(reviewImgList);
     }
     try {
       let user = req.header.user;
@@ -193,7 +184,10 @@ module.exports = {
         reviewImgList
       );
 
-      let missionResult = await missionService.checkSucceededMission(user, bakeryId)
+      let missionResult = await missionService.checkSucceededMission(
+        user,
+        bakeryId
+      );
       res
         .status(statusCode.OK)
         .send(
@@ -211,9 +205,7 @@ module.exports = {
   },
   saveReview: async (req, res) => {
     try {
-      let {
-        reviewId
-      } = req.params;
+      let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.savedReview(reviewId, user);
       res
@@ -229,9 +221,7 @@ module.exports = {
   },
   likeReview: async (req, res) => {
     try {
-      let {
-        reviewId
-      } = req.params;
+      let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.likedReview(reviewId, user);
       res
@@ -247,9 +237,7 @@ module.exports = {
   },
   unSaveReview: async (req, res) => {
     try {
-      let {
-        reviewId
-      } = req.params;
+      let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.deleteSavedReview(reviewId, user);
       res
@@ -265,9 +253,7 @@ module.exports = {
   },
   unLikeReview: async (req, res) => {
     try {
-      let {
-        reviewId
-      } = req.params;
+      let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.deleteLikedReview(reviewId, user);
       res
@@ -283,9 +269,7 @@ module.exports = {
   },
   deleteMyReveiw: async (req, res) => {
     try {
-      let {
-        reviewId
-      } = req.params;
+      let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.deleteMyReview(reviewId, user);
       res
