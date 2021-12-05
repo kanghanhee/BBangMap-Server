@@ -42,6 +42,8 @@ db.User.hasMany(db.Review, { onDelete: 'cascade' });
 db.Review.belongsTo(db.User);
 
 /* 보관한 후기 리스트 user:review(1:N) */
+// db.User.hasMany(db.SaveReivew, {onDelete: 'cascade'});
+// db.SaveReivew.belongsTo(db.User);
 db.User.belongsToMany(db.Review, { through: 'SaveReview', as: 'SavedReview' });
 db.Review.belongsToMany(db.User, { through: 'SaveReview', as: 'SaverReview' });
 

@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-return-await */
 const fs = require('fs');
+const { sequelize } = require('../../../models');
 const { User, Review, SaveBakery, SaveReview } = require('../../../models');
 
 module.exports = {
@@ -77,14 +78,18 @@ module.exports = {
 
   // db set null 삭제
   reviewSetNull: async user => {
-    const query = `UPDATE Review SET UserId = null WHERE UserId= :userId`;
-    await sequelize.query(query, {
-      replacements: {
-        userId: user.id,
-      },
-      type: Sequelize.QueryTypes.UPDATE,
-      raw: true,
-    });
+    try {
+      const query = `UPDATE Review SET UserId = null WHERE UserId= :userId`;
+      await sequelize.query(query, {
+        replacements: {
+          userId: user.id,
+        },
+        type: sequelize.QueryTypes.UPDATE,
+        raw: true,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   },
   // db cascade 삭제(not in review)
   deleteCascade: async user => {

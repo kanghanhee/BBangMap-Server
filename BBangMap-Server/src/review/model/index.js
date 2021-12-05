@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DOUBLE,
         allowNull: true,
       },
-      //추천수 추가
+      // 추천수 추가
     },
     {
       freezeTableName: true,
