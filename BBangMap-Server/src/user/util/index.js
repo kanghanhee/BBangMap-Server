@@ -1,6 +1,6 @@
 /* eslint-disable no-return-await */
 const fs = require('fs');
-const { User, Review, SaveBakery, SaveReview } = require('../../../models');
+const { User, Review, SaveBakery, SaveReview, LikeReview, VisitBakery, MissionWhether } = require('../../../models');
 
 module.exports = {
   // 회원 중복체크
@@ -76,19 +76,30 @@ module.exports = {
 
   // db set null 삭제
   reviewSetNull: async user => {
-    Review.update(
-      {
-        UserId: null,
-      },
-      {
-        where: {
-          UserId: user.id,
+    try {
+      await Review.update(
+        {
+          UserId: null,
         },
-      },
-    );
+        {
+          where: {
+            UserId: user.id,
+          },
+        },
+      );
+    } catch (err) {
+      console.log(err);
+    }
   },
   // db cascade 삭제(not in review)
-  deleteCascade: async user => {},
+  deleteCascade: async user => {
+    await MissionWhether.deleteCascade({ where: { UserId: user.id } });
+    await LikeReview.deleteCascade({ where: { UserId: user.id } });
+    await SaveBakery.deleteCascade({ where: { UserId: user.id } });
+    await SaveReview.deleteCascade({ where: { UserId: user.id } });
+    await VisitBakery.deleteCascade({ where: { UserId: user.id } });
+    await User.deleteCascade({ where: { id: user.id } });
+  },
 
   // 내가쓴후기개수
   getMyReview: async user => {

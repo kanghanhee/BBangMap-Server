@@ -1,8 +1,8 @@
+/* eslint-disable consistent-return */
 const util = require('../../../modules/util');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const missionService = require('../service');
-const { profileImg, bgImg } = require('../model/index');
 
 module.exports = {
   // 회원가입
@@ -42,7 +42,7 @@ module.exports = {
   // 프로필 삭제
   deleteUser: async (req, res) => {
     try {
-      let { user } = req.header;
+      const { user } = req.header;
       const result = await missionService.deleteUser(user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_USER, result));
     } catch (err) {

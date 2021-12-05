@@ -41,9 +41,8 @@ module.exports = {
   },
   // 회원 탈퇴
   deleteUser: async user => {
-    const reviewList = userUtil.reviewSetNull(user);
-    const deleteOthers = userUtil.deleteCascade(user);
-
+    await userUtil.reviewSetNull(user);
+    // await userUtil.deleteCascade(user);
     // 후기 리스트 -> set null, NOT IN 속성 사용
     // 나머지는 cascade, NOT IN 속성 사용
     // mission,likeReview,visitBakery

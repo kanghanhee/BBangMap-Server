@@ -1,14 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Review",
+    'Review',
     {
       purchaseBreadList: {
         type: DataTypes.STRING,
         set: function (val) {
-          return this.setDataValue("purchaseBreadList", JSON.stringify(val));
+          return this.setDataValue('purchaseBreadList', JSON.stringify(val));
         },
         get: function () {
-          return JSON.parse(this.getDataValue("purchaseBreadList"));
+          return JSON.parse(this.getDataValue('purchaseBreadList'));
         },
       },
       isVegan: {
@@ -22,10 +22,10 @@ module.exports = (sequelize, DataTypes) => {
       reviewImgList: {
         type: DataTypes.STRING(1000),
         set: function (val) {
-          return this.setDataValue("reviewImgList", JSON.stringify(val));
+          return this.setDataValue('reviewImgList', JSON.stringify(val));
         },
         get: function () {
-          return JSON.parse(this.getDataValue("reviewImgList"));
+          return JSON.parse(this.getDataValue('reviewImgList'));
         },
       },
       content: {
@@ -41,6 +41,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       freezeTableName: true,
       timestamps: true,
-    }
+    },
   );
 };
