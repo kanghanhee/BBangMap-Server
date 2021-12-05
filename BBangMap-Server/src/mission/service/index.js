@@ -1,17 +1,18 @@
-const missionUtil = require("../util");
-const missionMainDto = require("../dto/missionMainDto");
-const missionBakeryDto = require("../dto/missionBakeryDto");
-const createMissionBakeryDto = require("../dto/createMissionBakeryDto");
-const checkSucceededMissionDto = require("../dto/checkSucceededMissionDto");
-const badgeListDto = require("../dto/badgeListDto");
-const userSucceededMissionDto = require("../dto/userSucceededMissionDto");
-const monthlyMissionDto = require("../dto/monthlyMissionDto");
-const responseMessage = require("../../../modules/responseMessage");
-const statusCode = require("../../../modules/statusCode");
-// const
-//    { findBakeryByBakeryId } = require("../util");
+/* eslint-disable consistent-return */
+/* eslint-disable no-throw-literal */
+/* eslint-disable no-await-in-loop */
+const missionUtil = require('../util');
+const responseMessage = require('../../../modules/responseMessage');
+const statusCode = require('../../../modules/statusCode');
+const missionMainDto = require('../dto/missionMainDto');
+const missionBakeryDto = require('../dto/missionBakeryDto');
+const checkSucceededMissionDto = require('../dto/checkSucceededMissionDto');
+const badgeListDto = require('../dto/badgeListDto');
+const userSucceededMissionDto = require('../dto/userSucceededMissionDto');
+const monthlyMissionDto = require('../dto/monthlyMissionDto');
+
+// 미션 추가
 module.exports = {
-  //미션 추가
   postMission: async (
     missionTitle,
     missionContent,
@@ -20,7 +21,7 @@ module.exports = {
     badgeName,
     missionActiveStampImg,
     missionInactiveStampImg,
-    bakeryList
+    bakeryList,
   ) => {
     const mission = await missionUtil.createMission(
       missionTitle,
@@ -32,170 +33,115 @@ module.exports = {
       missionInactiveStampImg,
     );
 
-    await bakeryList.map((bakery) =>
-      missionUtil.createMissionBakery(mission.id, bakery.bakeryId)
-    );
+    await bakeryList.map(bakery => missionUtil.createMissionBakery(mission.id, bakery.bakeryId));
   },
-  //미션 삭제
-  //미션 메인페이지
-  getMissionMain: async (user) => {
-    try {
-      const mission = await missionUtil.findMissionByDate();
+  // 미션 삭제
+  // 미션 메인페이지
+  getMissionMain: async user => {
+    const mission = await missionUtil.findMissionByDate();
 
-      if (!mission) throw {
+    if (!mission)
+      throw {
         statusCode: statusCode.BAD_REQUEST,
         responseMessage: responseMessage.NO_MISSION,
       };
-      const missionBakeryList = await missionUtil.findMissionBakeryByMission(
-        mission.id
-      );
-      console.log(mission)
+    const missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
 
-      let missionSuccessWhether = await missionUtil.getMissionAcheiveCount(
-        user,
-        mission.id
-      );
-      let missionAchieveCount = 0;
-      if (missionSuccessWhether) missionAchieveCount = missionSuccessWhether.missionAchieveCount;
+    const missionSuccessWhether = await missionUtil.getMissionAchievedCount(user, mission.id);
+    let missionAchieveCount = 0;
+    if (missionSuccessWhether) missionAchieveCount = missionSuccessWhether.missionAchieveCount;
 
-      let bakeryListInfo = await Promise.all(
-        missionBakeryList.map(async (bakery) => {
-          let bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
-          let isSucceeded = await missionUtil.isVisitedBakery(
-            user,
-            bakery.BakeryId
-          );
-          return missionBakeryDto(bakeryInfo, isSucceeded);
-        })
-      );
+    const bakeryListInfo = await Promise.all(
+      missionBakeryList.map(async bakery => {
+        const bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
+        const isSucceeded = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
+        return missionBakeryDto(bakeryInfo, isSucceeded);
+      }),
+    );
 
-      const monthlyMission = monthlyMissionDto(mission);
-      const succeededMissionList = await missionUtil.findUserSucceededMission(
-        user
-      );
-      console.log(succeededMissionList)
-      let badgeList = [];
-      for (i = 0; i < succeededMissionList.length; i++) {
-        const missionInfo = await missionUtil.findMissionById(
-          succeededMissionList[i].MissionId
-        );
-        badgeList.push(badgeListDto(missionInfo));
-        console.log(badgeListDto(missionInfo))
-      }
-
-      if (badgeList == null) {
-        badgeList = {};
-      }
-      console.log(badgeList);
-
-      return missionMainDto(
-        monthlyMission,
-        bakeryListInfo,
-        badgeList,
-        missionAchieveCount
-      );
-    } catch (err) {
-      console.log(err);
+    const monthlyMission = monthlyMissionDto(mission);
+    const succeededMissionList = await missionUtil.findUserSucceededMission(user);
+    let badgeList = [];
+    for (let i = 0; i < succeededMissionList.length; i += 1) {
+      const missionInfo = await missionUtil.findMissionById(succeededMissionList[i].MissionId);
+      badgeList.push(badgeListDto(missionInfo));
     }
+
+    if (badgeList == null) {
+      badgeList = {};
+    }
+
+    return missionMainDto(monthlyMission, bakeryListInfo, badgeList, missionAchieveCount);
   },
-  //사용자가 달성한 미션
+  // 사용자가 달성한 미션
   getUserSucceededMission: async (user, missionId) => {
     const missionInfo = await missionUtil.findMissionById(missionId);
     let isVisitedList = [];
-    const missionSuccessWhether = await missionUtil.getMissionAcheiveCount(user, missionId);
+    const missionSuccessWhether = await missionUtil.getMissionAchievedCount(user, missionId);
 
-    if (missionSuccessWhether.missionAchieveCount < 3) throw {
-      statusCode: statusCode.BAD_REQUEST,
-      responseMessage: responseMessage.NOT_SUCCEEDED,
-    };
+    if (missionSuccessWhether.missionAchieveCount < 3)
+      throw {
+        statusCode: statusCode.BAD_REQUEST,
+        responseMessage: responseMessage.NOT_SUCCEEDED,
+      };
 
-    const missionBakeryList = await missionUtil.findMissionBakeryByMission(
-      missionId
-    );
+    const missionBakeryList = await missionUtil.findMissionBakeryByMission(missionId);
     await Promise.all(
-      missionBakeryList.map(async (bakery) => {
-        let bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
-        let isVisited = await missionUtil.isVisitedBakery(
-          user,
-          bakery.BakeryId
-        );
+      missionBakeryList.map(async bakery => {
+        const bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
+        const isVisited = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
         if (isVisited) {
           isVisitedList.push(bakeryInfo.bakeryName);
         }
-      })
+      }),
     );
-    console.log(isVisitedList)
     if (isVisitedList == null) {
       isVisitedList = {};
     }
     return userSucceededMissionDto(missionInfo, isVisitedList);
   },
 
-  //미션 달성시 체크
-  //{
-  // 	"rank" : String,
-  // 	"isMissonBakery" : Boolean,  
-  // 	"isSuccessMission" : Boolean // 이달의 미션 완료
-  // }
+  // 미션 달성시 체크
   checkSucceededMission: async (user, bakeryId) => {
-    try {
-      const mission = await missionUtil.findMissionByDate();
-      const isMissionBakery = await missionUtil.isMissionBakery(
-        mission,
-        bakeryId
-      );
+    const mission = await missionUtil.findMissionByDate();
+    const isMissionBakery = await missionUtil.isMissionBakery(mission, bakeryId);
 
-      const missionBakeryList = await missionUtil.findMissionBakeryByMission(
-        mission.id
-      );
-      let missionAchieveCount = 0;
-      await Promise.all(
-        missionBakeryList.map(async (bakery) => {
-          let isSucceeded = await missionUtil.isVisitedBakery(
-            user,
-            bakery.BakeryId
-          );
-          if (isSucceeded == true) missionAchieveCount++;
-        })
-      );
+    const missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
+    let missionAchieveCount = 0;
+    await Promise.all(
+      missionBakeryList.map(async bakery => {
+        const isSucceeded = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
+        if (isSucceeded === true) missionAchieveCount += 1;
+      }),
+    );
 
-      //미션 몇개 달성
-      let isSucceeded;
-      if (missionAchieveCount >= 3) isSucceeded = true;
-      else isSucceeded = false;
+    // 미션 몇개 달성
+    let isSucceeded;
+    if (missionAchieveCount >= 3) isSucceeded = true;
+    else isSucceeded = false;
 
-      //등급산정 Util(후기개수, 미션빵집)
-      const userMissionCount = await missionUtil.findUserSucceededMission(user); //전체 미션개수
-      const userReviewCount = await missionUtil.findUserReview(user);
-      const rank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
-      let isChangedRank = false;
-      if (user.grade !== rank.rank) {
-        isChangedRank = true
-        await missionUtil.updateUserRank(user, rank.rank);
-      }
-
-      return checkSucceededMissionDto(isMissionBakery, isSucceeded, isChangedRank, rank, mission);
-    } catch (err) {
-      console.error();
+    // 등급산정 Util(후기개수, 미션빵집)
+    const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
+    const userReviewCount = await missionUtil.findUserReview(user);
+    const rank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
+    let isChangedRank = false;
+    if (user.grade !== rank.rank) {
+      isChangedRank = true;
+      await missionUtil.updateUserRank(user, rank.rank);
     }
+
+    return checkSucceededMissionDto(isMissionBakery, isSucceeded, isChangedRank, rank, mission);
   },
-  //나의 등급
-  getUserRank: async (user) => {
-    try {
-      const userMissionCount = await missionUtil.findUserSucceededMission(user);
-      const userReviewCount = await missionUtil.findUserReview(user);
-      const calculated = await missionUtil.calculateRank(
-        userMissionCount.count,
-        userReviewCount.count
-      );
-      // const calculated = await missionUtil.calculateRank(20, 20);
+  // 나의 등급
+  getUserRank: async user => {
+    const userMissionCount = await missionUtil.findUserSucceededMission(user);
+    const userReviewCount = await missionUtil.findUserReview(user);
+    const calculated = await missionUtil.calculateRank(userMissionCount.count, userReviewCount.count);
+    // const calculated = await missionUtil.calculateRank(20, 20);
 
-      if (user.grade !== calculated.rank) {
-        await missionUtil.updateUserRank(user, calculated.rank);
-      }
-      return calculated
-    } catch (err) {
-      console.log(err);
+    if (user.grade !== calculated.rank) {
+      await missionUtil.updateUserRank(user, calculated.rank);
     }
+    return calculated;
   },
 };

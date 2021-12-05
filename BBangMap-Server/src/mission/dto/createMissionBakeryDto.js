@@ -1,7 +1,7 @@
-const createMissonBakeryDto = (mission, bakeryId) => {
-    return {
-        BakeryId: bakeryId,
-        MissionId: mission.id
-    }
-}
-module.exports = createMissonBakeryDto;
+const createMissionBakeryDto = (mission, bakeryId) => {
+  return {
+    BakeryId: bakeryId,
+    MissionId: mission.id,
+  };
+};
+module.exports = createMissionBakeryDto;

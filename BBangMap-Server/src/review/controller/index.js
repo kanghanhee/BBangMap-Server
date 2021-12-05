@@ -1,70 +1,38 @@
-const util = require("../../../modules/util");
-const statusCode = require("../../../modules/statusCode");
-const responseMessage = require("../../../modules/responseMessage");
-const reviewService = require("../service");
-const missionService = require("../../mission/service");
+const util = require('../../../modules/util');
+const statusCode = require('../../../modules/statusCode');
+const responseMessage = require('../../../modules/responseMessage');
+const reviewService = require('../service');
+const missionService = require('../../mission/service');
 
 module.exports = {
   reviewOfBakery: async (req, res) => {
     try {
       let { bakeryId } = req.query;
-      let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(
-        bakeryId
-      );
+      let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(bakeryId);
       res
         .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_GET_REVIEW,
-            reviewOfBakeryListDto
-          )
-        );
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewOfBakeryListDto));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   reviewAll: async (req, res) => {
     try {
       let reivewAllListDto = await reviewService.getReviewAll();
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_GET_REVIEW,
-            reivewAllListDto
-          )
-        );
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   reviewSearch: async (req, res) => {
     try {
       let { searchWord, isOnline, isVegan } = req.query;
-      let reviewSearchListDto = await reviewService.getSearchReviewList(
-        searchWord,
-        isOnline,
-        isVegan
-      );
+      let reviewSearchListDto = await reviewService.getSearchReviewList(searchWord, isOnline, isVegan);
       res
         .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_GET_REVIEW,
-            reviewSearchListDto
-          )
-        );
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewSearchListDto));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   reviewDetail: async (req, res) => {
@@ -72,95 +40,47 @@ module.exports = {
       let { reviewId } = req.query;
       let user = req.header.user;
       let reviewDetailDto = await reviewService.getReviewDetail(reviewId, user);
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_GET_REVIEW,
-            reviewDetailDto
-          )
-        );
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewDetailDto));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   savedReviewFolderList: async (req, res) => {
     try {
       let user = req.header.user;
-      let savedReviewFolderListDto =
-        await reviewService.getSavedReviewFolderList(user);
+      let savedReviewFolderListDto = await reviewService.getSavedReviewFolderList(user);
       res
         .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_GET_REVIEW,
-            savedReviewFolderListDto
-          )
-        );
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewFolderListDto));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   savedReviewOfBakeryList: async (req, res) => {
     try {
       let { bakeryId } = req.params;
       let user = req.header.user;
-      let savedReviewListDto = await reviewService.getSavedReviewOfBakeryList(
-        bakeryId,
-        user
-      );
+      let savedReviewListDto = await reviewService.getSavedReviewOfBakeryList(bakeryId, user);
       res
         .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_GET_REVIEW,
-            savedReviewListDto
-          )
-        );
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewListDto));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   myReview: async (req, res) => {
     try {
       let user = req.header.user;
       let myReviewListDto = await reviewService.getMyReviewList(user);
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_GET_REVIEW,
-            myReviewListDto
-          )
-        );
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, myReviewListDto));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   addReview: async (req, res) => {
-    let {
-      bakeryId,
-      isVegan,
-      isOnline,
-      purchaseBreadList,
-      star,
-      content,
-      reviewImg,
-    } = req.body;
+    let { bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImg } = req.body;
     let files = [];
-    if (req.files["reviewImgList"]) files = req.files["reviewImgList"];
+    if (req.files['reviewImgList']) files = req.files['reviewImgList'];
 
     if (Array.isArray(files)) {
       var reviewImgList = new Array();
@@ -181,26 +101,13 @@ module.exports = {
         purchaseBreadList,
         star,
         content,
-        reviewImgList
+        reviewImgList,
       );
 
-      let missionResult = await missionService.checkSucceededMission(
-        user,
-        bakeryId
-      );
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_CREATE_REVIEW,
-            missionResult
-          )
-        );
+      let missionResult = await missionService.checkSucceededMission(user, bakeryId);
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_REVIEW, missionResult));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   saveReview: async (req, res) => {
@@ -208,15 +115,9 @@ module.exports = {
       let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.savedReview(reviewId, user);
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_REVIEW)
-        );
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_REVIEW));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   likeReview: async (req, res) => {
@@ -224,15 +125,9 @@ module.exports = {
       let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.likedReview(reviewId, user);
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(statusCode.OK, responseMessage.SUCCESS_LIKED_REVIEW)
-        );
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKED_REVIEW));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   unSaveReview: async (req, res) => {
@@ -240,15 +135,9 @@ module.exports = {
       let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.deleteSavedReview(reviewId, user);
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW)
-        );
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   unLikeReview: async (req, res) => {
@@ -256,15 +145,9 @@ module.exports = {
       let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.deleteLikedReview(reviewId, user);
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKED_REVIEW)
-        );
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKED_REVIEW));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   deleteMyReveiw: async (req, res) => {
@@ -272,15 +155,9 @@ module.exports = {
       let { reviewId } = req.params;
       let user = req.header.user;
       await reviewService.deleteMyReview(reviewId, user);
-      res
-        .status(statusCode.OK)
-        .send(
-          util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_REVIEW)
-        );
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_REVIEW));
     } catch (err) {
-      res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
 };

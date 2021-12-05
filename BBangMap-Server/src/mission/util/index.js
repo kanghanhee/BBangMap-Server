@@ -1,3 +1,6 @@
+/* eslint-disable func-names */
+/* eslint-disable no-return-await */
+const { Op } = require('sequelize');
 const {
   Mission,
   MissionBakery,
@@ -7,14 +10,10 @@ const {
   Sequelize,
   Bakery,
   Review,
-} = require("../../../models");
-
-const {
-  Op
-} = require("sequelize");
+} = require('../../../models');
 
 module.exports = {
-  //미션 추가
+  // 미션 추가
   createMission: async (
     missionTitle,
     missionContent,
@@ -25,82 +24,64 @@ module.exports = {
     missionInactiveStampImg,
   ) => {
     return await Mission.create({
-      missionTitle: missionTitle,
-      missionContent: missionContent,
+      missionTitle,
+      missionContent,
       missionDate: new Date(missionDate),
-      badgeImg: badgeImg,
-      badgeName: badgeName,
-      missionActiveStampImg: missionActiveStampImg,
-      missionInactiveStampImg: missionInactiveStampImg,
+      badgeImg,
+      badgeName,
+      missionActiveStampImg,
+      missionInactiveStampImg,
     });
   },
-  //미션 빵집 추가
+  // 미션 빵집 추가
   createMissionBakery: async (missionId, bakeryId) => {
     await MissionBakery.create({
       MissionId: missionId,
       BakeryId: bakeryId,
     });
   },
-  //이달의 미션 조회
+  // 이달의 미션 조회
   findMissionByDate: async () => {
     return await Mission.findOne({
       where: {
         [Op.and]: [
-          Sequelize.literal(
-            `missionDate > LAST_DAY(NOW() - interval 1 month) AND missionDate <= LAST_DAY(NOW())`
-          ),
+          Sequelize.literal(`missionDate > LAST_DAY(NOW() - interval 1 month) AND missionDate <= LAST_DAY(NOW())`),
         ],
       },
     });
   },
-  //미션 id로 미션 조회
-  findMissionById: async (missionId) => {
+  // 미션 id로 미션 조회
+  findMissionById: async missionId => {
     return await Mission.findOne({
       where: {
         id: missionId,
       },
     });
   },
-  //해당 미션의 미션 빵집
-  findMissionBakeryByMission: async (missionId) => {
+  // 해당 미션의 미션 빵집
+  findMissionBakeryByMission: async missionId => {
     return await MissionBakery.findAll({
       where: {
         MissionId: missionId,
       },
-      attributes: ["BakeryId"],
+      attributes: ['BakeryId'],
     });
   },
-  //빵집id로 빵집 조회
-  findBakeryById: async (bakeryId) => {
+  // 빵집id로 빵집 조회
+  findBakeryById: async bakeryId => {
     return await Bakery.findOne({
       where: {
         id: bakeryId,
       },
     });
   },
-  // //사용자 방문 미션 빵집
-  // isVisitedMissionBakery: async (user, missionId) => {
-  //   //사용자의 방문 빵집 == 해당 달의 미션 빵집
-  //   let result = await missionBakeryList.map((bakery) => {
-  //       VisitBakery.findAll({
-  //       where: {
-  //         [Op.and]: [{
-  //             UserId: user.id,
-  //           },
-  //           {
-  //             BakeryId: bakery.BakeryId,
-  //           }
-  //         ],
-  //       },
-  //     });
-  //   });
-  //   return result
-  // },
-  // //빵집 방문 여부
+
+  // 빵집 방문 여부
   isVisitedBakery: async (user, bakeryId) => {
     const isVisited = await VisitBakery.findOne({
       where: {
-        [Op.and]: [{
+        [Op.and]: [
+          {
             BakeryId: bakeryId,
           },
           {
@@ -112,11 +93,12 @@ module.exports = {
 
     return isVisited != null;
   },
-  //사용자 전체 달성 미션 조회
-  findUserSucceededMission: async (user) => {
+  // 사용자 전체 달성 미션 조회
+  findUserSucceededMission: async user => {
     return await MissionWhether.findAndCountAll({
       where: {
-        [Op.and]: [{
+        [Op.and]: [
+          {
             missionSuccessWhether: true,
           },
           {
@@ -126,32 +108,35 @@ module.exports = {
       },
     });
   },
-  //후기 작성/삭제 시, 배지 달성 체크
+  // 후기 작성/삭제 시, 배지 달성 체크
   isSucceededMission: async (user, missionId, missionAchieveCount) => {
-    const achieveMission = await MissionWhether.findOne({
-        where: {
-          [Op.and]: [{
-              MissionId: missionId,
-            },
-            {
-              UserId: user.id,
-            },
-          ],
-        },
-      })
-      .then(function (userMission) {
-        if (!userMission)
-          return MissionWhether.create({
-            missionAchieveCount: missionAchieveCount,
-            UserId: user.id,
+    await MissionWhether.findOne({
+      where: {
+        [Op.and]: [
+          {
             MissionId: missionId,
-            missionSuccessWhether: false,
-          });
-        return MissionWhether.update({
-          missionAchieveCount: missionAchieveCount,
-        }, {
+          },
+          {
+            UserId: user.id,
+          },
+        ],
+      },
+    }).then(function (userMission) {
+      if (!userMission)
+        return MissionWhether.create({
+          missionAchieveCount,
+          UserId: user.id,
+          MissionId: missionId,
+          missionSuccessWhether: false,
+        });
+      return MissionWhether.update(
+        {
+          missionAchieveCount,
+        },
+        {
           where: {
-            [Op.and]: [{
+            [Op.and]: [
+              {
                 MissionId: missionId,
               },
               {
@@ -159,16 +144,15 @@ module.exports = {
               },
             ],
           },
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        },
+      );
+    });
   },
-  getMissionAcheiveCount: async (user, missionId) => {
+  getMissionAchievedCount: async (user, missionId) => {
     return MissionWhether.findOne({
       where: {
-        [Op.and]: [{
+        [Op.and]: [
+          {
             MissionId: missionId,
           },
           {
@@ -178,11 +162,12 @@ module.exports = {
       },
     });
   },
-  //빵집이 미션 빵집인지
+  // 빵집이 미션 빵집인지
   isMissionBakery: async (mission, bakeryId) => {
     const isMission = await MissionBakery.findOne({
       where: {
-        [Op.and]: [{
+        [Op.and]: [
+          {
             MissionId: mission.id,
           },
           {
@@ -193,37 +178,39 @@ module.exports = {
     });
     return isMission != null;
   },
-  //등급 산정 + 체크
+  // 등급 산정 + 체크
   calculateRank: async (userMissionCount, userReviewCount) => {
-    let rank; //등급
+    let rank; // 등급
     if (userMissionCount >= 30 && userReviewCount >= 30) rank = 3;
     else if (userMissionCount >= 20 && userReviewCount >= 20) rank = 2;
     else rank = 1;
 
     const result = {
-      rank: rank,
+      rank,
       reviewCount: userReviewCount,
       missionCount: userMissionCount,
     };
     return result;
   },
-  //등급 변경
+  // 등급 변경
   updateUserRank: async (user, newRank) => {
-    await User.update({
-      grade: newRank,
-    }, {
-      where: {
-        id: user.id,
+    await User.update(
+      {
+        grade: newRank,
       },
-    });
+      {
+        where: {
+          id: user.id,
+        },
+      },
+    );
   },
 
-  //사용자 작성 후기
-  findUserReview: async (user) => {
-    return (userReview = await Review.findAndCountAll({
+  // 사용자 작성 후기
+  findUserReview: async user =>
+    await Review.findAndCountAll({
       where: {
         UserId: user.id,
       },
-    }));
-  },
+    }),
 };

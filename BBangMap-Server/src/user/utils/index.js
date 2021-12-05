@@ -1,30 +1,31 @@
-const { Bakery, User, Review } = require("../../../models");
+/* eslint-disable no-return-await */
+const { Bakery, User, Review } = require('../../../models');
 
 module.exports = {
-  findUserIncludeSavedBakery: async (user) => {
+  findUserIncludeSavedBakery: async user => {
     return await User.findOne({
       where: { id: user.id },
       include: {
         model: Bakery,
-        as: "SavedBakery",
+        as: 'SavedBakery',
         attributes: {},
       },
     });
   },
-  findUserIncludeSavedReview: async (user) => {
+  findUserIncludeSavedReview: async user => {
     return await User.findOne({
       where: { id: user.id },
       include: {
         model: Review,
-        as: "SavedReview",
+        as: 'SavedReview',
         attributes: {},
         include: {
           model: Bakery,
-          as: "Bakery",
-          attributes: ["bakeryName"],
+          as: 'Bakery',
+          attributes: ['bakeryName'],
         },
       },
-      group: ["SavedReview.BakeryId"],
+      group: ['SavedReview.BakeryId'],
     });
   },
   findUserIncludeSavedReviewOfBakery: async (bakeryId, user) => {
@@ -33,13 +34,13 @@ module.exports = {
       include: [
         {
           model: Review,
-          as: "SavedReview",
+          as: 'SavedReview',
           where: { BakeryId: bakeryId },
           attributes: {},
           include: {
             model: Bakery,
-            as: "Bakery",
-            attributes: ["bakeryName"],
+            as: 'Bakery',
+            attributes: ['bakeryName'],
           },
         },
       ],
