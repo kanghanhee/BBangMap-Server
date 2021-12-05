@@ -37,6 +37,7 @@ module.exports = {
   },
   //회원 탈퇴
   deleteUser: async (user) => {
+
     const reviewList = userUtil.reviewSetNull(user);
     const deleteOthers = userUtil.deleteCascade(user);
 
@@ -96,7 +97,9 @@ module.exports = {
         let checkNickname = await userUtil.isExistNickname(newNickname);
         if (!checkNickname) break;
       }
-      return { nickname: newNickname };
+      return {
+        nickname: newNickname
+      };
     } catch (err) {
       console.log(err)
     }

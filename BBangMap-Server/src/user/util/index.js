@@ -2,7 +2,12 @@ const {
   User,
   Review,
   SaveBakery,
-  SaveReview
+  SaveReview,
+  MissionWhether,
+  LikeReview,
+  VisitBakery,
+  sequelize,
+  Sequelize
 } = require("../../../models");
 const {
   Op
@@ -87,17 +92,22 @@ module.exports = {
 
   //db set null 삭제
   reviewSetNull: async (user) => {
-    Review.update({
-      UserId: null
-    }, {
-      where: {
-        UserId: user.id
-      }
-    })
+    let query = `UPDATE Review SET UserId = null WHERE UserId= :userId`;
+    await sequelize.query(query, {
+      replacements: {
+        userId: user.id
+      },
+      type: Sequelize.QueryTypes.UPDATE,
+      raw: true
+    });
   },
   //db cascade 삭제(not in review)
   deleteCascade: async (user) => {
-
+    await User.destroy({
+      where: {
+        id: user.id
+      }
+    })
   },
 
   //내가쓴후기개수
