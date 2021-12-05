@@ -42,11 +42,7 @@ module.exports = {
   // 회원 탈퇴
   deleteUser: async user => {
     await userUtil.reviewSetNull(user);
-    // await userUtil.deleteCascade(user);
-    // 후기 리스트 -> set null, NOT IN 속성 사용
-    // 나머지는 cascade, NOT IN 속성 사용
-    // mission,likeReview,visitBakery
-    // 좋아요 리스트,보관내역(빵집,후기),미션 내역,사용자 정보 삭제
+    await userUtil.deleteCascade(user);
   },
   // 프로필 수정
   updateUser: async (user, newProfileImg, newBgImg, newNickname) => {
