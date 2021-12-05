@@ -78,18 +78,14 @@ module.exports = {
 
   // db set null 삭제
   reviewSetNull: async user => {
-    try {
-      const query = `UPDATE Review SET UserId = null WHERE UserId= :userId`;
-      await sequelize.query(query, {
-        replacements: {
-          userId: user.id,
-        },
-        type: sequelize.QueryTypes.UPDATE,
-        raw: true,
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    const query = `UPDATE Review SET UserId = null WHERE UserId= :userId`;
+    await sequelize.query(query, {
+      replacements: {
+        userId: user.id,
+      },
+      type: sequelize.QueryTypes.UPDATE,
+      raw: true,
+    });
   },
   // db cascade 삭제(not in review)
   deleteCascade: async user => {
