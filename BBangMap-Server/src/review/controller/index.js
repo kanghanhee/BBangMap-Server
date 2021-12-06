@@ -150,7 +150,7 @@ module.exports = {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
-  deleteMyReveiw: async (req, res) => {
+  deleteMyReview: async (req, res) => {
     try {
       let { reviewId } = req.params;
       let user = req.header.user;
