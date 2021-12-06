@@ -39,7 +39,7 @@ router.post("/like/:reviewId", authUtil.checkUuid, reviewController.likeReview);
 router.delete(
   "/my/:reviewId",
   authUtil.checkUuid,
-  reviewController.deleteMyReveiw
+  reviewController.deleteMyReview
 );
 router.delete(
   "/storage/:reviewId",
