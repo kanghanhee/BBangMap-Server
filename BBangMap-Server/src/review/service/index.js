@@ -1,15 +1,15 @@
-const reviewUtils = require("../utils");
-const userUtils = require("../../user/utils");
+const reviewUtils = require('../utils');
+const userUtils = require('../../user/utils');
 
-const reviewListDto = require("../dto/reviewListDto");
-const reviewDetailDto = require("../dto/reviewDetailDto");
-const savedReviewOfBakeryListDto = require("../dto/savedReviewOfBakeryListDto");
-const savedReviewFolderListDto = require("../dto/savedReviewFolderListDto");
-const reviewOfBakeryListDto = require("../dto/reviewOfBakeryListDto");
-const myReviewListDto = require("../dto/myReviewListDto");
+const reviewListDto = require('../dto/reviewListDto');
+const reviewDetailDto = require('../dto/reviewDetailDto');
+const savedReviewOfBakeryListDto = require('../dto/savedReviewOfBakeryListDto');
+const savedReviewFolderListDto = require('../dto/savedReviewFolderListDto');
+const reviewOfBakeryListDto = require('../dto/reviewOfBakeryListDto');
+const myReviewListDto = require('../dto/myReviewListDto');
 
 module.exports = {
-  getReviewOfBakery: async (bakeryId) => {
+  getReviewOfBakery: async bakeryId => {
     let reviewOfBakeryList = await reviewUtils.findReviewOfBakery(bakeryId);
 
     return reviewOfBakeryListDto(reviewOfBakeryList);
@@ -20,11 +20,7 @@ module.exports = {
     return reviewListDto(reviewList);
   },
   getSearchReviewList: async (searchWord, isOnline, isVegan) => {
-    let reviewList = await reviewUtils.findReviewListBySearchWord(
-      searchWord,
-      isOnline,
-      isVegan
-    );
+    let reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
 
     return reviewListDto(reviewList);
   },
@@ -34,43 +30,26 @@ module.exports = {
     let myReviewList = await reviewUtils.findMyReviewList(user);
     let likedReviewList = await reviewUtils.findUsersLikedReviewList(user);
 
-    return reviewDetailDto(
-      review,
-      savedReviewList,
-      myReviewList,
-      likedReviewList
-    );
+    return reviewDetailDto(review, savedReviewList, myReviewList, likedReviewList);
   },
-  getSavedReviewFolderList: async (user) => {
+  getSavedReviewFolderList: async user => {
     let findUser = await userUtils.findUserIncludeSavedReview(user);
     let savedReviewFolderList = findUser.SavedReview;
 
     return savedReviewFolderListDto(savedReviewFolderList);
   },
   getSavedReviewOfBakeryList: async (bakeryId, user) => {
-    let findUser = await userUtils.findUserIncludeSavedReviewOfBakery(
-      bakeryId,
-      user
-    );
+    let findUser = await userUtils.findUserIncludeSavedReviewOfBakery(bakeryId, user);
     let savedReviewOfBakeryList = findUser.SavedReview;
 
     return savedReviewOfBakeryListDto(savedReviewOfBakeryList);
   },
-  getMyReviewList: async (user) => {
+  getMyReviewList: async user => {
     let myReviewList = await reviewUtils.findMyReviewList(user);
 
     return myReviewListDto(myReviewList);
   },
-  addReview: async (
-    user,
-    bakeryId,
-    isVegan,
-    isOnline,
-    purchaseBreadList,
-    star,
-    content,
-    reviewImgList
-  ) => {
+  addReview: async (user, bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImgList) => {
     let addReview = await reviewUtils.addReview(
       user,
       bakeryId,
@@ -79,7 +58,7 @@ module.exports = {
       purchaseBreadList,
       star,
       content,
-      reviewImgList
+      reviewImgList,
     );
 
     return addReview;

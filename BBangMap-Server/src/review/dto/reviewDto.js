@@ -1,4 +1,4 @@
-const reviewDto = (review) => {
+const reviewDto = review => {
   return {
     reviewId: review.id,
     bakeryName: review.Bakery.bakeryName,
