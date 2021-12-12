@@ -123,14 +123,15 @@ module.exports = {
     // 등급산정 Util(후기개수, 미션빵집)
     const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
     const userReviewCount = await missionUtil.findUserReview(user);
-    const rank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
+    const beforeRank = user.grade;
+    const afterRank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
     let isChangedRank = false;
-    if (user.grade !== rank.rank) {
+    if (user.grade !== afterRank.rank) {
       isChangedRank = true;
-      await missionUtil.updateUserRank(user, rank.rank);
+      await missionUtil.updateUserRank(user, afterRank.rank);
     }
 
-    return checkSucceededMissionDto(isMissionBakery, isSucceeded, isChangedRank, rank, mission);
+    return checkSucceededMissionDto(isMissionBakery, isSucceeded, isChangedRank, beforeRank, afterRank, mission);
   },
   // 나의 등급
   getUserRank: async user => {
