@@ -1,3 +1,5 @@
+const reviewUtils = require('../utils');
+
 const reviewDto = (review, likedReviewList, likeCountList) => {
   return {
     reviewId: review.id,
@@ -9,13 +11,8 @@ const reviewDto = (review, likedReviewList, likeCountList) => {
     isOnline: review.isOnline,
     isVegan: review.isVegan,
     isLikedReview: !!likedReviewList.includes(review.id),
-    likeReviewCount: getCount(review.id, likeCountList),
+    likeReviewCount: reviewUtils.getCount(review.id, likeCountList),
   };
-};
-
-const getCount = (reviewId, likeCountList) => {
-  let count = likeCountList.filter(likeCount => likeCount === reviewId).length;
-  return count;
 };
 
 // const getCount = (reviewId, likeCountList) => {
