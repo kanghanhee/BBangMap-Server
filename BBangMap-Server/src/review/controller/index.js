@@ -29,7 +29,8 @@ module.exports = {
   reviewSearch: async (req, res) => {
     try {
       let { searchWord, isOnline, isVegan } = req.query;
-      let reviewSearchListDto = await reviewService.getSearchReviewList(searchWord, isOnline, isVegan);
+      let user = req.header.user;
+      let reviewSearchListDto = await reviewService.getSearchReviewList(searchWord, isOnline, isVegan, user);
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewSearchListDto));

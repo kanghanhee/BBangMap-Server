@@ -23,10 +23,12 @@ module.exports = {
 
     return reviewListDto(reviewList, likedReviewList);
   },
-  getSearchReviewList: async (searchWord, isOnline, isVegan) => {
+  getSearchReviewList: async (searchWord, isOnline, isVegan, user) => {
     let reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
+    let findUser = await userUtils.findUserIncludeLikedReview(user);
+    let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
 
-    return reviewListDto(reviewList);
+    return reviewListDto(reviewList, likedReviewList);
   },
   getReviewDetail: async (reviewId, user) => {
     let review = await reviewUtils.findReviewById(reviewId);
