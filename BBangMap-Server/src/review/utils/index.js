@@ -144,4 +144,8 @@ module.exports = {
   findLikeReview: async () => {
     return await LikeReview.findAll({});
   },
+  getCount: (reviewId, likeCountList) => {
+    let count = likeCountList.filter(likeCount => likeCount === reviewId).length;
+    return count;
+  },
 };
