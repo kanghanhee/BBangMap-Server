@@ -13,30 +13,40 @@ module.exports = {
     let reviewOfBakeryList = await reviewUtils.findReviewOfBakery(bakeryId);
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
+    // LikeReview
+    let likeReview = await reviewUtils.findLikeReview();
+    let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
-    return reviewOfBakeryListDto(reviewOfBakeryList, likedReviewList);
+    return reviewOfBakeryListDto(reviewOfBakeryList, likedReviewList, likeCountList);
   },
   getReviewAll: async user => {
     let reviewList = await reviewUtils.findReviewAll();
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
+    // LikeReview
+    let likeReview = await reviewUtils.findLikeReview();
+    let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
-    return reviewListDto(reviewList, likedReviewList);
+    return reviewListDto(reviewList, likedReviewList, likeCountList);
   },
   getSearchReviewList: async (searchWord, isOnline, isVegan, user) => {
     let reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
+    // LikeReview
+    let likeReview = await reviewUtils.findLikeReview();
+    let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
-    return reviewListDto(reviewList, likedReviewList);
+    return reviewListDto(reviewList, likedReviewList, likeCountList);
   },
   getReviewDetail: async (reviewId, user) => {
     let review = await reviewUtils.findReviewById(reviewId);
     let savedReviewList = await reviewUtils.findUsersSavedReviewList(user);
     let myReviewList = await reviewUtils.findMyReviewList(user);
     let likedReviewList = await reviewUtils.findUsersLikedReviewList(user);
+    let likeReviewCount = await reviewUtils.findLikeReviewCount(reviewId);
 
-    return reviewDetailDto(review, savedReviewList, myReviewList, likedReviewList);
+    return reviewDetailDto(review, savedReviewList, myReviewList, likedReviewList, likeReviewCount.count);
   },
   getSavedReviewFolderList: async user => {
     let findUser = await userUtils.findUserIncludeSavedReview(user);
@@ -54,8 +64,11 @@ module.exports = {
     let myReviewList = await reviewUtils.findMyReviewList(user);
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
+    // LikeReview
+    let likeReview = await reviewUtils.findLikeReview();
+    let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
-    return myReviewListDto(myReviewList, likedReviewList);
+    return myReviewListDto(myReviewList, likedReviewList, likeCountList);
   },
   addReview: async (user, bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImgList) => {
     let addReview = await reviewUtils.addReview(

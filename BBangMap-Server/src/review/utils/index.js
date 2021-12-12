@@ -134,4 +134,14 @@ module.exports = {
       },
     });
   },
+  findLikeReviewCount: async reviewId => {
+    return await LikeReview.findAndCountAll({
+      where: {
+        ReviewId: reviewId,
+      },
+    });
+  },
+  findLikeReview: async () => {
+    return await LikeReview.findAll({});
+  },
 };

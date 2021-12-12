@@ -1,4 +1,4 @@
-const reviewDto = (review, likedReviewList) => {
+const reviewDto = (review, likedReviewList, likeCountList) => {
   return {
     reviewId: review.id,
     bakeryName: review.Bakery.bakeryName,
@@ -9,7 +9,23 @@ const reviewDto = (review, likedReviewList) => {
     isOnline: review.isOnline,
     isVegan: review.isVegan,
     isLikedReview: !!likedReviewList.includes(review.id),
+    likeReviewCount: getCount(review.id, likeCountList),
   };
 };
+
+const getCount = (reviewId, likeCountList) => {
+  let count = likeCountList.filter(likeCount => likeCount === reviewId).length;
+  return count;
+};
+
+// const getCount = (reviewId, likeCountList) => {
+//   let count = 0;
+//   for (let i = 0; i < likeCountList.length; i++) {
+//     if (likeCountList[i] === reviewId) {
+//       count++;
+//     }
+//   }
+//   return count;
+// };
 
 module.exports = reviewDto;

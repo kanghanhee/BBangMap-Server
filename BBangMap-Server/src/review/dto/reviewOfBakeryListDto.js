@@ -1,8 +1,8 @@
 const reviewOfBakeryDto = require('./reviewOfBakeryDto');
 
-const reviewListOfBakeryDto = (reviewOfBakeryList, likedReviewList) => {
+const reviewListOfBakeryDto = (reviewOfBakeryList, likedReviewList, likeCountList) => {
   return reviewOfBakeryList.map(reviewOfBakery => {
-    return reviewOfBakeryDto(reviewOfBakery, likedReviewList);
+    return reviewOfBakeryDto(reviewOfBakery, likedReviewList, likeCountList);
   });
 };
 

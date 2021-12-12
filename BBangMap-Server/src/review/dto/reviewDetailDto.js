@@ -1,6 +1,6 @@
 const reviewUtil = require('../utils');
 
-const reviewDetailDto = async (review, savedReviewList, myReviewList, likedReviewList) => {
+const reviewDetailDto = async (review, savedReviewList, myReviewList, likedReviewList, likeReviewCount) => {
   return {
     reviewId: review.id,
     bakeryName: review.BakeryId === null ? '빵집 정보 없음' : review.Bakery.bakeryName,
@@ -12,6 +12,7 @@ const reviewDetailDto = async (review, savedReviewList, myReviewList, likedRevie
     isSavedReview: await reviewUtil.isSavedReview(review, savedReviewList),
     isMyReview: await reviewUtil.isMyReview(review, myReviewList),
     isLikedReview: await reviewUtil.isLikedReview(review, likedReviewList),
+    likeReviewCount: likeReviewCount,
   };
 };
 

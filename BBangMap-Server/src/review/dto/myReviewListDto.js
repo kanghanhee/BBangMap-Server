@@ -1,8 +1,8 @@
 const myReviewDto = require('./myReviewDto');
 
-const myReviewListDto = (myReviewList, likedReviewList) => {
+const myReviewListDto = (myReviewList, likedReviewList, likeCountList) => {
   return myReviewList.map(myReview => {
-    return myReviewDto(myReview, likedReviewList);
+    return myReviewDto(myReview, likedReviewList, likeCountList);
   });
 };
 
