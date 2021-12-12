@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
 /* eslint-disable no-await-in-loop */
@@ -87,13 +88,18 @@ module.exports = {
     return { nickname: newNickname };
   },
   readMyPage: async user => {
-    const review = await userUtil.getMyReview(user);
-    const savedBakery = await userUtil.getSavedBakery(user);
-    const savedReview = await userUtil.getSavedReview(user);
-    let grade = '';
-    if (user.grade === 1) grade = '중력분';
-    else if (user.grade === 2) grade = '강력분';
-    else grade = '박력분';
-    return myPageDto(user, grade, review.count, savedBakery.count, savedReview.count);
+    try {
+      const review = await userUtil.getMyReview(user);
+      // console.log(await review);
+      const savedBakery = await userUtil.getSavedBakery(user);
+      const savedReview = await userUtil.getSavedReview(user);
+      let grade = '';
+      if (user.grade === 1) grade = '중력분';
+      else if (user.grade === 2) grade = '강력분';
+      else grade = '박력분';
+      return myPageDto(user, grade, review.count, savedBakery.count, savedReview.count);
+    } catch (err) {
+      console.log(err);
+    }
   },
 };
