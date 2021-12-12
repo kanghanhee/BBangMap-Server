@@ -1,4 +1,4 @@
-const reviewOfBakeryDto = reviewOfBakery => {
+const reviewOfBakeryDto = (reviewOfBakery, likedReviewList) => {
   return {
     reviewId: reviewOfBakery.id,
     bakeryId: reviewOfBakery.BakeryId,
@@ -6,6 +6,7 @@ const reviewOfBakeryDto = reviewOfBakery => {
     reviewImg: reviewOfBakery.reviewImgList.length < 1 ? null : reviewOfBakery.reviewImgList[0],
     purchaseBreadCount: reviewOfBakery.purchaseBreadList.length,
     reviewCreatedDate: reviewOfBakery.createdAt,
+    isLikedReview: !!likedReviewList.includes(reviewOfBakery.id),
   };
 };
 

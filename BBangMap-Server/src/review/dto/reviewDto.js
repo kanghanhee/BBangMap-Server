@@ -1,4 +1,4 @@
-const reviewDto = review => {
+const reviewDto = (review, likedReviewList) => {
   return {
     reviewId: review.id,
     bakeryName: review.Bakery.bakeryName,
@@ -8,6 +8,7 @@ const reviewDto = review => {
     purchaseBreadList: review.purchaseBreadList,
     isOnline: review.isOnline,
     isVegan: review.isVegan,
+    isLikedReview: !!likedReviewList.includes(review.id),
   };
 };
 

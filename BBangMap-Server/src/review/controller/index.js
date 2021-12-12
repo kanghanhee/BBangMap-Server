@@ -8,7 +8,8 @@ module.exports = {
   reviewOfBakery: async (req, res) => {
     try {
       let { bakeryId } = req.query;
-      let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(bakeryId);
+      let user = req.header.user;
+      let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(bakeryId, user);
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewOfBakeryListDto));
@@ -18,7 +19,8 @@ module.exports = {
   },
   reviewAll: async (req, res) => {
     try {
-      let reivewAllListDto = await reviewService.getReviewAll();
+      let user = req.header.user;
+      let reivewAllListDto = await reviewService.getReviewAll(user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));

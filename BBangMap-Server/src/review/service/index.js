@@ -9,15 +9,19 @@ const reviewOfBakeryListDto = require('../dto/reviewOfBakeryListDto');
 const myReviewListDto = require('../dto/myReviewListDto');
 
 module.exports = {
-  getReviewOfBakery: async bakeryId => {
+  getReviewOfBakery: async (bakeryId, user) => {
     let reviewOfBakeryList = await reviewUtils.findReviewOfBakery(bakeryId);
+    let findUser = await userUtils.findUserIncludeLikedReview(user);
+    let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
 
-    return reviewOfBakeryListDto(reviewOfBakeryList);
+    return reviewOfBakeryListDto(reviewOfBakeryList, likedReviewList);
   },
-  getReviewAll: async () => {
+  getReviewAll: async user => {
     let reviewList = await reviewUtils.findReviewAll();
+    let findUser = await userUtils.findUserIncludeLikedReview(user);
+    let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
 
-    return reviewListDto(reviewList);
+    return reviewListDto(reviewList, likedReviewList);
   },
   getSearchReviewList: async (searchWord, isOnline, isVegan) => {
     let reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
@@ -46,8 +50,10 @@ module.exports = {
   },
   getMyReviewList: async user => {
     let myReviewList = await reviewUtils.findMyReviewList(user);
+    let findUser = await userUtils.findUserIncludeLikedReview(user);
+    let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
 
-    return myReviewListDto(myReviewList);
+    return myReviewListDto(myReviewList, likedReviewList);
   },
   addReview: async (user, bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImgList) => {
     let addReview = await reviewUtils.addReview(
