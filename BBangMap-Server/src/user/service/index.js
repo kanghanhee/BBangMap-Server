@@ -83,7 +83,7 @@ module.exports = {
       let secondWord = await userUtil.randomNickname(secondList);
       let thirdWord = await userUtil.randomNickname(thirdList);
 
-      newNickname = firstWord + secondWord + thirdWord;
+      newNickname = `${firstWord} ${secondWord} ${thirdWord}`;
       let checkNickname = await userUtil.isExistNickname(newNickname);
       if (!checkNickname) break;
     }
