@@ -11,6 +11,7 @@ const checkSucceededMissionDto = require('../dto/checkSucceededMissionDto');
 const badgeListDto = require('../dto/badgeListDto');
 const userSucceededMissionDto = require('../dto/userSucceededMissionDto');
 const monthlyMissionDto = require('../dto/monthlyMissionDto');
+const MissionWhether = require('../model/MissionWhether');
 
 // 미션 추가
 module.exports = {
@@ -78,10 +79,15 @@ module.exports = {
   // 사용자가 달성한 미션
   getUserSucceededMission: async (user, missionId) => {
     const missionInfo = await missionUtil.findMissionById(missionId);
+    if (!missionInfo)
+      throw {
+        statusCode: statusCode.BAD_REQUEST,
+        responseMessage: responseMessage.NO_MISSION,
+      };
     let isVisitedList = [];
     const missionSuccessWhether = await missionUtil.getMissionAchievedCount(user, missionId);
 
-    if (missionSuccessWhether.missionAchieveCount < 3)
+    if (!missionSuccessWhether || missionSuccessWhether.missionAchieveCount < 3)
       throw {
         statusCode: statusCode.BAD_REQUEST,
         responseMessage: responseMessage.NOT_SUCCEEDED,
