@@ -115,10 +115,15 @@ module.exports = {
       }),
     );
 
+    // 후기 작성/삭제시, 배지 달성 체크
+    await missionUtil.isSucceededMission(user, mission.id, missionAchieveCount);
+
     // 미션 몇개 달성
     let isSucceeded;
-    if (missionAchieveCount >= 3) isSucceeded = true;
-    else isSucceeded = false;
+    if (missionAchieveCount >= 3) {
+      isSucceeded = true;
+      await missionUtil.checkMissionSucceeded(user, mission.id);
+    } else isSucceeded = false;
 
     // 등급산정 Util(후기개수, 미션빵집)
     const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수

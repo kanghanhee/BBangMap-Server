@@ -148,6 +148,26 @@ module.exports = {
       );
     });
   },
+  // whether 미션달성 체크
+  checkMissionSucceeded: async (user, missionId) => {
+    await MissionWhether.update(
+      {
+        missionSuccessWhether: true,
+      },
+      {
+        where: {
+          [Op.and]: [
+            {
+              MissionId: missionId,
+            },
+            {
+              userId: user.id,
+            },
+          ],
+        },
+      },
+    );
+  },
   getMissionAchievedCount: async (user, missionId) => {
     return MissionWhether.findOne({
       where: {
