@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable consistent-return */
 /* eslint-disable no-throw-literal */
 /* eslint-disable no-await-in-loop */
@@ -62,8 +63,9 @@ module.exports = {
     const monthlyMission = monthlyMissionDto(mission);
     const succeededMissionList = await missionUtil.findUserSucceededMission(user);
     let badgeList = [];
-    for (let i = 0; i < succeededMissionList.length; i += 1) {
-      const missionInfo = await missionUtil.findMissionById(succeededMissionList[i].MissionId);
+    for (let i = 0; i < succeededMissionList.count; i++) {
+      const missionInfo = await missionUtil.findMissionById(succeededMissionList.rows[i].MissionId);
+      console.log(missionInfo);
       badgeList.push(badgeListDto(missionInfo));
     }
 

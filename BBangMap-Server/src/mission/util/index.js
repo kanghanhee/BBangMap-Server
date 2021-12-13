@@ -96,6 +96,7 @@ module.exports = {
   // 사용자 전체 달성 미션 조회
   findUserSucceededMission: async user => {
     return await MissionWhether.findAndCountAll({
+      raw: true,
       where: {
         [Op.and]: [
           {
