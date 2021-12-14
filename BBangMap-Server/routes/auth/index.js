@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router();
+const authUtil = require('../../modules/auth')
 const authController = require('../../src/auth/controller')
 
-router.get('/login/apple',authController.appleLogin);
+router.put('/login',authController.authLogin);
+router.put('/logout',authUtil.checkToken,authController.logout);
 
 module.exports = router;

@@ -4,12 +4,12 @@ const jwt = require('../../../modules/jwt')
 const loginDto = require('../dto/loginDto')
 
 module.exports = {
-    authLogin:async(authUserInfo, provider)=>{
+    authLogin: async (authUserInfo, provider) => {
         //identifyToken, authorizationCode, email, state, user, familyName, givenName, middleName, nickName
         const {identifyToken} = authUserInfo;
-        try{
+        try {
             let findUser = await userUtil.findUserByIdentifyToken(identifyToken);
-            if(findUser == null){
+            if (findUser == null) {
                 //최초로그인유저 : 회원가입
                 let nickName = (await (userService.createRandomNickname())).nickname;
                 findUser = await userUtil.createUser(identifyToken, nickName);
@@ -17,6 +17,13 @@ module.exports = {
             const tokenJson = await jwt.sign(findUser);
             await userUtil.setUserToken(findUser, tokenJson.accessToken, tokenJson.refreshToken);
             return loginDto(tokenJson, provider);
+        } catch (err) {
+            return err;
+        }
+    },
+    logout: async (user) => {
+        try{
+            await userUtil.setUserToken(user, null, null);
         }catch(err){
             return err;
         }

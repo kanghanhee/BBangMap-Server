@@ -4,7 +4,7 @@ const statusCode = require('../../../modules/statusCode');
 const authService = require('../service');
 
 module.exports = {
-    appleLogin: async (req, res) => {
+    authLogin: async (req, res) => {
         try{
             const {appleUserInfo, provider} = req.body;
             //identifyToken, authorizationCode를 제외한 필드는 optional
@@ -14,4 +14,13 @@ module.exports = {
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
         }
     },
+    logout: async(req,res)=>{
+        try{
+            const {user} = req.header;
+            await authService.logout(user);
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_APPLE_LOGIN));
+        }catch(err){
+            return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
+        }
+    }
 }
