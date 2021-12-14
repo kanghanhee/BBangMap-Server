@@ -8,10 +8,17 @@ module.exports = (sequelize, DataTypes) => {
         unique: 'nickName',
         allowNull: false,
       },
-
-      uuid: {
+        accessToken:{
+          type: DataTypes.STRING(500),
+            unique:'accessToken'
+        },
+        refreshToken:{
+          type: DataTypes.STRING(500),
+            unique:'refreshToken'
+        },
+      identifyToken: {
         type: DataTypes.STRING(50),
-        unique: 'uuid',
+        unique: 'identifyToken',
         allowNull: false,
       },
       // 프로필이미지

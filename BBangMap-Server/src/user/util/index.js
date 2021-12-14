@@ -5,6 +5,13 @@ const { sequelize } = require('../../../models');
 const { User, Review, SaveBakery, SaveReview } = require('../../../models');
 
 module.exports = {
+  findUserById : async(id)=>{
+    return await User.findOne({
+        where: {
+            id
+        }
+    })
+  },
   // 회원 중복체크
   isExistUser: async uuid => {
     const existUser = await User.findOne({
@@ -26,10 +33,10 @@ module.exports = {
     return true;
   },
   // 회원 등록(role:1-> admin, 2: user)
-  createUser: async (uuid, nickname) => {
-    await User.create({
-      nickName: nickname,
-      uuid,
+  createUser: async (identifyToken, nickname) => {
+    return await User.create({
+      nickName : nickname,
+      identifyToken,
       grade: 1,
       role: 2,
       profileImg: 'https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427__340.jpg',
@@ -55,8 +62,7 @@ module.exports = {
     };
     const pickWord = async words => {
       const wordList = words.split('\n').slice(0, -1);
-      const word = wordList[rand(0, wordList.length - 1)];
-      return word;
+      return wordList[rand(0, wordList.length - 1)];
     };
     return await pickWord(stringWords);
   },
@@ -120,4 +126,20 @@ module.exports = {
       },
     });
   },
+  //uuid를 token으로 수정하고 uuid를 header에 넣는 로직을 전부 token으로 변경해야할거같은데..
+  findUserByIdentifyToken:async(authIdentifyToken)=> {
+    return await User.findOne({
+      where: { identifyToken : authIdentifyToken}
+    })
+  },
+  setUserToken:async(user, accessToken, refreshToken)=>{
+    await User.update({
+      accessToken : accessToken,
+      refreshToken : refreshToken
+    },{
+      where : {
+        id : user.id
+      }
+    })
+  }
 };

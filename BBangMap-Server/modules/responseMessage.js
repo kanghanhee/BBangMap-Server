@@ -6,12 +6,14 @@ module.exports = {
   /* 서버에러 */
   INTERNAL_SERVER_ERROR: '서버 내부 오류',
 
+  /*로그인*/
+  SUCCESS_APPLE_LOGIN:'애플로그인 성공',
+
   /*토큰*/
   INVALID_UUID: '존재하지 않는 UUID입니다.',
   EMPTY_TOKEN: '빈 토큰',
   EXPIRED_TOKEN: '토큰 기간 만료',
   INVALID_TOKEN: '유효하지 않은 토큰',
-  INVALID_UUID: '존재하지 않는 UUID입니다.',
 
   /*빵집*/
   SUCCESS_GET_BAKERY: '빵집불러오기 성공',
@@ -37,6 +39,7 @@ module.exports = {
   SUCCESS_GET_MY_PAGE: '마이페이지 불러오기 성공',
   ALREADY_USER: '이미 존재하는 회원입니다.',
   ALREADY_NICKNAME: '이미 존재하는 닉네임입니다.',
+  INVALID_USER: '유효하지 않는 회원입니다.',
 
   /*미션*/
   SUCCESS_CREATE_MISSION: '미션 추가 성공',
