@@ -11,7 +11,6 @@ const checkSucceededMissionDto = require('../dto/checkSucceededMissionDto');
 const badgeListDto = require('../dto/badgeListDto');
 const userSucceededMissionDto = require('../dto/userSucceededMissionDto');
 const monthlyMissionDto = require('../dto/monthlyMissionDto');
-const MissionWhether = require('../model/MissionWhether');
 
 // 미션 추가
 module.exports = {
@@ -66,7 +65,6 @@ module.exports = {
     let badgeList = [];
     for (let i = 0; i < succeededMissionList.count; i++) {
       const missionInfo = await missionUtil.findMissionById(succeededMissionList.rows[i].MissionId);
-      console.log(missionInfo);
       badgeList.push(badgeListDto(missionInfo));
     }
 
@@ -127,11 +125,11 @@ module.exports = {
     await missionUtil.isSucceededMission(user, mission.id, missionAchieveCount);
 
     // 미션 몇개 달성
-    let isSucceeded;
+    let isSucceeded = false;
     if (missionAchieveCount >= 3) {
       isSucceeded = true;
       await missionUtil.checkMissionSucceeded(user, mission.id);
-    } else isSucceeded = false;
+    }
 
     // 등급산정 Util(후기개수, 미션빵집)
     const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
