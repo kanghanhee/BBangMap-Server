@@ -29,7 +29,6 @@ module.exports = {
       if (req.files.profileImg) profileImgName = req.files.profileImg[0].location;
       if (req.files.backgroundImg) bgImgName = req.files.backgroundImg[0].location;
       if (req.body.nickname) nickname = req.body.nickname;
-      console.log(profileImgName);
       const result = await missionService.updateUser(user, profileImgName, bgImgName, nickname);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_USER, result));
     } catch (err) {
