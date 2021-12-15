@@ -1,14 +1,8 @@
-const {
-  Bakery,
-  Review,
-  User,
-  SaveReview,
-  LikeReview,
-} = require("../../../models");
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
+const { Bakery, Review, User, SaveReview, LikeReview } = require('../../../models');
 
 module.exports = {
-  findReviewOfBakery: async (bakeryId) => {
+  findReviewOfBakery: async bakeryId => {
     return Review.findAll({
       where: {
         BakeryId: bakeryId,
@@ -20,7 +14,7 @@ module.exports = {
       include: [
         {
           model: Bakery,
-          attributes: ["bakeryName"],
+          attributes: ['bakeryName'],
         },
       ],
     });
@@ -30,8 +24,8 @@ module.exports = {
       include: [
         {
           model: Bakery,
-          as: "Bakery",
-          attributes: ["bakeryName"],
+          as: 'Bakery',
+          attributes: ['bakeryName'],
         },
       ],
       where: {
@@ -48,7 +42,7 @@ module.exports = {
       },
     });
   },
-  findReviewById: async (reviewId) => {
+  findReviewById: async reviewId => {
     return Review.findOne({
       where: {
         id: reviewId,
@@ -56,46 +50,37 @@ module.exports = {
       include: [
         {
           model: User,
-          attributes: ["nickName"],
+          attributes: ['nickName'],
         },
         {
           model: Bakery,
-          attributes: ["bakeryName"],
+          attributes: ['bakeryName'],
         },
       ],
     });
   },
-  findUsersSavedReviewList: async (user) => {
+  findUsersSavedReviewList: async user => {
     return SaveReview.findAll({
       where: { UserId: user.id },
     });
   },
-  findUsersLikedReviewList: async (user) => {
+  findUsersLikedReviewList: async user => {
     return LikeReview.findAll({
       where: { UserId: user.id },
     });
   },
-  findMyReviewList: async (user) => {
+  findMyReviewList: async user => {
     return Review.findAll({
       where: { UserId: user.id },
       include: [
         {
           model: Bakery,
-          attributes: ["bakeryName"],
+          attributes: ['bakeryName'],
         },
       ],
     });
   },
-  addReview: async (
-    user,
-    bakeryId,
-    isOnline,
-    isVegan,
-    purchaseBreadList,
-    star,
-    content,
-    reviewImgList
-  ) => {
+  addReview: async (user, bakeryId, isOnline, isVegan, purchaseBreadList, star, content, reviewImgList) => {
     await Review.create({
       UserId: user.id,
       BakeryId: bakeryId,
@@ -108,17 +93,15 @@ module.exports = {
     });
   },
   isMyReview: async (review, myReviewList) => {
-    const isMyReview = (myReviewList) => myReviewList.id === review.id;
+    const isMyReview = myReviewList => myReviewList.id === review.id;
     return myReviewList.some(isMyReview);
   },
   isSavedReview: async (review, savedReviewList) => {
-    const isContainReview = (savedReviewList) =>
-      savedReviewList.ReviewId === review.id;
+    const isContainReview = savedReviewList => savedReviewList.ReviewId === review.id;
     return savedReviewList.some(isContainReview);
   },
   isLikedReview: async (review, likedReviewList) => {
-    const isContainReview = (likedReviewList) =>
-      likedReviewList.ReviewId === review.id;
+    const isContainReview = likedReviewList => likedReviewList.ReviewId === review.id;
     return likedReviewList.some(isContainReview);
   },
   savedReview: async (userId, reviewId) => {
@@ -150,5 +133,19 @@ module.exports = {
         id: reviewId,
       },
     });
+  },
+  findLikeReviewCount: async reviewId => {
+    return await LikeReview.findAndCountAll({
+      where: {
+        ReviewId: reviewId,
+      },
+    });
+  },
+  findLikeReview: async () => {
+    return await LikeReview.findAll({});
+  },
+  getCount: (reviewId, likeCountList) => {
+    let count = likeCountList.filter(likeCount => likeCount === reviewId).length;
+    return count;
   },
 };
