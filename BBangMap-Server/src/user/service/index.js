@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
 /* eslint-disable no-await-in-loop */
@@ -48,12 +49,14 @@ module.exports = {
   updateUser: async (user, newProfileImg, newBgImg, newNickname) => {
     // 닉네임 중복검사(본인 제외)
     const checkNickname = await userUtil.isExistNickname(newNickname);
-    if (checkNickname && newNickname !== user.nickName)
+
+    if (checkNickname && newNickname !== user.nickName && newNickname)
       throw {
         statusCode: statusCode.CONFLICT,
         responseMessage: responseMessage.ALREADY_NICKNAME,
       };
-    if (!newProfileImg) newProfileImg = user.profileImg; // 변경 없음
+
+    if (!newProfileImg) newProfileImg = user.profileImg;
     if (!newBgImg) newBgImg = user.backgroundImg;
     if (!newNickname) newNickname = user.nickName;
 
@@ -80,7 +83,7 @@ module.exports = {
       let secondWord = await userUtil.randomNickname(secondList);
       let thirdWord = await userUtil.randomNickname(thirdList);
 
-      newNickname = firstWord + secondWord + thirdWord;
+      newNickname = `${firstWord} ${secondWord} ${thirdWord}`;
       let checkNickname = await userUtil.isExistNickname(newNickname);
       if (!checkNickname) break;
     }
