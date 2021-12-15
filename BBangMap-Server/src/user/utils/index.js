@@ -46,4 +46,14 @@ module.exports = {
       ],
     });
   },
+  findUserIncludeLikedReview: async user => {
+    return await User.findOne({
+      where: { id: user.id },
+      include: {
+        model: Review,
+        as: 'Liked',
+        attributes: {},
+      },
+    });
+  },
 };

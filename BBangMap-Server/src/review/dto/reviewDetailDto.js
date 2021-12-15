@@ -1,24 +1,18 @@
-const reviewUtil = require("../utils");
+const reviewUtil = require('../utils');
 
-const reviewDetailDto = async (
-  review,
-  savedReviewList,
-  myReviewList,
-  likedReviewList
-) => {
+const reviewDetailDto = async (review, savedReviewList, myReviewList, likedReviewList, likeReviewCount) => {
   return {
     reviewId: review.id,
-    bakeryName:
-      review.BakeryId === null ? "빵집 정보 없음" : review.Bakery.bakeryName,
+    bakeryName: review.BakeryId === null ? '빵집 정보 없음' : review.Bakery.bakeryName,
     purchaseBreadList: review.purchaseBreadList,
     content: review.content,
     reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList,
-    reviewerName:
-      review.UserId === null ? "존재하지 않는 닉네임" : review.User.nickName,
+    reviewerName: review.UserId === null ? '존재하지 않는 닉네임' : review.User.nickName,
     reviewCreatedDate: review.createdAt,
     isSavedReview: await reviewUtil.isSavedReview(review, savedReviewList),
     isMyReview: await reviewUtil.isMyReview(review, myReviewList),
     isLikedReview: await reviewUtil.isLikedReview(review, likedReviewList),
+    likeReviewCount: likeReviewCount,
   };
 };
 
