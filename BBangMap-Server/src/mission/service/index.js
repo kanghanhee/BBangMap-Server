@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable consistent-return */
 /* eslint-disable no-throw-literal */
 /* eslint-disable no-await-in-loop */
@@ -10,6 +11,7 @@ const checkSucceededMissionDto = require('../dto/checkSucceededMissionDto');
 const badgeListDto = require('../dto/badgeListDto');
 const userSucceededMissionDto = require('../dto/userSucceededMissionDto');
 const monthlyMissionDto = require('../dto/monthlyMissionDto');
+const MissionWhether = require('../model/MissionWhether');
 
 // 미션 추가
 module.exports = {
@@ -62,8 +64,9 @@ module.exports = {
     const monthlyMission = monthlyMissionDto(mission);
     const succeededMissionList = await missionUtil.findUserSucceededMission(user);
     let badgeList = [];
-    for (let i = 0; i < succeededMissionList.length; i += 1) {
-      const missionInfo = await missionUtil.findMissionById(succeededMissionList[i].MissionId);
+    for (let i = 0; i < succeededMissionList.count; i++) {
+      const missionInfo = await missionUtil.findMissionById(succeededMissionList.rows[i].MissionId);
+      console.log(missionInfo);
       badgeList.push(badgeListDto(missionInfo));
     }
 
@@ -76,10 +79,15 @@ module.exports = {
   // 사용자가 달성한 미션
   getUserSucceededMission: async (user, missionId) => {
     const missionInfo = await missionUtil.findMissionById(missionId);
+    if (!missionInfo)
+      throw {
+        statusCode: statusCode.BAD_REQUEST,
+        responseMessage: responseMessage.NO_MISSION,
+      };
     let isVisitedList = [];
     const missionSuccessWhether = await missionUtil.getMissionAchievedCount(user, missionId);
 
-    if (missionSuccessWhether.missionAchieveCount < 3)
+    if (!missionSuccessWhether || missionSuccessWhether.missionAchieveCount < 3)
       throw {
         statusCode: statusCode.BAD_REQUEST,
         responseMessage: responseMessage.NOT_SUCCEEDED,
@@ -115,22 +123,28 @@ module.exports = {
       }),
     );
 
+    // 후기 작성/삭제시, 배지 달성 체크
+    await missionUtil.isSucceededMission(user, mission.id, missionAchieveCount);
+
     // 미션 몇개 달성
     let isSucceeded;
-    if (missionAchieveCount >= 3) isSucceeded = true;
-    else isSucceeded = false;
+    if (missionAchieveCount >= 3) {
+      isSucceeded = true;
+      await missionUtil.checkMissionSucceeded(user, mission.id);
+    } else isSucceeded = false;
 
     // 등급산정 Util(후기개수, 미션빵집)
     const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
     const userReviewCount = await missionUtil.findUserReview(user);
-    const rank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
+    const beforeRank = user.grade;
+    const afterRank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
     let isChangedRank = false;
-    if (user.grade !== rank.rank) {
+    if (user.grade !== afterRank.rank) {
       isChangedRank = true;
-      await missionUtil.updateUserRank(user, rank.rank);
+      await missionUtil.updateUserRank(user, afterRank.rank);
     }
 
-    return checkSucceededMissionDto(isMissionBakery, isSucceeded, isChangedRank, rank, mission);
+    return checkSucceededMissionDto(isMissionBakery, isSucceeded, isChangedRank, beforeRank, afterRank, mission);
   },
   // 나의 등급
   getUserRank: async user => {

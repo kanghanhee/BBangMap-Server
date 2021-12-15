@@ -1,9 +1,10 @@
-const checkSucceededMissionDto = (bakery, isSucceeded, isChangedRank, rank, mission) => {
+const checkSucceededMissionDto = (bakery, isSucceeded, isChangedRank, beforeRank, afterRank, mission) => {
   return {
-    rank: rank.rank,
     isMissionBakery: bakery,
     isSucceededMission: isSucceeded,
     isChangedRank,
+    beforeRank,
+    afterRank: afterRank.rank,
     badgeName: mission.badgeName,
     badgeImg: mission.badgeImg,
   };
