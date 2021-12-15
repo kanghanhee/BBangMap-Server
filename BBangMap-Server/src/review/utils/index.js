@@ -7,6 +7,7 @@ module.exports = {
       where: {
         BakeryId: bakeryId,
       },
+      order: [['createdAt', 'DESC']],
     });
   },
   findReviewAll: async () => {
@@ -17,6 +18,7 @@ module.exports = {
           attributes: ['bakeryName'],
         },
       ],
+      order: [['createdAt', 'DESC']],
     });
   },
   findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
