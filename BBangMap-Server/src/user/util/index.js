@@ -132,10 +132,9 @@ module.exports = {
       where: { identifyToken : authIdentifyToken}
     })
   },
-  setUserToken:async(user, accessToken, refreshToken)=>{
+  setUserToken:async(user, accessToken)=>{
     await User.update({
-      accessToken : accessToken,
-      refreshToken : refreshToken
+      accessToken : accessToken
     },{
       where : {
         id : user.id

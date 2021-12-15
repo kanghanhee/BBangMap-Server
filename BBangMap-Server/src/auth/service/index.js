@@ -9,21 +9,25 @@ module.exports = {
         const {identifyToken} = authUserInfo;
         try {
             let findUser = await userUtil.findUserByIdentifyToken(identifyToken);
+            let accessToken;
             if (findUser == null) {
                 //최초로그인유저 : 회원가입
                 let nickName = (await (userService.createRandomNickname())).nickname;
                 findUser = await userUtil.createUser(identifyToken, nickName);
+                accessToken = await jwt.sign(findUser);
+                await userUtil.setUserToken(findUser, accessToken);
+
+                return loginDto(accessToken, provider);
             }
-            const tokenJson = await jwt.sign(findUser);
-            await userUtil.setUserToken(findUser, tokenJson.accessToken, tokenJson.refreshToken);
-            return loginDto(tokenJson, provider);
+            accessToken = findUser.accessToken;
+            return loginDto(accessToken, provider);
         } catch (err) {
             return err;
         }
     },
     logout: async (user) => {
         try{
-            await userUtil.setUserToken(user, null, null);
+            await userUtil.setUserToken(user, null);
         }catch(err){
             return err;
         }

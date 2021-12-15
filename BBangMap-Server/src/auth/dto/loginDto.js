@@ -1,7 +1,6 @@
-const loginDto = (token, provider) => {
+const loginDto = (accessToken, provider) => {
     return {
-        accessToken : token.accessToken,
-        refreshToken : token.refreshToken,
+        accessToken : accessToken,
         provider
     }
 }

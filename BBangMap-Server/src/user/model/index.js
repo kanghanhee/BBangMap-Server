@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.STRING(500),
             unique:'accessToken'
         },
-        refreshToken:{
-          type: DataTypes.STRING(500),
-            unique:'refreshToken'
-        },
       identifyToken: {
         type: DataTypes.STRING(50),
         unique: 'identifyToken',

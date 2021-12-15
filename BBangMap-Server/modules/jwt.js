@@ -1,4 +1,3 @@
-const randToken = require('rand-token')
 const jwt = require('jsonwebtoken')
 const secretKey = require('../config/secretJwtKey').secretKey
 const options = require('../config/secretJwtKey').option
@@ -11,10 +10,7 @@ module.exports = {
             id: user.id,
             nickname: user.nickName
         };
-        return {
-            accessToken: jwt.sign(payload, secretKey, options),
-            refreshToken: randToken.uid(256)
-        };
+        return jwt.sign(payload, secretKey, options);
     },
     verify: async (token) => {
         let decoded;
