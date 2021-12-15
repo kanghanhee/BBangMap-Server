@@ -7,6 +7,7 @@ module.exports = {
       where: {
         BakeryId: bakeryId,
       },
+      order: [['createdAt', 'DESC']],
     });
   },
   findReviewAll: async () => {
@@ -17,6 +18,7 @@ module.exports = {
           attributes: ['bakeryName'],
         },
       ],
+      order: [['createdAt', 'DESC']],
     });
   },
   findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
@@ -144,8 +146,8 @@ module.exports = {
   findLikeReview: async () => {
     return await LikeReview.findAll({});
   },
-  getCount: (reviewId, likeCountList) => {
-    let count = likeCountList.filter(likeCount => likeCount === reviewId).length;
+  getCount: (id, countList) => {
+    let count = countList.filter(count => count === id).length;
     return count;
   },
 };

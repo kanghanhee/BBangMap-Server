@@ -52,9 +52,13 @@ module.exports = {
     try {
       let user = req.header.user;
       let savedReviewFolderListDto = await reviewService.getSavedReviewFolderList(user);
+      // 저장한 후기 전체개수
+      let savedReviewCount = await reviewService.getSavedReviewCount(user);
       res
         .status(statusCode.OK)
-        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewFolderListDto));
+        .send(
+          util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewFolderListDto, savedReviewCount),
+        );
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
@@ -66,7 +70,14 @@ module.exports = {
       let savedReviewListDto = await reviewService.getSavedReviewOfBakeryList(bakeryId, user);
       res
         .status(statusCode.OK)
-        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewListDto));
+        .send(
+          util.success(
+            statusCode.OK,
+            responseMessage.SUCCESS_GET_REVIEW,
+            savedReviewListDto,
+            savedReviewListDto.length,
+          ),
+        );
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }

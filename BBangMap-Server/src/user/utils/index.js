@@ -22,7 +22,22 @@ module.exports = {
         include: {
           model: Bakery,
           as: 'Bakery',
-          attributes: ['bakeryName'],
+          attributes: {},
+        },
+      },
+    });
+  },
+  findUserIncludeSavedReviewGroup: async user => {
+    return await User.findOne({
+      where: { id: user.id },
+      include: {
+        model: Review,
+        as: 'SavedReview',
+        attributes: {},
+        include: {
+          model: Bakery,
+          as: 'Bakery',
+          attributes: {},
         },
       },
       group: ['SavedReview.BakeryId'],
