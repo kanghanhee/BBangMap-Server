@@ -7,13 +7,15 @@ module.exports = {
   INTERNAL_SERVER_ERROR: '서버 내부 오류',
 
   /*로그인*/
-  SUCCESS_APPLE_LOGIN:'애플로그인 성공',
+  SUCCESS_LOGIN:'로그인 성공',
+  SUCCESS_LOGOUT:'로그아웃 성공',
 
   /*토큰*/
   INVALID_UUID: '존재하지 않는 UUID입니다.',
   EMPTY_TOKEN: '빈 토큰',
   EXPIRED_TOKEN: '토큰 기간 만료',
   INVALID_TOKEN: '유효하지 않은 토큰',
+  SUCCESS_REISSUE_TOKEN: '토큰 재발생 성공',
 
   /*빵집*/
   SUCCESS_GET_BAKERY: '빵집불러오기 성공',

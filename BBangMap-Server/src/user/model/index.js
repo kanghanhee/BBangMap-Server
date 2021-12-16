@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       },
         accessToken:{
           type: DataTypes.STRING(500),
-            unique:'accessToken'
+            unique:'accessToken',
+            allowNull: true
         },
       identifyToken: {
         type: DataTypes.STRING(50),

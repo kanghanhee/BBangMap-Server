@@ -19,17 +19,33 @@ module.exports = {
 
                 return loginDto(accessToken, provider);
             }
-            accessToken = findUser.accessToken;
+            if(findUser.accessToken == null){
+                console.log('accessToken이 null')
+                accessToken = await jwt.sign(findUser);
+                await userUtil.setUserToken(findUser, accessToken);
+            }else accessToken = findUser.accessToken;
             return loginDto(accessToken, provider);
         } catch (err) {
             return err;
         }
     },
     logout: async (user) => {
-        try{
+        try {
             await userUtil.setUserToken(user, null);
-        }catch(err){
+        } catch (err) {
             return err;
+        }
+    },
+    reissueToken: async (accessToken) => {
+        try {
+            const findUser = await userUtil.findUserByAccessToken(accessToken);
+            if(findUser == null) throw new Error("InvalidAccessToken");
+            const newAccessToken = await jwt.sign(findUser);
+            await userUtil.setUserToken(findUser, newAccessToken);
+
+            return loginDto(newAccessToken, findUser.provider);
+        } catch (err) {
+            throw err;
         }
     }
 }

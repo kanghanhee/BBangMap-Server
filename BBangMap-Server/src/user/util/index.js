@@ -140,5 +140,10 @@ module.exports = {
         id : user.id
       }
     })
+  },
+  findUserByAccessToken:async(accessToken)=>{
+    return await User.findOne({
+      where : {accessToken: accessToken}
+    })
   }
 };
