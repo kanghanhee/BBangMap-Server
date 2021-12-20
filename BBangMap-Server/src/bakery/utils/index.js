@@ -13,6 +13,15 @@ module.exports = {
             //방문 빵집이 많은 순으로 정렬
         })
     },
+    findBakeryListByBakeryBestMenu: async(bread)=>{
+        return Bakery.findAll({
+            where: {
+                bestMenu:{[Op.like]:`%${bread}%`}
+            },
+            raw:true,
+            nest:true
+        })
+    },
     findBakeryById: async (bakeryId) => {
         return Bakery.findOne({
             where: {
