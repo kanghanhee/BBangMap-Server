@@ -86,7 +86,9 @@ module.exports = {
     try {
       let user = req.header.user;
       let myReviewListDto = await reviewService.getMyReviewList(user);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, myReviewListDto));
+      res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, myReviewListDto, myReviewListDto.length));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
