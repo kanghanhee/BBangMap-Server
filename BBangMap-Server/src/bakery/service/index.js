@@ -19,7 +19,12 @@ module.exports = {
         return bakeryMapListDto(bakeryList, savedBakeryList);
     },
     getSearchBakeryList: async (bakeryName, latitude, longitude) => {
+        let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
+
+        if(searchBakeryByBreadList.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude);
+
         let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
+
         return bakerySearchListDto(searchBakeryList, latitude, longitude);
     },
     getBakeryDetail: async (bakeryId, user) => {
