@@ -5,11 +5,15 @@ module.exports = {
   findUserIncludeSavedBakery: async user => {
     return await User.findOne({
       where: { id: user.id },
-      include: {
+      include: [{
         model: Bakery,
         as: 'SavedBakery',
         attributes: {},
-      },
+      },{
+        model: Bakery,
+        as: 'VisitedBakery',
+        attributes: {}
+      }]
     });
   },
   findUserIncludeSavedReview: async user => {
