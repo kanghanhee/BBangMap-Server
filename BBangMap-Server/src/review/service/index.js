@@ -48,11 +48,21 @@ module.exports = {
 
     return reviewDetailDto(review, savedReviewList, myReviewList, likedReviewList, likeReviewCount.count);
   },
+  getSavedReviewCount: async user => {
+    let findUser = await userUtils.findUserIncludeSavedReview(user);
+    let savedReviewList = findUser.SavedReview;
+
+    return savedReviewList.length;
+  },
   getSavedReviewFolderList: async user => {
     let findUser = await userUtils.findUserIncludeSavedReview(user);
-    let savedReviewFolderList = findUser.SavedReview;
+    let savedReviewList = findUser.SavedReview;
+    let savedReviewCountList = savedReviewList.map(savedReview => savedReview.BakeryId);
 
-    return savedReviewFolderListDto(savedReviewFolderList);
+    let findUserGroup = await userUtils.findUserIncludeSavedReviewGroup(user);
+    let savedReviewFolderGroupList = findUserGroup.SavedReview;
+
+    return savedReviewFolderListDto(savedReviewFolderGroupList, savedReviewCountList);
   },
   getSavedReviewOfBakeryList: async (bakeryId, user) => {
     let findUser = await userUtils.findUserIncludeSavedReviewOfBakery(bakeryId, user);

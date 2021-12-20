@@ -1,7 +1,7 @@
 const savedReviewFolderDto = require('./savedReviewFolderDto');
 
-const savedReviewFolderListDto = savedReviewFolderList => {
-  return savedReviewFolderList.map(savedReviewFolder => savedReviewFolderDto(savedReviewFolder));
+const savedReviewFolderListDto = (savedReviewFolderList, savedReviewCountList) => {
+  return savedReviewFolderList.map(savedReviewFolder => savedReviewFolderDto(savedReviewFolder, savedReviewCountList));
 };
 
 module.exports = savedReviewFolderListDto;
