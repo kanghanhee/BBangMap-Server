@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const authUtil = require('../../modules/auth')
+const authUtil = require('../../middlewares/authUtil')
 const authController = require('../../src/auth/controller')
 
 router.put('/login',authController.authLogin);
