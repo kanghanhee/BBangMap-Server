@@ -13,10 +13,10 @@ module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
         let findUser = await userUtils.findUserIncludeSavedBakery(user);
         let savedBakeryList = findUser.SavedBakery.map(saveBakery => saveBakery.id);
-
+        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
         let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
 
-        return bakeryMapListDto(bakeryList, savedBakeryList);
+        return bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
     },
     getSearchBakeryList: async (bakeryName, latitude, longitude) => {
         let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
