@@ -1,10 +1,9 @@
-const bakeryMapDto = (bakery, savedBakeryList, visitedBakeryList) => {
+const bakeryMapDto = (bakery, savedBakeryList) => {
     return {
         bakeryId: bakery.id,
         latitude: bakery.latitude,
         longitude: bakery.longitude,
-        isSaveBakery: savedBakeryList.includes(bakery.id),
-        isVisitedBakery : visitedBakeryList.includes(bakery.id)
+        isSaveBakery: savedBakeryList.includes(bakery.id)
     }
 }
 

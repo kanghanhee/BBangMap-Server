@@ -9,10 +9,6 @@ module.exports = {
         model: Bakery,
         as: 'SavedBakery',
         attributes: {},
-      },{
-        model: Bakery,
-        as: 'VisitedBakery',
-        attributes: {}
       }]
     });
   },
@@ -75,4 +71,14 @@ module.exports = {
       },
     });
   },
+  findUserIncludeVisitedBakery: async user => {
+    return await User.findOne({
+      where: { id: user.id },
+      include: [{
+        model: Bakery,
+        as: 'VisitedBakery',
+        attributes: {}
+      }]
+    });
+  }
 };

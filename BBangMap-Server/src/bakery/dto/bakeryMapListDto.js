@@ -1,8 +1,8 @@
 const bakeryMapDto = require('./bakeryMapDto')
 
-const bakeryMapListDto = (bakeryList, savedBakeryList, visitedBakeryList) => {
+const bakeryMapListDto = (bakeryList, savedBakeryList) => {
     return bakeryList.map(bakery => {
-        return bakeryMapDto(bakery, savedBakeryList, visitedBakeryList);
+        return bakeryMapDto(bakery, savedBakeryList);
     });
 }
 
