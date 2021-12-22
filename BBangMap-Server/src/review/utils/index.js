@@ -94,6 +94,33 @@ module.exports = {
       reviewImgList: reviewImgList,
     });
   },
+  updateReview: async (
+    reviewId,
+    user,
+    bakeryId,
+    isOnline,
+    isVegan,
+    purchaseBreadList,
+    star,
+    content,
+    reviewImgList,
+  ) => {
+    await Review.update(
+      {
+        UserId: user.id,
+        BakeryId: bakeryId,
+        isVegan: isVegan,
+        isOnline: isOnline,
+        purchaseBreadList: purchaseBreadList,
+        star: star,
+        content: content,
+        reviewImgList: reviewImgList,
+      },
+      {
+        where: { id: reviewId },
+      },
+    );
+  },
   isMyReview: async (review, myReviewList) => {
     const isMyReview = myReviewList => myReviewList.id === review.id;
     return myReviewList.some(isMyReview);

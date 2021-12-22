@@ -94,6 +94,31 @@ module.exports = {
 
     return addReview;
   },
+  updateReview: async (
+    reviewId,
+    user,
+    bakeryId,
+    isVegan,
+    isOnline,
+    purchaseBreadList,
+    star,
+    content,
+    reviewImgList,
+  ) => {
+    let updateReview = await reviewUtils.updateReview(
+      reviewId,
+      user,
+      bakeryId,
+      isVegan,
+      isOnline,
+      purchaseBreadList,
+      star,
+      content,
+      reviewImgList,
+    );
+
+    return updateReview;
+  },
   savedReview: async (reviewId, user) => {
     let userId = user.id;
     await reviewUtils.savedReview(userId, reviewId);

@@ -126,6 +126,39 @@ module.exports = {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
+  updateReview: async (req, res) => {
+    let { reviewId } = req.params;
+    let { bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImg } = req.body;
+    let files = [];
+    if (req.files['reviewImgList']) files = req.files['reviewImgList'];
+
+    if (Array.isArray(files)) {
+      var reviewImgList = new Array();
+
+      for (var i = 0; i < files.length; i++) {
+        reviewImgList.push(files[i].location);
+      }
+    }
+    try {
+      let user = req.header.user;
+      console.log(reviewId);
+      let updateReview = await reviewService.updateReview(
+        reviewId,
+        user,
+        bakeryId,
+        isVegan,
+        isOnline,
+        purchaseBreadList,
+        star,
+        content,
+        reviewImgList,
+      );
+
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REVIEW, updateReview));
+    } catch (err) {
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
   saveReview: async (req, res) => {
     try {
       let { reviewId } = req.params;
