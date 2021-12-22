@@ -7,9 +7,15 @@ const missionService = require('../../mission/service');
 module.exports = {
   reviewOfBakery: async (req, res) => {
     try {
-      let { bakeryId } = req.query;
+      let { bakeryId, order } = req.query;
       let user = req.header.user;
       let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(bakeryId, user);
+      // 추천순으로 정렬
+      if (order === 'best') {
+        reviewOfBakeryListDto.sort(function (a, b) {
+          return b.likeReviewCount - a.likeReviewCount;
+        });
+      }
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewOfBakeryListDto));
@@ -19,8 +25,15 @@ module.exports = {
   },
   reviewAll: async (req, res) => {
     try {
+      let { order } = req.query;
       let user = req.header.user;
       let reivewAllListDto = await reviewService.getReviewAll(user);
+      // 추천순으로 정렬
+      if (order === 'best') {
+        reivewAllListDto.sort(function (a, b) {
+          return b.likeReviewCount - a.likeReviewCount;
+        });
+      }
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
@@ -28,9 +41,15 @@ module.exports = {
   },
   reviewSearch: async (req, res) => {
     try {
-      let { searchWord, isOnline, isVegan } = req.query;
+      let { searchWord, isOnline, isVegan, order } = req.query;
       let user = req.header.user;
       let reviewSearchListDto = await reviewService.getSearchReviewList(searchWord, isOnline, isVegan, user);
+      // 추천순으로 정렬
+      if (order === 'best') {
+        reviewSearchListDto.sort(function (a, b) {
+          return b.likeReviewCount - a.likeReviewCount;
+        });
+      }
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewSearchListDto));
