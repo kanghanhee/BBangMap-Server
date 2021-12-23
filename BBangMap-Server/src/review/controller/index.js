@@ -3,6 +3,7 @@ const statusCode = require('../../../modules/statusCode');
 const responseMessage = require('../../../modules/responseMessage');
 const reviewService = require('../service');
 const missionService = require('../../mission/service');
+const reviewUtils = require('../utils');
 
 module.exports = {
   reviewOfBakery: async (req, res) => {
@@ -12,9 +13,7 @@ module.exports = {
       let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(bakeryId, user);
       // 추천순으로 정렬
       if (order === 'best') {
-        reviewOfBakeryListDto.sort(function (a, b) {
-          return b.likeReviewCount - a.likeReviewCount;
-        });
+        reviewUtils.getSortByLikeCount(reviewOfBakeryListDto);
       }
       res
         .status(statusCode.OK)
@@ -30,9 +29,7 @@ module.exports = {
       let reivewAllListDto = await reviewService.getReviewAll(user);
       // 추천순으로 정렬
       if (order === 'best') {
-        reivewAllListDto.sort(function (a, b) {
-          return b.likeReviewCount - a.likeReviewCount;
-        });
+        reviewUtils.getSortByLikeCount(reivewAllListDto);
       }
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
     } catch (err) {
@@ -46,9 +43,7 @@ module.exports = {
       let reviewSearchListDto = await reviewService.getSearchReviewList(searchWord, isOnline, isVegan, user);
       // 추천순으로 정렬
       if (order === 'best') {
-        reviewSearchListDto.sort(function (a, b) {
-          return b.likeReviewCount - a.likeReviewCount;
-        });
+        reviewUtils.getSortByLikeCount(reviewSearchListDto);
       }
       res
         .status(statusCode.OK)
