@@ -150,4 +150,36 @@ module.exports = {
     let count = countList.filter(count => count === id).length;
     return count;
   },
+  // 저장한 후기 전체 개수
+  getSavedReview: async user => {
+    return await SaveReview.findAndCountAll({
+      where: {
+        UserId: user.id,
+      },
+    });
+  },
+  // 저장한 후기 빵집별 개수
+  getSavedReviewOfBakery: async (user, bakeryId) => {
+    return await User.findAndCountAll({
+      where: {
+        id: user.id,
+      },
+      include: [
+        {
+          model: Review,
+          as: 'SavedReview',
+          where: { BakeryId: bakeryId },
+          attributes: {},
+        },
+      ],
+    });
+  },
+  // 내가 쓴 후기 개수
+  getMyReview: async user => {
+    return await Review.findAndCountAll({
+      where: {
+        UserId: user.id,
+      },
+    });
+  },
 };
