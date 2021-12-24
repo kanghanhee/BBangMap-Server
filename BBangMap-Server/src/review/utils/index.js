@@ -150,4 +150,10 @@ module.exports = {
     let count = countList.filter(count => count === id).length;
     return count;
   },
+  // 추천순으로 정렬
+  getSortByLikeCount: list => {
+    list.sort(function (a, b) {
+      return b.likeReviewCount - a.likeReviewCount;
+    });
+  },
 };

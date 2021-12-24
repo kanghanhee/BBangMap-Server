@@ -10,11 +10,7 @@ module.exports = {
     try {
       let { bakeryId, order } = req.query;
       let user = req.header.user;
-      let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(bakeryId, user);
-      // 추천순으로 정렬
-      if (order === 'best') {
-        reviewUtils.getSortByLikeCount(reviewOfBakeryListDto);
-      }
+      let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(order, bakeryId, user);
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewOfBakeryListDto));
@@ -26,11 +22,7 @@ module.exports = {
     try {
       let { order } = req.query;
       let user = req.header.user;
-      let reivewAllListDto = await reviewService.getReviewAll(user);
-      // 추천순으로 정렬
-      if (order === 'best') {
-        reviewUtils.getSortByLikeCount(reivewAllListDto);
-      }
+      let reivewAllListDto = await reviewService.getReviewAll(order, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
@@ -40,11 +32,7 @@ module.exports = {
     try {
       let { searchWord, isOnline, isVegan, order } = req.query;
       let user = req.header.user;
-      let reviewSearchListDto = await reviewService.getSearchReviewList(searchWord, isOnline, isVegan, user);
-      // 추천순으로 정렬
-      if (order === 'best') {
-        reviewUtils.getSortByLikeCount(reviewSearchListDto);
-      }
+      let reviewSearchListDto = await reviewService.getSearchReviewList(order, searchWord, isOnline, isVegan, user);
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewSearchListDto));

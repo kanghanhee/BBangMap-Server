@@ -9,7 +9,7 @@ const reviewOfBakeryListDto = require('../dto/reviewOfBakeryListDto');
 const myReviewListDto = require('../dto/myReviewListDto');
 
 module.exports = {
-  getReviewOfBakery: async (bakeryId, user) => {
+  getReviewOfBakery: async (order, bakeryId, user) => {
     let reviewOfBakeryList = await reviewUtils.findReviewOfBakery(bakeryId);
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
@@ -17,9 +17,15 @@ module.exports = {
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
-    return reviewOfBakeryListDto(reviewOfBakeryList, likedReviewList, likeCountList);
+    let result = reviewOfBakeryListDto(reviewOfBakeryList, likedReviewList, likeCountList);
+    // 추천수로 정렬
+    if (order === 'best') {
+      reviewUtils.getSortByLikeCount(result);
+    }
+
+    return result;
   },
-  getReviewAll: async user => {
+  getReviewAll: async (order, user) => {
     let reviewList = await reviewUtils.findReviewAll();
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
@@ -27,9 +33,15 @@ module.exports = {
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
-    return reviewListDto(reviewList, likedReviewList, likeCountList);
+    let result = reviewListDto(reviewList, likedReviewList, likeCountList);
+    // 추천수로 정렬
+    if (order === 'best') {
+      reviewUtils.getSortByLikeCount(result);
+    }
+
+    return result;
   },
-  getSearchReviewList: async (searchWord, isOnline, isVegan, user) => {
+  getSearchReviewList: async (order, searchWord, isOnline, isVegan, user) => {
     let reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
@@ -37,7 +49,13 @@ module.exports = {
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
-    return reviewListDto(reviewList, likedReviewList, likeCountList);
+    let result = reviewListDto(reviewList, likedReviewList, likeCountList);
+    // 추천수로 정렬
+    if (order === 'best') {
+      reviewUtils.getSortByLikeCount(result);
+    }
+
+    return result;
   },
   getReviewDetail: async (reviewId, user) => {
     let review = await reviewUtils.findReviewById(reviewId);
