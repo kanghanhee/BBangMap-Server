@@ -20,13 +20,14 @@ module.exports = {
     },
     getSearchBakeryList: async (bakeryName, latitude, longitude, user) => {
         let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
+        let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
+        let findUser = await userUtils.findUserIncludeVisitedBakery(user);
+        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
 
-        if(searchBakeryByBreadList.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude);
+        if(filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
 
         let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
 
-        let findUser = await userUtils.findUserIncludeVisitedBakery(user);
-        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
 
         return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
     },
