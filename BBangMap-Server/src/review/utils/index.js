@@ -181,6 +181,8 @@ module.exports = {
   getSortByLikeCount: list => {
     list.sort(function (a, b) {
       return b.likeReviewCount - a.likeReviewCount;
+    });
+  },
   // 저장한 후기 전체 개수
   getSavedReview: async user => {
     return await SaveReview.findAndCountAll({
