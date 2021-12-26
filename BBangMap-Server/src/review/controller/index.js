@@ -54,13 +54,9 @@ module.exports = {
     try {
       let user = req.header.user;
       let savedReviewFolderListDto = await reviewService.getSavedReviewFolderList(user);
-      // 저장한 후기 전체개수
-      let savedReviewCount = await reviewService.getSavedReviewCount(user);
       res
         .status(statusCode.OK)
-        .send(
-          util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewFolderListDto, savedReviewCount),
-        );
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewFolderListDto));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
@@ -72,14 +68,7 @@ module.exports = {
       let savedReviewListDto = await reviewService.getSavedReviewOfBakeryList(bakeryId, user);
       res
         .status(statusCode.OK)
-        .send(
-          util.success(
-            statusCode.OK,
-            responseMessage.SUCCESS_GET_REVIEW,
-            savedReviewListDto,
-            savedReviewListDto.length,
-          ),
-        );
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewListDto));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
@@ -88,9 +77,7 @@ module.exports = {
     try {
       let user = req.header.user;
       let myReviewListDto = await reviewService.getMyReviewList(user);
-      res
-        .status(statusCode.OK)
-        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, myReviewListDto, myReviewListDto.length));
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, myReviewListDto));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
@@ -124,6 +111,39 @@ module.exports = {
 
       let missionResult = await missionService.checkSucceededMission(user, bakeryId);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_REVIEW, missionResult));
+    } catch (err) {
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  updateReview: async (req, res) => {
+    let { reviewId } = req.params;
+    let { bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImg } = req.body;
+    let files = [];
+    if (req.files['reviewImgList']) files = req.files['reviewImgList'];
+
+    if (Array.isArray(files)) {
+      var reviewImgList = new Array();
+
+      for (var i = 0; i < files.length; i++) {
+        reviewImgList.push(files[i].location);
+      }
+    }
+    try {
+      let user = req.header.user;
+      console.log(reviewId);
+      let updateReview = await reviewService.updateReview(
+        reviewId,
+        user,
+        bakeryId,
+        isVegan,
+        isOnline,
+        purchaseBreadList,
+        star,
+        content,
+        reviewImgList,
+      );
+
+      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REVIEW, updateReview));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }

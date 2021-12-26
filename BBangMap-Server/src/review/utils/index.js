@@ -94,6 +94,33 @@ module.exports = {
       reviewImgList: reviewImgList,
     });
   },
+  updateReview: async (
+    reviewId,
+    user,
+    bakeryId,
+    isOnline,
+    isVegan,
+    purchaseBreadList,
+    star,
+    content,
+    reviewImgList,
+  ) => {
+    await Review.update(
+      {
+        UserId: user.id,
+        BakeryId: bakeryId,
+        isVegan: isVegan,
+        isOnline: isOnline,
+        purchaseBreadList: purchaseBreadList,
+        star: star,
+        content: content,
+        reviewImgList: reviewImgList,
+      },
+      {
+        where: { id: reviewId },
+      },
+    );
+  },
   isMyReview: async (review, myReviewList) => {
     const isMyReview = myReviewList => myReviewList.id === review.id;
     return myReviewList.some(isMyReview);
@@ -154,6 +181,36 @@ module.exports = {
   getSortByLikeCount: list => {
     list.sort(function (a, b) {
       return b.likeReviewCount - a.likeReviewCount;
+  // 저장한 후기 전체 개수
+  getSavedReview: async user => {
+    return await SaveReview.findAndCountAll({
+      where: {
+        UserId: user.id,
+      },
+    });
+  },
+  // 저장한 후기 빵집별 개수
+  getSavedReviewOfBakery: async (user, bakeryId) => {
+    return await User.findAndCountAll({
+      where: {
+        id: user.id,
+      },
+      include: [
+        {
+          model: Review,
+          as: 'SavedReview',
+          where: { BakeryId: bakeryId },
+          attributes: {},
+        },
+      ],
+    });
+  },
+  // 내가 쓴 후기 개수
+  getMyReview: async user => {
+    return await Review.findAndCountAll({
+      where: {
+        UserId: user.id,
+      },
     });
   },
 };

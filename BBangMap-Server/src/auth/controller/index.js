@@ -6,9 +6,9 @@ const authService = require('../service');
 module.exports = {
     authLogin: async (req, res) => {
         try {
-            const {appleUserInfo, provider} = req.body;
+            const {identifyToken, provider} = req.body;
             //identifyToken, authorizationCode를 제외한 필드는 optional
-            const loginDto = await authService.authLogin(appleUserInfo, provider);
+            const loginDto = await authService.authLogin(identifyToken, provider);
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LOGIN, loginDto));
         } catch (err) {
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.message));

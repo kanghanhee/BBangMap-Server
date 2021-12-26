@@ -4,9 +4,8 @@ const jwt = require('../../../modules/jwt')
 const loginDto = require('../dto/loginDto')
 
 module.exports = {
-    authLogin: async (authUserInfo, provider) => {
+    authLogin: async (identifyToken, provider) => {
         //identifyToken, authorizationCode, email, state, user, familyName, givenName, middleName, nickName
-        const {identifyToken} = authUserInfo;
         try {
             let findUser = await userUtil.findUserByIdentifyToken(identifyToken);
             let accessToken;
@@ -17,14 +16,13 @@ module.exports = {
                 accessToken = await jwt.sign(findUser);
                 await userUtil.setUserToken(findUser, accessToken);
 
-                return loginDto(accessToken, provider);
+                return loginDto(accessToken, provider, findUser.nickName);
             }
             if(findUser.accessToken == null){
-                console.log('accessToken이 null')
                 accessToken = await jwt.sign(findUser);
                 await userUtil.setUserToken(findUser, accessToken);
             }else accessToken = findUser.accessToken;
-            return loginDto(accessToken, provider);
+            return loginDto(accessToken, provider, findUser.nickName);
         } catch (err) {
             return err;
         }
@@ -43,7 +41,7 @@ module.exports = {
             const newAccessToken = await jwt.sign(findUser);
             await userUtil.setUserToken(findUser, newAccessToken);
 
-            return loginDto(newAccessToken, findUser.provider);
+            return loginDto(newAccessToken, findUser.provider, findUser.nickName);
         } catch (err) {
             throw err;
         }

@@ -7,8 +7,8 @@ module.exports = {
   INTERNAL_SERVER_ERROR: '서버 내부 오류',
 
   /*로그인*/
-  SUCCESS_LOGIN:'로그인 성공',
-  SUCCESS_LOGOUT:'로그아웃 성공',
+  SUCCESS_LOGIN: '로그인 성공',
+  SUCCESS_LOGOUT: '로그아웃 성공',
 
   /*토큰*/
   INVALID_UUID: '존재하지 않는 UUID입니다.',
@@ -31,6 +31,7 @@ module.exports = {
   SUCCESS_CREATE_REVIEW: '후기 작성 성공',
   SUCCESS_LIKED_REVIEW: '후기 추천하기 성공',
   SUCCESS_UNLIKED_REVIEW: '후기 추천하기 삭제',
+  SUCCESS_UPDATE_REVIEW: '후기 수정 성공',
 
   /*사용자*/
   SUCCESS_SIGN_UP: '회원가입 성공',
