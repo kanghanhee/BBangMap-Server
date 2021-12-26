@@ -3,13 +3,14 @@ const statusCode = require('../../../modules/statusCode');
 const responseMessage = require('../../../modules/responseMessage');
 const reviewService = require('../service');
 const missionService = require('../../mission/service');
+const reviewUtils = require('../utils');
 
 module.exports = {
   reviewOfBakery: async (req, res) => {
     try {
-      let { bakeryId } = req.query;
+      let { bakeryId, order } = req.query;
       let user = req.header.user;
-      let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(bakeryId, user);
+      let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(order, bakeryId, user);
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewOfBakeryListDto));
@@ -19,8 +20,9 @@ module.exports = {
   },
   reviewAll: async (req, res) => {
     try {
+      let { order } = req.query;
       let user = req.header.user;
-      let reivewAllListDto = await reviewService.getReviewAll(user);
+      let reivewAllListDto = await reviewService.getReviewAll(order, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
@@ -28,9 +30,9 @@ module.exports = {
   },
   reviewSearch: async (req, res) => {
     try {
-      let { searchWord, isOnline, isVegan } = req.query;
+      let { searchWord, isOnline, isVegan, order } = req.query;
       let user = req.header.user;
-      let reviewSearchListDto = await reviewService.getSearchReviewList(searchWord, isOnline, isVegan, user);
+      let reviewSearchListDto = await reviewService.getSearchReviewList(order, searchWord, isOnline, isVegan, user);
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewSearchListDto));
