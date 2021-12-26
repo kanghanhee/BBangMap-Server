@@ -13,19 +13,23 @@ module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
         let findUser = await userUtils.findUserIncludeSavedBakery(user);
         let savedBakeryList = findUser.SavedBakery.map(saveBakery => saveBakery.id);
-        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
+
         let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
 
-        return bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
+        return bakeryMapListDto(bakeryList, savedBakeryList);
     },
-    getSearchBakeryList: async (bakeryName, latitude, longitude) => {
+    getSearchBakeryList: async (bakeryName, latitude, longitude, user) => {
         let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
+        let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
+        let findUser = await userUtils.findUserIncludeVisitedBakery(user);
+        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
 
-        if(searchBakeryByBreadList.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude);
+        if(filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
 
         let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
 
-        return bakerySearchListDto(searchBakeryList, latitude, longitude);
+
+        return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
     },
     getBakeryDetail: async (bakeryId, user) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);
