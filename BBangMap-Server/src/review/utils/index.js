@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
-const { Bakery, Review, User, SaveReview, LikeReview } = require('../../../models');
+const { Bakery, Review, User, SaveReview, LikeReview, VisitBakery } = require('../../../models');
+// const VisitBakery = require('../../user/model/VisitBakery');
 
 module.exports = {
   findReviewOfBakery: async bakeryId => {
@@ -212,6 +213,17 @@ module.exports = {
     return await Review.findAndCountAll({
       where: {
         UserId: user.id,
+      },
+    });
+  },
+  // 방문한 빵집 체크
+  checkVisitBakery: async (user, bakeryId) => {
+    // 이미 체크했는지 확인 & 없으면 생성
+    return await VisitBakery.findOrCreate({
+      where: { [Op.and]: [{ UserId: user.id }, { BakeryId: bakeryId }] },
+      defaults: {
+        UserId: user.id,
+        BakeryId: bakeryId,
       },
     });
   },
