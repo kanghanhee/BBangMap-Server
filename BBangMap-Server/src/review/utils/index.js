@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
-const { Bakery, Review, User, SaveReview, LikeReview } = require('../../../models');
+const { Bakery, Review, User, SaveReview, LikeReview, VisitBakery } = require('../../../models');
+// const VisitBakery = require('../../user/model/VisitBakery');
 
 module.exports = {
   findReviewOfBakery: async bakeryId => {
@@ -94,6 +95,33 @@ module.exports = {
       reviewImgList: reviewImgList,
     });
   },
+  updateReview: async (
+    reviewId,
+    user,
+    bakeryId,
+    isOnline,
+    isVegan,
+    purchaseBreadList,
+    star,
+    content,
+    reviewImgList,
+  ) => {
+    await Review.update(
+      {
+        UserId: user.id,
+        BakeryId: bakeryId,
+        isVegan: isVegan,
+        isOnline: isOnline,
+        purchaseBreadList: purchaseBreadList,
+        star: star,
+        content: content,
+        reviewImgList: reviewImgList,
+      },
+      {
+        where: { id: reviewId },
+      },
+    );
+  },
   isMyReview: async (review, myReviewList) => {
     const isMyReview = myReviewList => myReviewList.id === review.id;
     return myReviewList.some(isMyReview);
@@ -149,5 +177,54 @@ module.exports = {
   getCount: (id, countList) => {
     let count = countList.filter(count => count === id).length;
     return count;
+  },
+  // 추천순으로 정렬
+  getSortByLikeCount: list => {
+    list.sort(function (a, b) {
+      return b.likeReviewCount - a.likeReviewCount;
+    });
+  },
+  // 저장한 후기 전체 개수
+  getSavedReview: async user => {
+    return await SaveReview.findAndCountAll({
+      where: {
+        UserId: user.id,
+      },
+    });
+  },
+  // 저장한 후기 빵집별 개수
+  getSavedReviewOfBakery: async (user, bakeryId) => {
+    return await User.findAndCountAll({
+      where: {
+        id: user.id,
+      },
+      include: [
+        {
+          model: Review,
+          as: 'SavedReview',
+          where: { BakeryId: bakeryId },
+          attributes: {},
+        },
+      ],
+    });
+  },
+  // 내가 쓴 후기 개수
+  getMyReview: async user => {
+    return await Review.findAndCountAll({
+      where: {
+        UserId: user.id,
+      },
+    });
+  },
+  // 방문한 빵집 체크
+  checkVisitBakery: async (user, bakeryId) => {
+    // 이미 체크했는지 확인 & 없으면 생성
+    return await VisitBakery.findOrCreate({
+      where: { [Op.and]: [{ UserId: user.id }, { BakeryId: bakeryId }] },
+      defaults: {
+        UserId: user.id,
+        BakeryId: bakeryId,
+      },
+    });
   },
 };
