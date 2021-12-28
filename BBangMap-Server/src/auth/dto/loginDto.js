@@ -1,8 +1,8 @@
-const loginDto = (accessToken, provider, nickName, isLogin) => {
+const loginDto = (accessToken, provider, nickname, isLogin) => {
     return {
         accessToken : accessToken,
         provider,
-        nickName,
+        nickname,
         isLogin
     }
 }
