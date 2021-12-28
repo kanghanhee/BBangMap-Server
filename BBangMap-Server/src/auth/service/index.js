@@ -16,13 +16,13 @@ module.exports = {
                 accessToken = await jwt.sign(findUser);
                 await userUtil.setUserToken(findUser, accessToken);
 
-                return loginDto(accessToken, provider, findUser.nickName);
+                return loginDto(accessToken, provider, findUser.nickName, false);
             }
             if(findUser.accessToken == null){
                 accessToken = await jwt.sign(findUser);
                 await userUtil.setUserToken(findUser, accessToken);
             }else accessToken = findUser.accessToken;
-            return loginDto(accessToken, provider, findUser.nickName);
+            return loginDto(accessToken, provider, findUser.nickName, true);
         } catch (err) {
             return err;
         }
@@ -41,7 +41,7 @@ module.exports = {
             const newAccessToken = await jwt.sign(findUser);
             await userUtil.setUserToken(findUser, newAccessToken);
 
-            return loginDto(newAccessToken, findUser.provider, findUser.nickName);
+            return loginDto(newAccessToken, findUser.provider, findUser.nickName, true);
         } catch (err) {
             throw err;
         }

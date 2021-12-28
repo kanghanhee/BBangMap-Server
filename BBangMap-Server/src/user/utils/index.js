@@ -9,6 +9,10 @@ module.exports = {
         model: Bakery,
         as: 'SavedBakery',
         attributes: {},
+      },{
+        model : Bakery,
+        as : 'VisitedBakery',
+        attributes: {}
       }]
     });
   },
