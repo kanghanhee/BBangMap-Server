@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const env = process.env.NODE_ENV || 'production';
+const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
 
 const db = {};
@@ -28,8 +28,8 @@ db.User.belongsToMany(db.Bakery, { through: 'SaveBakery', as: 'SavedBakery' });
 db.Bakery.belongsToMany(db.User, { through: 'SaveBakery', as: 'SaverBakery' });
 
 /* 방문한 빵집 리스트 user:bakery(1:N) */
-db.User.belongsToMany(db.Bakery, { through: 'VisitBakery', as: 'VisitedBakery',});
-db.Bakery.belongsToMany(db.User, { through: 'VisitBakery', as: 'VisiterBakery',});
+db.User.belongsToMany(db.Bakery, { through: 'VisitBakery', as: 'VisitedBakery' });
+db.Bakery.belongsToMany(db.User, { through: 'VisitBakery', as: 'VisiterBakery' });
 
 /* 작성한 후기 리스트 user:review(1:N) */
 db.User.hasMany(db.Review, { onDelete: 'cascade' });

@@ -108,7 +108,7 @@ module.exports = {
   },
 
   // 미션 달성시 체크
-  checkSucceededMission: async (user, bakeryId) => {
+  checkSucceededMission: async (user, bakeryId, reviewId) => {
     const mission = await missionUtil.findMissionByDate();
     const isMissionBakery = await missionUtil.isMissionBakery(mission, bakeryId);
 
@@ -142,7 +142,15 @@ module.exports = {
       await missionUtil.updateUserRank(user, afterRank.rank);
     }
 
-    return checkSucceededMissionDto(isMissionBakery, isSucceeded, isChangedRank, beforeRank, afterRank, mission);
+    return checkSucceededMissionDto(
+      isMissionBakery,
+      isSucceeded,
+      isChangedRank,
+      beforeRank,
+      afterRank,
+      mission,
+      reviewId,
+    );
   },
   // 나의 등급
   getUserRank: async user => {

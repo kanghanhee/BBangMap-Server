@@ -108,8 +108,8 @@ module.exports = {
         content,
         reviewImgList,
       );
-
-      let missionResult = await missionService.checkSucceededMission(user, bakeryId);
+      console.log(review);
+      const missionResult = await missionService.checkSucceededMission(user, bakeryId, review.id);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_REVIEW, missionResult));
     } catch (err) {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
