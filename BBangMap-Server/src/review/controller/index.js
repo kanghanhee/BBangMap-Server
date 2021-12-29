@@ -108,7 +108,6 @@ module.exports = {
         content,
         reviewImgList,
       );
-      console.log(review);
       const missionResult = await missionService.checkSucceededMission(user, bakeryId, review.id);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_REVIEW, missionResult));
     } catch (err) {
@@ -130,7 +129,6 @@ module.exports = {
     }
     try {
       let user = req.header.user;
-      console.log(reviewId);
       let updateReview = await reviewService.updateReview(
         reviewId,
         user,
