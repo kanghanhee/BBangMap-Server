@@ -135,7 +135,7 @@ module.exports = {
     const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
     const userReviewCount = await missionUtil.findUserReview(user);
     const beforeRank = user.grade;
-    const afterRank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
+    const afterRank = await missionUtil.calculateRank(userMissionCount.count, userReviewCount.count);
     let isChangedRank = false;
     if (user.grade !== afterRank.rank) {
       isChangedRank = true;
@@ -158,7 +158,8 @@ module.exports = {
     const userReviewCount = await missionUtil.findUserReview(user);
     const calculated = await missionUtil.calculateRank(userMissionCount.count, userReviewCount.count);
     // const calculated = await missionUtil.calculateRank(20, 20);
-
+    console.log(user.grade);
+    console.log(calculated.rank);
     if (user.grade !== calculated.rank) {
       await missionUtil.updateUserRank(user, calculated.rank);
     }
