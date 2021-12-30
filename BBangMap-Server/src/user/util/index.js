@@ -3,14 +3,15 @@
 const fs = require('fs');
 const { sequelize } = require('../../../models');
 const { User, Review, SaveBakery, SaveReview } = require('../../../models');
+const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
 
 module.exports = {
-  findUserById : async(id)=>{
+  findUserById: async id => {
     return await User.findOne({
-        where: {
-            id
-        }
-    })
+      where: {
+        id,
+      },
+    });
   },
   // 회원 중복체크
   isExistUser: async uuid => {
@@ -35,12 +36,12 @@ module.exports = {
   // 회원 등록(role:1-> admin, 2: user)
   createUser: async (identifyToken, nickname) => {
     return await User.create({
-      nickName : nickname,
+      nickName: nickname,
       identifyToken,
       grade: 1,
       role: 2,
-      profileImg: 'https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427__340.jpg',
-      backgroundImg: 'https://www.stockvault.net/data/2019/08/24/268592/preview16.jpg',
+      profileImg: defaultProfileImg,
+      backgroundImg: defaultBgImg,
     });
   },
   // 파일 읽기
@@ -127,23 +128,26 @@ module.exports = {
     });
   },
   //uuid를 token으로 수정하고 uuid를 header에 넣는 로직을 전부 token으로 변경해야할거같은데..
-  findUserByIdentifyToken:async(authIdentifyToken)=> {
+  findUserByIdentifyToken: async authIdentifyToken => {
     return await User.findOne({
-      where: { identifyToken : authIdentifyToken}
-    })
+      where: { identifyToken: authIdentifyToken },
+    });
   },
-  setUserToken:async(user, accessToken)=>{
-    await User.update({
-      accessToken : accessToken
-    },{
-      where : {
-        id : user.id
-      }
-    })
+  setUserToken: async (user, accessToken) => {
+    await User.update(
+      {
+        accessToken: accessToken,
+      },
+      {
+        where: {
+          id: user.id,
+        },
+      },
+    );
   },
-  findUserByAccessToken:async(accessToken)=>{
+  findUserByAccessToken: async accessToken => {
     return await User.findOne({
-      where : {accessToken: accessToken}
-    })
-  }
+      where: { accessToken: accessToken },
+    });
+  },
 };

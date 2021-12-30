@@ -7,6 +7,7 @@ const userUtil = require('../util');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const myPageDto = require('../dto/myPageDto');
+const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
 
 module.exports = {
   // 회원가입
@@ -55,6 +56,8 @@ module.exports = {
         statusCode: statusCode.CONFLICT,
         responseMessage: responseMessage.ALREADY_NICKNAME,
       };
+    if (newProfileImg === 'default') newProfileImg = defaultProfileImg;
+    if (newBgImg === 'default') newBgImg = defaultBgImg;
 
     if (!newProfileImg) newProfileImg = user.profileImg;
     if (!newBgImg) newBgImg = user.backgroundImg;
