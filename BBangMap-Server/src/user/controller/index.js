@@ -23,11 +23,17 @@ module.exports = {
   updateUser: async (req, res) => {
     try {
       const { user } = req.header;
-      let profileImgName = req?.files.profileImg[0]?.location;
-      let bgImgName = req.files?.backgroundImg[0]?.location;
-      const nickname = req?.body?.nickname;
+
+      let profileImgName = '';
+      let bgImgName = '';
+      let nickname = '';
+      if (req.files.profileImg) profileImgName = req.files.profileImg[0].location;
+      if (req.files.backgroundImg) bgImgName = req.files.backgroundImg[0].location;
+      if (req.body.nickname) nickname = req.body.nickname;
+
       // let isProfileImageDefault = req?.body?.isProfileImageDefault;
       // let isBackgroundImageDefault = req?.body?.isBackgroundImageDefault;
+      console.log(profileImgName, bgImgName, nickname);
       if (req.body.isProfileImageDefault) profileImgName = 'default';
       if (req.body.isBackgroundImageDefault) bgImgName = 'default';
 
