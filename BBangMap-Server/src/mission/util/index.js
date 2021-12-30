@@ -203,7 +203,7 @@ module.exports = {
   calculateRank: async (userMissionCount, userReviewCount) => {
     let rank; // 등급
     if (userMissionCount >= 30 && userReviewCount >= 30) rank = 3;
-    else if (userMissionCount >= 20 && userReviewCount >= 20) rank = 2;
+    else if (userMissionCount >= 10 && userReviewCount >= 10) rank = 2;
     else rank = 1;
 
     const result = {
