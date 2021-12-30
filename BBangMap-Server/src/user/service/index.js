@@ -50,7 +50,6 @@ module.exports = {
   updateUser: async (user, newProfileImg, newBgImg, newNickname) => {
     // 닉네임 중복검사(본인 제외)
     const checkNickname = await userUtil.isExistNickname(newNickname);
-    console.log('durl!');
     if (checkNickname && newNickname !== user.nickName && newNickname)
       throw {
         statusCode: statusCode.CONFLICT,

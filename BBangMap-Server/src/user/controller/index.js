@@ -31,9 +31,6 @@ module.exports = {
       if (req.files.backgroundImg) bgImgName = req.files.backgroundImg[0].location;
       if (req.body.nickname) nickname = req.body.nickname;
 
-      // let isProfileImageDefault = req?.body?.isProfileImageDefault;
-      // let isBackgroundImageDefault = req?.body?.isBackgroundImageDefault;
-      console.log(profileImgName, bgImgName, nickname);
       if (req.body.isProfileImageDefault) profileImgName = 'default';
       if (req.body.isBackgroundImageDefault) bgImgName = 'default';
 
