@@ -33,13 +33,15 @@ module.exports = {
     },
     getBakeryDetail: async (bakeryId, user) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);
+        let imgUpdateBakery = await bakeryUtils.addBakeryImg(bakery);
         let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
         let visitedBakeryList = await bakeryUtils.findUsersVisitedBakeryList(user);
-        return bakeryDetailDto(bakery, savedBakeryList, visitedBakeryList);
+        return bakeryDetailDto(imgUpdateBakery, savedBakeryList, visitedBakeryList);
     },
     getBakeryImgList: async (bakeryId) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);
-        return bakeryImgListDto(bakery);
+        let imgUpdateBakery = await bakeryUtils.addBakeryImg(bakery);
+        return bakeryImgListDto(imgUpdateBakery);
     },
     getSavedBakeryList: async (user) => {
         let findUser = await userUtils.findUserIncludeSavedBakery(user);

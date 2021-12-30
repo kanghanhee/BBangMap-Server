@@ -81,5 +81,14 @@ module.exports = {
         return searchBakeryByBreadList.filter(bakery => {
             return bakery.bestMenu.includes(bread);
         })
+    },
+    addBakeryImg: async(bakery)=>{
+        var originalBakeryImgList = bakery.bakeryImg;
+        let reviewImgList = bakery.Reviews
+            .map(review => review.reviewImgList)
+            .reduce((reviewImgArr, next) =>
+                reviewImgArr.concat(next));
+        bakery.bakeryImg = originalBakeryImgList.concat(reviewImgList);
+        return bakery;
     }
 }
