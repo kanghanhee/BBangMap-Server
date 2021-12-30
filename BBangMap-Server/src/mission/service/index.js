@@ -158,6 +158,7 @@ module.exports = {
     const userReviewCount = await missionUtil.findUserReview(user);
     const calculated = await missionUtil.calculateRank(userMissionCount.count, userReviewCount.count);
     // const calculated = await missionUtil.calculateRank(20, 20);
+
     if (user.grade !== calculated.rank) {
       await missionUtil.updateUserRank(user, calculated.rank);
     }
