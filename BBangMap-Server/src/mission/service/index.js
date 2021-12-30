@@ -108,7 +108,7 @@ module.exports = {
   },
 
   // 미션 달성시 체크
-  checkSucceededMission: async (user, bakeryId) => {
+  checkSucceededMission: async (user, bakeryId, reviewId) => {
     const mission = await missionUtil.findMissionByDate();
     const isMissionBakery = await missionUtil.isMissionBakery(mission, bakeryId);
 
@@ -135,14 +135,22 @@ module.exports = {
     const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
     const userReviewCount = await missionUtil.findUserReview(user);
     const beforeRank = user.grade;
-    const afterRank = await missionUtil.calculateRank(userMissionCount, userReviewCount);
+    const afterRank = await missionUtil.calculateRank(userMissionCount.count, userReviewCount.count);
     let isChangedRank = false;
     if (user.grade !== afterRank.rank) {
       isChangedRank = true;
       await missionUtil.updateUserRank(user, afterRank.rank);
     }
 
-    return checkSucceededMissionDto(isMissionBakery, isSucceeded, isChangedRank, beforeRank, afterRank, mission);
+    return checkSucceededMissionDto(
+      isMissionBakery,
+      isSucceeded,
+      isChangedRank,
+      beforeRank,
+      afterRank,
+      mission,
+      reviewId,
+    );
   },
   // 나의 등급
   getUserRank: async user => {
