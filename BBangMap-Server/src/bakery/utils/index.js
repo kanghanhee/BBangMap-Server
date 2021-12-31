@@ -20,7 +20,7 @@ module.exports = {
             },
             // raw: true,
             // nest: true,
-            attributes:{}
+            attributes: {}
         })
     },
     findBakeryById: async (bakeryId) => {
@@ -82,12 +82,16 @@ module.exports = {
             return bakery.bestMenu.includes(bread);
         })
     },
-    addBakeryImg: async(bakery)=>{
-        var originalBakeryImgList = bakery.bakeryImg;
-        let reviewImgList = bakery.Reviews
-            .map(review => review.reviewImgList)
-            .reduce((reviewImgArr, next) =>
-                reviewImgArr.concat(next));
+    addBakeryImg: async (bakery) => {
+        var originalBakeryImgList = bakery.bakeryImg.length > 0 ? bakery.bakeryImg : ["https://bbang-map.s3.ap-northeast-2.amazonaws.com/images/bakery/empty-bakery-image.jpg"];
+
+        let reviewImgList = [];
+        if (bakery.Reviews.length > 0) {
+            reviewImgList = bakery.Reviews
+                .map(review => review.reviewImgList)
+                .reduce((reviewImgArr, next) =>
+                    reviewImgArr.concat(next));
+        }
         bakery.bakeryImg = originalBakeryImgList.concat(reviewImgList);
         return bakery;
     }

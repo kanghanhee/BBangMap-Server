@@ -66,6 +66,8 @@ module.exports = {
       let { bakeryId } = req.params;
       let user = req.header.user;
       let savedReviewListDto = await reviewService.getSavedReviewOfBakeryList(bakeryId, user);
+      if (savedReviewListDto === null)
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.NO_SAVED_REIVEW));
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewListDto));
