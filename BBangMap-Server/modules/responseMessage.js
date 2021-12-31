@@ -32,6 +32,7 @@ module.exports = {
   SUCCESS_LIKED_REVIEW: '후기 추천하기 성공',
   SUCCESS_UNLIKED_REVIEW: '후기 추천하기 삭제',
   SUCCESS_UPDATE_REVIEW: '후기 수정 성공',
+  NO_SAVED_REIVEW: '해당 빵집의 보관된 후기가 없습니다',
 
   /*사용자*/
   SUCCESS_SIGN_UP: '회원가입 성공',

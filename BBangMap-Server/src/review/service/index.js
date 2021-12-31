@@ -79,6 +79,13 @@ module.exports = {
   },
   getSavedReviewOfBakeryList: async (bakeryId, user) => {
     let findUser = await userUtils.findUserIncludeSavedReviewOfBakery(bakeryId, user);
+    if (findUser !== null) {
+      let savedReviewOfBakeryList = findUser.SavedReview;
+      let totalCount = await reviewUtils.getSavedReviewOfBakery(user, bakeryId);
+
+      return savedReviewOfBakeryListDto(savedReviewOfBakeryList, totalCount.count);
+    } else return findUser;
+
     let savedReviewOfBakeryList = findUser.SavedReview;
     let totalCount = await reviewUtils.getSavedReviewOfBakery(user, bakeryId);
 
