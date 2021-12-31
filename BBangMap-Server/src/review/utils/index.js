@@ -83,7 +83,7 @@ module.exports = {
       ],
     });
   },
-  addReview: async (user, bakeryId, isOnline, isVegan, purchaseBreadList, star, content, reviewImgList) => {
+  addReview: async (user, bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImgList) => {
     return await Review.create({
       UserId: user.id,
       BakeryId: bakeryId,
