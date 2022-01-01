@@ -9,16 +9,16 @@ router.post('/', userController.signUp); // 회원가입
 // 프로필 수정
 router.put(
   '/',
-  authUtil.checkUuid,
+  authUtil.checkToken,
   userUpload.fields([
     { name: 'profileImg', maxCount: 1 },
     { name: 'backgroundImg', maxCount: 1 },
   ]),
   userController.updateUser,
 );
-router.delete('/', authUtil.checkUuid, userController.deleteUser); // 프로필 삭제
+router.delete('/', authUtil.checkToken, userController.deleteUser); // 프로필 삭제
 router.post('/nickname', userController.checkNickname); // 닉네임 중복검사
 router.get('/random-nickname', userController.randomNickname); // 랜덤 닉네임
-router.get('/mypage', authUtil.checkUuid, userController.getMyPage); // 마이페이지
+router.get('/mypage', authUtil.checkToken, userController.getMyPage); // 마이페이지
 
 module.exports = router;

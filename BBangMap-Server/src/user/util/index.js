@@ -3,8 +3,16 @@
 const fs = require('fs');
 const { sequelize } = require('../../../models');
 const { User, Review, SaveBakery, SaveReview } = require('../../../models');
+const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
 
 module.exports = {
+  findUserById: async id => {
+    return await User.findOne({
+      where: {
+        id,
+      },
+    });
+  },
   // 회원 중복체크
   isExistUser: async uuid => {
     const existUser = await User.findOne({
@@ -26,14 +34,14 @@ module.exports = {
     return true;
   },
   // 회원 등록(role:1-> admin, 2: user)
-  createUser: async (uuid, nickname) => {
-    await User.create({
+  createUser: async (identifyToken, nickname) => {
+    return await User.create({
       nickName: nickname,
-      uuid,
+      identifyToken,
       grade: 1,
       role: 2,
-      profileImg: 'https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427__340.jpg',
-      backgroundImg: 'https://www.stockvault.net/data/2019/08/24/268592/preview16.jpg',
+      profileImg: defaultProfileImg,
+      backgroundImg: defaultBgImg,
     });
   },
   // 파일 읽기
@@ -55,8 +63,7 @@ module.exports = {
     };
     const pickWord = async words => {
       const wordList = words.split('\n').slice(0, -1);
-      const word = wordList[rand(0, wordList.length - 1)];
-      return word;
+      return wordList[rand(0, wordList.length - 1)];
     };
     return await pickWord(stringWords);
   },
@@ -118,6 +125,29 @@ module.exports = {
       where: {
         UserId: user.id,
       },
+    });
+  },
+  //uuid를 token으로 수정하고 uuid를 header에 넣는 로직을 전부 token으로 변경해야할거같은데..
+  findUserByIdentifyToken: async authIdentifyToken => {
+    return await User.findOne({
+      where: { identifyToken: authIdentifyToken },
+    });
+  },
+  setUserToken: async (user, accessToken) => {
+    await User.update(
+      {
+        accessToken: accessToken,
+      },
+      {
+        where: {
+          id: user.id,
+        },
+      },
+    );
+  },
+  findUserByAccessToken: async accessToken => {
+    return await User.findOne({
+      where: { accessToken: accessToken },
     });
   },
 };

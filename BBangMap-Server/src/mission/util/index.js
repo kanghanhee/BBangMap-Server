@@ -96,6 +96,7 @@ module.exports = {
   // 사용자 전체 달성 미션 조회
   findUserSucceededMission: async user => {
     return await MissionWhether.findAndCountAll({
+      raw: true,
       where: {
         [Op.and]: [
           {
@@ -148,6 +149,26 @@ module.exports = {
       );
     });
   },
+  // whether 미션달성 체크
+  checkMissionSucceeded: async (user, missionId) => {
+    await MissionWhether.update(
+      {
+        missionSuccessWhether: true,
+      },
+      {
+        where: {
+          [Op.and]: [
+            {
+              MissionId: missionId,
+            },
+            {
+              userId: user.id,
+            },
+          ],
+        },
+      },
+    );
+  },
   getMissionAchievedCount: async (user, missionId) => {
     return MissionWhether.findOne({
       where: {
@@ -182,7 +203,7 @@ module.exports = {
   calculateRank: async (userMissionCount, userReviewCount) => {
     let rank; // 등급
     if (userMissionCount >= 30 && userReviewCount >= 30) rank = 3;
-    else if (userMissionCount >= 20 && userReviewCount >= 20) rank = 2;
+    else if (userMissionCount >= 10 && userReviewCount >= 10) rank = 2;
     else rank = 1;
 
     const result = {

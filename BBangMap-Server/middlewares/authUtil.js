@@ -1,32 +1,32 @@
+const jwt = require('../modules/jwt')
 const responseMessage = require('../modules/responseMessage')
-const util = require('../modules/util')
 const statusCode = require('../modules/statusCode')
-const uuidUtil = require('../modules/uuidUtil')
+const util = require('../modules/util')
+const TOKEN_EXPIRED = -3;
+const TOKEN_INVALID = -2;
+
+const userUtil = require('../src/user/util')
 
 const authUtil = {
-    checkUuid: async (req, res, next) => {
-        try {
-            var uuid = req.headers.uuid;
+    checkToken: async (req, res, next) => {
+        let token = req.headers.token;
 
-            var user = await uuidUtil.validUuId(uuid);
+        if(!token)
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.EMPTY_TOKEN));
 
-            if (user == null) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INVALID_UUID));
+        const decode = await jwt.verify(token);
 
-            req.header.user = user;
+        if(decode === TOKEN_EXPIRED)
+            return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.EXPIRED_TOKEN));
+        if(decode === TOKEN_INVALID)
+            return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.INVALID_TOKEN));
+        if(decode.id === undefined)
+            return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.INVALID_TOKEN));
 
-            next();
-        } catch (e) {
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, e.message))
-        }
-    },
-    validAdmin: async (req, res, next) => {
-        var uuid = req.headers.uuid;
+        const user = await userUtil.findUserById(decode.id);
 
-        var user = await uuidUtil.validUuId(uuid);
-
-        if (user == null) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INVALID_UUID));
-
-        if (user.role !== 0) res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.UNAUTHORIZED));
+        if(user == null)
+            return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.INVALID_USER));
 
         req.header.user = user;
 

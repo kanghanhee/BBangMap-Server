@@ -1,11 +1,13 @@
-const checkSucceededMissionDto = (bakery, isSucceeded, isChangedRank, rank, mission) => {
+const checkSucceededMissionDto = (bakery, isSucceeded, isChangedRank, beforeRank, afterRank, mission, reviewId) => {
   return {
-    rank: rank.rank,
     isMissionBakery: bakery,
     isSucceededMission: isSucceeded,
     isChangedRank,
+    beforeRank,
+    afterRank: afterRank.rank,
     badgeName: mission.badgeName,
     badgeImg: mission.badgeImg,
+    reviewId,
   };
 };
 module.exports = checkSucceededMissionDto;

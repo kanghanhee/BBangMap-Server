@@ -13,24 +13,35 @@ module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
         let findUser = await userUtils.findUserIncludeSavedBakery(user);
         let savedBakeryList = findUser.SavedBakery.map(saveBakery => saveBakery.id);
-
+        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
         let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
 
-        return bakeryMapListDto(bakeryList, savedBakeryList);
+        return bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
     },
-    getSearchBakeryList: async (bakeryName, latitude, longitude) => {
+    getSearchBakeryList: async (bakeryName, latitude, longitude, user) => {
+        let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
+        let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
+        let findUser = await userUtils.findUserIncludeVisitedBakery(user);
+        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
+
+        if(filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
+
         let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
-        return bakerySearchListDto(searchBakeryList, latitude, longitude);
+
+
+        return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
     },
     getBakeryDetail: async (bakeryId, user) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);
+        let imgUpdateBakery = await bakeryUtils.addBakeryImg(bakery);
         let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
         let visitedBakeryList = await bakeryUtils.findUsersVisitedBakeryList(user);
-        return bakeryDetailDto(bakery, savedBakeryList, visitedBakeryList);
+        return bakeryDetailDto(imgUpdateBakery, savedBakeryList, visitedBakeryList);
     },
     getBakeryImgList: async (bakeryId) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);
-        return bakeryImgListDto(bakery);
+        let imgUpdateBakery = await bakeryUtils.addBakeryImg(bakery);
+        return bakeryImgListDto(imgUpdateBakery);
     },
     getSavedBakeryList: async (user) => {
         let findUser = await userUtils.findUserIncludeSavedBakery(user);

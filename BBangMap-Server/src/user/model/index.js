@@ -8,22 +8,26 @@ module.exports = (sequelize, DataTypes) => {
         unique: 'nickName',
         allowNull: false,
       },
-
-      uuid: {
+      accessToken: {
+        type: DataTypes.STRING(500),
+        unique: 'accessToken',
+        allowNull: true,
+      },
+      identifyToken: {
         type: DataTypes.STRING(50),
-        unique: 'uuid',
+        unique: 'identifyToken',
         allowNull: false,
       },
       // 프로필이미지
       profileImg: {
         type: DataTypes.STRING(100),
         allowNull: true,
-        define: 'https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg',
+        define: 'https://bbang-map.s3.ap-northeast-2.amazonaws.com/images/user/default/profile_empty.png',
       },
       backgroundImg: {
         type: DataTypes.STRING(100),
         allowNull: true,
-        define: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
+        define: 'https://bbang-map.s3.ap-northeast-2.amazonaws.com/images/user/default/dark_mask_xxl_empty.png',
       },
       // 역할(1=admin,2=user)
       role: {
