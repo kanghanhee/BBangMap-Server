@@ -23,7 +23,7 @@ module.exports = {
     });
   },
   findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
-    if(isOnline == isVegan){
+    if(isOnline == 1 && isVegan == 1){
       return Review.findAll({
         include: [
           {
@@ -69,31 +69,59 @@ module.exports = {
         },
         order: [['createdAt', 'DESC']],
       });
-    }
-    return Review.findAll({
-      include: [
-        {
-          model: Bakery,
-          as: 'Bakery',
-          attributes: ['bakeryName'],
-        },
-      ],
-      where: {
-        [Op.and]: [
-          {isVegan: isVegan},
+    }else if(isVegan == 1){
+      return Review.findAll({
+        include: [
           {
-            [Op.or]: [
-              { [`$Bakery.bakeryName$`]: { [Op.like]: `%${searchWord}%` } },
-              { purchaseBreadList: { [Op.like]: `%${searchWord}%` } },
-            ],
+            model: Bakery,
+            as: 'Bakery',
+            attributes: ['bakeryName'],
           },
         ],
-      },
-      order: [['createdAt', 'DESC']],
-    });
+        where: {
+          [Op.and]: [
+            {isVegan: isVegan},
+            {
+              [Op.or]: [
+                { [`$Bakery.bakeryName$`]: { [Op.like]: `%${searchWord}%` } },
+                { purchaseBreadList: { [Op.like]: `%${searchWord}%` } },
+              ],
+            },
+          ],
+        },
+        order: [['createdAt', 'DESC']],
+      });
+    }else{
+      return Review.findAll({
+        include: [
+          {
+            model: Bakery,
+            as: 'Bakery',
+            attributes: ['bakeryName'],
+          },
+        ],
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                { isOnline: isOnline },
+                { isVegan: isVegan },
+              ]
+            },
+            {
+              [Op.or]: [
+                { [`$Bakery.bakeryName$`]: { [Op.like]: `%${searchWord}%` } },
+                { purchaseBreadList: { [Op.like]: `%${searchWord}%` } },
+              ],
+            },
+          ],
+        },
+        order: [['createdAt', 'DESC']],
+      });
+    }
   },
   findReviewListByOption: async (isOnline, isVegan) => {
-    if(isOnline == isVegan){
+    if(isOnline == 1 && isVegan == 1){
       return Review.findAll({
         include: [
           {
@@ -125,20 +153,38 @@ module.exports = {
         },
         order: [['createdAt', 'DESC']],
       })
+    }else if(isVegan == 1){
+      return Review.findAll({
+        include: [
+          {
+            model: Bakery,
+            as: 'Bakery',
+            attributes: ['bakeryName']
+          }
+        ],
+        where: {
+          isVegan: isVegan
+        },
+        order: [['createdAt', 'DESC']],
+      })
+    }else{
+      return Review.findAll({
+        include: [
+          {
+            model: Bakery,
+            as: 'Bakery',
+            attributes: ['bakeryName']
+          }
+        ],
+        where: {
+          [Op.or]: [
+            {isOnline: isOnline},
+            {isVegan: isVegan}
+          ]
+        },
+        order: [['createdAt', 'DESC']],
+      })
     }
-    return Review.findAll({
-      include: [
-        {
-          model: Bakery,
-          as: 'Bakery',
-          attributes: ['bakeryName']
-        }
-      ],
-      where: {
-        isVegan: isVegan
-      },
-      order: [['createdAt', 'DESC']],
-    })
   },
   findReviewById: async reviewId => {
     return Review.findOne({
