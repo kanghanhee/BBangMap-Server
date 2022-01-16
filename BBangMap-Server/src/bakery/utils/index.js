@@ -87,6 +87,7 @@ module.exports = {
 
         let reviewImgList = [];
         if (bakery.Reviews.length > 0) {
+            originalBakeryImgList = [];
             reviewImgList = bakery.Reviews
                 .map(review => review.reviewImgList)
                 .reduce((reviewImgArr, next) =>
