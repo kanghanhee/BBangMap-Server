@@ -42,7 +42,11 @@ module.exports = {
     return result;
   },
   getSearchReviewList: async (order, searchWord, isOnline, isVegan, user) => {
-    let reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
+    const searchWordLength = searchWord.length > 0;
+
+    let reviewList = searchWordLength ?
+        await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan)
+        : await reviewUtils.findReviewListByOption(isOnline, isVegan)
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
     // LikeReview
