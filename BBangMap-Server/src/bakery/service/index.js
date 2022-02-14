@@ -33,10 +33,12 @@ module.exports = {
     },
     getBakeryDetail: async (bakeryId, user) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);
+        console.log('bakery info : ',bakery.Reviews)
+        console.log('user id : ',user.id)
         let imgUpdateBakery = await bakeryUtils.addBakeryImg(bakery);
         let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
         let visitedBakeryList = await bakeryUtils.findUsersVisitedBakeryList(user);
-        return bakeryDetailDto(imgUpdateBakery, savedBakeryList, visitedBakeryList);
+        return bakeryDetailDto(imgUpdateBakery, savedBakeryList, visitedBakeryList, user.id);
     },
     getBakeryImgList: async (bakeryId) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);

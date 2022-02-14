@@ -1,11 +1,12 @@
 const bakeryDetailReviewListDto = require('./bakeryDetailReviewListDto')
 const bakeryUtil = require('../utils')
 
-const bakeryDetailDto = async (bakery, savedBakeryList, invitedBakeryList) => {
+const bakeryDetailDto = async (bakery, savedBakeryList, invitedBakeryList, userId) => {
     let reviewList = bakery.Reviews
     return {
         bakeryId: bakery.id,
         bakeryName: bakery.bakeryName,
+        address: bakery.address,
         isVisitedBakery : await bakeryUtil.isVisitedBakery(bakery, invitedBakeryList),
         isSaveBakery : await bakeryUtil.isSavedBakery(bakery, savedBakeryList),
         star: await getBakeryStar(reviewList),
@@ -18,7 +19,7 @@ const bakeryDetailDto = async (bakery, savedBakeryList, invitedBakeryList) => {
         seasonMenu: bakery.seasonMenu,
         isDrink: bakery.isDrink,
         reviewCount: reviewList.length,
-        reviewList: reviewList.map(review => bakeryDetailReviewListDto(review))
+        reviewList: reviewList.map(review => bakeryDetailReviewListDto(review, userId))
     }
 }
 
