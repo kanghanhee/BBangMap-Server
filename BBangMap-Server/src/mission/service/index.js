@@ -134,12 +134,11 @@ module.exports = {
             if (isVisited === true) missionAchieveCount += 1;
           }),
         );
-
-        // 후기 작성/삭제시, 배지 달성 체크
+        // 후기 작성/삭제시, 배지 달성 체크(missionWhether Table)
         await missionUtil.isSucceededMission(user, mission.id, missionAchieveCount);
-        console.log(missionAchieveCount);
-        // 미션 몇개 달성
-        if (missionAchieveCount >= 3) {
+        // 이번달 미션 몇개 달성
+        let beforeMissionWhether = await missionUtil.getMissionAchievedCount(user, mission.id);
+        if (missionAchieveCount == 3 && beforeMissionWhether.missionSuccessWhether == false) {
           isSucceeded = true;
           await missionUtil.checkMissionSucceeded(user, mission.id);
         }
@@ -164,7 +163,6 @@ module.exports = {
         mission,
         reviewId,
       );
-      console.log(result);
 
       return result;
     } catch (err) {
