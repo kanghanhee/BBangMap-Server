@@ -42,21 +42,17 @@ module.exports = {
     const mission = await missionUtil.findMissionByDate();
     let missionBakeryList = null;
     let missionSuccessWhether = null;
-    let monthlyMission = null;
     let bakeryListInfo = [];
     let badgeList = [];
     let missionAchieveCount = 0;
-
-    if (!mission) {
-      monthlyMission = {
-        missionId: 0,
-        missionTitle: null,
-        missionContent: null,
-        missionAchieveCount: 0,
-        missionActiveStampImg: null,
-        missionInactiveStampImg: null,
-      };
-    } else {
+    let monthlyMission = {
+      missionId: null,
+      missionTitle: null,
+      missionContent: null,
+      missionActiveStampImg: null,
+      missionInactiveStampImg: null,
+    };
+    if (mission) {
       missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
 
       missionSuccessWhether = await missionUtil.getMissionAchievedCount(user, mission.id);
