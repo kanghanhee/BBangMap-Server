@@ -43,7 +43,7 @@ module.exports = {
   },
   // 회원 탈퇴
   deleteUser: async user => {
-    await userUtil.reviewSetNull(user);
+    await userUtil.reviewSetUnknown(user);
     await userUtil.deleteCascade(user);
   },
   // 프로필 수정
