@@ -40,36 +40,45 @@ module.exports = {
   // 미션 메인페이지
   getMissionMain: async user => {
     const mission = await missionUtil.findMissionByDate();
-
-    if (!mission)
-      throw {
-        statusCode: statusCode.BAD_REQUEST,
-        responseMessage: responseMessage.NO_MISSION,
-      };
-    const missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
-
-    const missionSuccessWhether = await missionUtil.getMissionAchievedCount(user, mission.id);
-    let missionAchieveCount = 0;
-    if (missionSuccessWhether) missionAchieveCount = missionSuccessWhether.missionAchieveCount;
-
-    const bakeryListInfo = await Promise.all(
-      missionBakeryList.map(async bakery => {
-        const bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
-        const isSucceeded = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
-        return missionBakeryDto(bakeryInfo, isSucceeded);
-      }),
-    );
-
-    const monthlyMission = monthlyMissionDto(mission);
-    const succeededMissionList = await missionUtil.findUserSucceededMission(user);
+    let missionBakeryList = null;
+    let missionSuccessWhether = null;
+    let monthlyMission = null;
+    let bakeryListInfo = [];
     let badgeList = [];
+    let missionAchieveCount = 0;
+
+    if (!mission) {
+      monthlyMission = {
+        missionId: 0,
+        missionTitle: null,
+        missionContent: null,
+        missionAchieveCount: 0,
+        missionActiveStampImg: null,
+        missionInactiveStampImg: null,
+      };
+    } else {
+      missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
+
+      missionSuccessWhether = await missionUtil.getMissionAchievedCount(user, mission.id);
+
+      if (missionSuccessWhether) missionAchieveCount = missionSuccessWhether.missionAchieveCount;
+
+      bakeryListInfo = await Promise.all(
+        missionBakeryList.map(async bakery => {
+          const bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
+          const isSucceeded = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
+          return missionBakeryDto(bakeryInfo, isSucceeded);
+        }),
+      );
+
+      monthlyMission = monthlyMissionDto(mission);
+    }
+
+    const succeededMissionList = await missionUtil.findUserSucceededMission(user);
+
     for (let i = 0; i < succeededMissionList.count; i++) {
       const missionInfo = await missionUtil.findMissionById(succeededMissionList.rows[i].MissionId);
       badgeList.push(badgeListDto(missionInfo));
-    }
-
-    if (badgeList == null) {
-      badgeList = {};
     }
 
     return missionMainDto(monthlyMission, bakeryListInfo, badgeList, missionAchieveCount);
