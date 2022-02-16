@@ -5,7 +5,7 @@ const reviewDto = (review, likedReviewList, likeCountList, userId) => {
     reviewId: review.id,
     bakeryName: review.Bakery.bakeryName,
     content: review.content,
-    // reviewer: review.User.nickName,
+    reviewer: review.User.nickName,
     reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList[0],
     reviewCreatedDate: review.createdAt,
     purchaseBreadList: review.purchaseBreadList,
