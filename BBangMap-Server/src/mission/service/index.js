@@ -114,48 +114,62 @@ module.exports = {
 
   // 미션 달성시 체크
   checkSucceededMission: async (user, bakeryId, reviewId) => {
-    const mission = await missionUtil.findMissionByDate();
-    const isMissionBakery = await missionUtil.isMissionBakery(mission, bakeryId);
+    try {
+      let mission = await missionUtil.findMissionByDate();
+      let isMissionBakery = false;
+      let isSucceeded = false;
+      //미션 없을 경우
+      if (!mission) {
+        mission = {
+          badgeName: null,
+          badgeImg: null,
+        };
+      } else {
+        isMissionBakery = await missionUtil.isMissionBakery(mission, bakeryId);
+        const missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
+        let missionAchieveCount = 0;
+        await Promise.all(
+          missionBakeryList.map(async bakery => {
+            let isVisited = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
+            if (isVisited === true) missionAchieveCount += 1;
+          }),
+        );
 
-    const missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
-    let missionAchieveCount = 0;
-    await Promise.all(
-      missionBakeryList.map(async bakery => {
-        const isSucceeded = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
-        if (isSucceeded === true) missionAchieveCount += 1;
-      }),
-    );
+        // 후기 작성/삭제시, 배지 달성 체크
+        await missionUtil.isSucceededMission(user, mission.id, missionAchieveCount);
+        console.log(missionAchieveCount);
+        // 미션 몇개 달성
+        if (missionAchieveCount >= 3) {
+          isSucceeded = true;
+          await missionUtil.checkMissionSucceeded(user, mission.id);
+        }
+      }
+      // 등급산정 Util(후기개수, 미션빵집)
+      const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
+      const userReviewCount = await missionUtil.findUserReview(user);
+      const beforeRank = user.grade;
+      const afterRank = await missionUtil.calculateRank(userMissionCount.count, userReviewCount.count);
+      let isChangedRank = false;
+      if (user.grade !== afterRank.rank) {
+        isChangedRank = true;
+        await missionUtil.updateUserRank(user, afterRank.rank);
+      }
 
-    // 후기 작성/삭제시, 배지 달성 체크
-    await missionUtil.isSucceededMission(user, mission.id, missionAchieveCount);
+      result = checkSucceededMissionDto(
+        isMissionBakery,
+        isSucceeded,
+        isChangedRank,
+        beforeRank,
+        afterRank,
+        mission,
+        reviewId,
+      );
+      console.log(result);
 
-    // 미션 몇개 달성
-    let isSucceeded = false;
-    if (missionAchieveCount >= 3) {
-      isSucceeded = true;
-      await missionUtil.checkMissionSucceeded(user, mission.id);
+      return result;
+    } catch (err) {
+      console.log(err);
     }
-
-    // 등급산정 Util(후기개수, 미션빵집)
-    const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
-    const userReviewCount = await missionUtil.findUserReview(user);
-    const beforeRank = user.grade;
-    const afterRank = await missionUtil.calculateRank(userMissionCount.count, userReviewCount.count);
-    let isChangedRank = false;
-    if (user.grade !== afterRank.rank) {
-      isChangedRank = true;
-      await missionUtil.updateUserRank(user, afterRank.rank);
-    }
-
-    return checkSucceededMissionDto(
-      isMissionBakery,
-      isSucceeded,
-      isChangedRank,
-      beforeRank,
-      afterRank,
-      mission,
-      reviewId,
-    );
   },
   // 나의 등급
   getUserRank: async user => {
