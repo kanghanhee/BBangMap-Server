@@ -29,7 +29,12 @@ const authUtil = {
             return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.INVALID_USER));
 
         req.header.user = user;
-
+        next();
+    },
+    checkAdminToken: async(req,res,next)=>{
+        if(req.header.user.role !== 1){
+            return res.status(statusCode.FORBIDDEN).send(util.fail(statusCode.FORBIDDEN, responseMessage.INVALID_USER));
+        }
         next();
     }
 }
