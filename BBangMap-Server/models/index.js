@@ -22,6 +22,9 @@ db.VisitBakery = require('../src/user/model/VisitBakery')(sequelize, Sequelize);
 db.SaveReview = require('../src/user/model/SaveReview')(sequelize, Sequelize);
 db.LikeReview = require('../src/review/model/LikeReview')(sequelize, Sequelize);
 db.MissionBakery = require('../src/mission/model/MissionBakery')(sequelize, Sequelize);
+db.Curation = require('../src/curation/model')(sequelize, Sequelize);
+db.CurationTarget = require('../src/curation/model/CurationTarget')(sequelize, Sequelize);
+db.LikeCuration = require('../src/curation/model/LikeCuration')(sequelize, Sequelize);
 
 /* 보관한 빵집 리스트 user:bakery(1:N) */
 db.User.belongsToMany(db.Bakery, { through: 'SaveBakery', as: 'SavedBakery' });
@@ -68,5 +71,13 @@ db.Bakery.belongsToMany(db.Mission, {
   through: 'MissionBakery',
   as: 'MissionOfBakery',
 });
+
+/* 큐레이션과 리뷰 curation:review(N:M)*/
+db.Curation.belongsToMany(db.Review,{through: 'CurationTarget', as: 'CurationTarget'});
+db.Review.belongsToMany(db.Curation,{through: 'CurationTarget', as: 'Curations'});
+
+/* 큐레이션과 유저(좋아요) curation:user(N:M)*/
+db.Curation.belongsToMany(db.User,{through: 'LikeCuration', as: 'LikerCuration'});
+db.User.belongsToMany(db.Curation,{through: 'LikeCuration', as: 'LikedCuration'});
 
 module.exports = db;
