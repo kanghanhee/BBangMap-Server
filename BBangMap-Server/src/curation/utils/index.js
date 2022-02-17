@@ -2,7 +2,9 @@ const {Curation, CurationTarget, LikeCuration, CurationContent, MatchingCuration
 
 module.exports = {
     findCurationContents:async(curationContentsId)=>{
-        return CurationContent.findOne({where : {id : curationContentsId}});
+        const curationContent = await CurationContent.findOne({where : {id : curationContentsId}});
+        if(curationContent == null) throw new Error("NOT_FOUND_CURATION_CONTENT")
+        return curationContent
     },
     addCuration : async (user, mainTitle, subTitle, aWord, reviewList, curationContents)=>{
         try{
