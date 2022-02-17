@@ -11,7 +11,7 @@ const reviewDetailDto = async (review, savedReviewList, myReviewList, likedRevie
     isVegan: review.isVegan,
     content: review.content,
     reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList,
-    reviewerName: review.UserId === null ? '존재하지 않는 닉네임' : review.User.nickName,
+    reviewerName: review.User.nickName,
     reviewCreatedDate: review.createdAt,
     isSavedReview: await reviewUtil.isSavedReview(review, savedReviewList),
     isMyReview: await reviewUtil.isMyReview(review, myReviewList),
