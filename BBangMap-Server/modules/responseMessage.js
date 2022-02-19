@@ -54,5 +54,6 @@ module.exports = {
   NOT_SUCCEEDED: '달성하지 않은 미션입니다.',
 
   /*큐레이션*/
-  SUCCESS_CREATE_CURATION: '큐레이션 추가 성공'
+  SUCCESS_CREATE_CURATION: '큐레이션 추가 성공',
+  SUCCESS_GET_CURATION: '큐레이션 불러오기 성공'
 };
