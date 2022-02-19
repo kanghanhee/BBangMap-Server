@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
             aWord:{
                 type: DataTypes.STRING(1000),
                 allowNull: false
+            },
+            curationImage:{
+                type: DataTypes.STRING(1000),
+                allowNull: false
             }
         },
         {

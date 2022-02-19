@@ -7,7 +7,7 @@ module.exports = {
     addCuration: async (req, res) => {
         try{
             let user = req.header.user;
-            await curationService.addCuration(user, req.body);
+            await curationService.addCuration(user, req.body, req.file);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_CURATION));
         }catch(err){
             if(err.message === "NOT_FOUND_CURATION_CONTENT"){

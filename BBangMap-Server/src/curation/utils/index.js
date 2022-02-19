@@ -6,13 +6,14 @@ module.exports = {
         if(curationContent == null) throw new Error("NOT_FOUND_CURATION_CONTENT")
         return curationContent
     },
-    addCuration : async (user, mainTitle, subTitle, aWord, reviewList, curationContents)=>{
+    addCuration : async (user, mainTitle, subTitle, aWord, curationImage, reviewList, curationContents)=>{
         try{
             const newCuration = await Curation.create({
                 UserId : user.id,
                 mainTitle,
                 subTitle,
-                aWord
+                aWord,
+                curationImage
             })
             await user.addCuration(newCuration);
             for (let reviewId of reviewList) {
