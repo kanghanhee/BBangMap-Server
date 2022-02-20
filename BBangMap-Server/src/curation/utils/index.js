@@ -4,7 +4,9 @@ const {
     LikeCuration,
     CurationContent,
     MatchingCurationContents,
-    User
+    User,
+    Review,
+    Bakery
 } = require('../../../models')
 
 module.exports = {
@@ -61,5 +63,52 @@ module.exports = {
         );
         if (curationContent == null) throw new Error("NOT_FOUND_CURATION_CONTENT")
         return curationContent
+    },
+    findCuration: async (curationId) => {
+        const curation = await Curation.findOne(
+            {
+                where : {id : curationId},
+                include : [
+                    {
+                        model : CurationContent,
+                        as : 'Contents'
+                    },
+                    {
+                        model : User
+                    },
+                    {
+                        model : User,
+                        as : 'LikerCuration',
+                        attributes : ['id']
+                    },
+                    {
+                        model : Review,
+                        as : 'Targets',
+                        include : [
+                            {
+                                model : Bakery,
+                                include : [
+                                    {
+                                        model : User,
+                                        as : 'VisiterBakery',
+                                        attributes : ['id']
+                                    }
+                                ]
+                            },
+                            {
+                                model : User,
+                                as : 'SaverReview',
+                                attributes : ['id']
+                            },
+                            {
+                                model : User
+                            }
+                        ]
+                    }
+                ]
+            }
+        )
+        if (curation == null) throw new Error("NOT_FOUND_CURATION");
+        return curation
     }
 }

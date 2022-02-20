@@ -7,5 +7,6 @@ const curationUpload = require('../../modules/multer/curationMulter')
 
 router.post('/', authUtil.checkToken, authUtil.checkAdminToken, curationUpload.single('curationImage'), curationController.addCuration)
 router.get('/',authUtil.checkToken, curationController.curationListByCurationContents)
+router.get('/detail', authUtil.checkToken, curationController.curationDetail)
 
 module.exports = router;

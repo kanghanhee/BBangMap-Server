@@ -1,5 +1,6 @@
 const curationUtil = require('../utils')
 const CurationListByContent = require('../dto/CurationListByContent')
+const CurationDetailListDto = require('../dto/CurationDetailListDto')
 
 module.exports = {
     addCuration: async (user, body, image) => {
@@ -22,5 +23,9 @@ module.exports = {
         const mainContentId = 1;
         const mainContent = await curationUtil.findCurationContentWithCuration(mainContentId);
         return CurationListByContent(mainContent)
+    },
+    getCurationDetail: async (userId, curationId) => {
+        const findCuration = await curationUtil.findCuration(curationId);
+        return CurationDetailListDto(userId, findCuration);
     }
 }

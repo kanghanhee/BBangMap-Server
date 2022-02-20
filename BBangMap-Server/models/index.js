@@ -75,7 +75,7 @@ db.Bakery.belongsToMany(db.Mission, {
 });
 
 /* 큐레이션과 리뷰 curation:review(N:M)*/
-db.Curation.belongsToMany(db.Review,{through: 'CurationTarget', as: 'Target'});
+db.Curation.belongsToMany(db.Review,{through: 'CurationTarget', as: 'Targets'});
 db.Review.belongsToMany(db.Curation,{through: 'CurationTarget', as: 'Curations'});
 
 /* 큐레이션과 유저(좋아요) curation:user(N:M)*/
