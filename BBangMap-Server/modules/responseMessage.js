@@ -55,5 +55,7 @@ module.exports = {
 
   /*큐레이션*/
   SUCCESS_CREATE_CURATION: '큐레이션 추가 성공',
-  SUCCESS_GET_CURATION: '큐레이션 불러오기 성공'
+  SUCCESS_GET_CURATION: '큐레이션 불러오기 성공',
+  SUCCESS_LIKE_CURATION: '큐레이션 좋아요 ',
+  SUCCESS_UNLIKE_CURATION : '큐레이션 좋아요 취소'
 };

@@ -67,41 +67,41 @@ module.exports = {
     findCuration: async (curationId) => {
         const curation = await Curation.findOne(
             {
-                where : {id : curationId},
-                include : [
+                where: {id: curationId},
+                include: [
                     {
-                        model : CurationContent,
-                        as : 'Contents'
+                        model: CurationContent,
+                        as: 'Contents'
                     },
                     {
-                        model : User
+                        model: User
                     },
                     {
-                        model : User,
-                        as : 'LikerCuration',
-                        attributes : ['id']
+                        model: User,
+                        as: 'LikerCuration',
+                        attributes: ['id']
                     },
                     {
-                        model : Review,
-                        as : 'Targets',
-                        include : [
+                        model: Review,
+                        as: 'Targets',
+                        include: [
                             {
-                                model : Bakery,
-                                include : [
+                                model: Bakery,
+                                include: [
                                     {
-                                        model : User,
-                                        as : 'VisiterBakery',
-                                        attributes : ['id']
+                                        model: User,
+                                        as: 'VisiterBakery',
+                                        attributes: ['id']
                                     }
                                 ]
                             },
                             {
-                                model : User,
-                                as : 'SaverReview',
-                                attributes : ['id']
+                                model: User,
+                                as: 'SaverReview',
+                                attributes: ['id']
                             },
                             {
-                                model : User
+                                model: User
                             }
                         ]
                     }
@@ -110,5 +110,23 @@ module.exports = {
         )
         if (curation == null) throw new Error("NOT_FOUND_CURATION");
         return curation
+    },
+    isLikeCuration: async (userId, curationId) => {
+        const findLikeCuration = await LikeCuration.findOne({where: {UserId: userId, CurationId: curationId}})
+        return findLikeCuration != null;
+    },
+    createLikeCuration: async (userId, curationId) => {
+        await LikeCuration.create({
+            UserId: userId,
+            CurationId: curationId
+        })
+    },
+    deleteLikeCuration: async (userId, curationId) => {
+        await LikeCuration.destroy({
+            where: {
+                UserId: userId,
+                CurationId: curationId
+            }
+        })
     }
 }

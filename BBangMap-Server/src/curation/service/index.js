@@ -27,5 +27,16 @@ module.exports = {
     getCurationDetail: async (userId, curationId) => {
         const findCuration = await curationUtil.findCuration(curationId);
         return CurationDetailListDto(userId, findCuration);
+    },
+    likeCuration: async (userId, curationId) => {
+        const isLikeCuration = await curationUtil.isLikeCuration(userId, curationId);
+
+        if(isLikeCuration){
+            await curationUtil.deleteLikeCuration(userId, curationId)
+            return "UNLIKE"
+        }else{
+            await curationUtil.createLikeCuration(userId, curationId);
+            return "LIKE"
+        }
     }
 }

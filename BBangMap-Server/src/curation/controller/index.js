@@ -27,17 +27,36 @@ module.exports = {
         }
     },
     curationDetail: async (req, res) => {
-        try{
+        try {
             const user = req.header.user
             const {curationId} = req.query
-            console.log('curationId : ',curationId)
+            console.log('curationId : ', curationId)
             const result = await curationService.getCurationDetail(user.id, curationId)
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_CURATION, result));
-        }catch (err){
+        } catch (err) {
+            if (err.message === "NOT_FOUND_CURATION") {
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            }else{
+                res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            }
+        }
+    },
+    likeCuration: async (req, res) => {
+        const user = req.header.user
+        const {curationId} = req.query
+        try{
+            const isLike = await curationService.likeCuration(user.id, curationId)
+            if(isLike === "LIKE"){
+                res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKE_CURATION));
+            }else{
+                res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKE_CURATION));
+            }
+        }catch(err){
             if(err.message === "NOT_FOUND_CURATION"){
                 res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            }else{
+                res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
             }
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     }
 }
