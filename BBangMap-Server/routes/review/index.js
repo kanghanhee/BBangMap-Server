@@ -5,7 +5,7 @@ const authUtil = require('../../middlewares/authUtil');
 const reviewUpload = require('../../modules/multer/reviewMulter');
 const reviewController = require('../../src/review/controller');
 
-const reviewImgUpload = reviewUpload.fields([{ name: 'reviewImgList', maxCount: 5 }]);
+const reviewImgUpload = reviewUpload.fields([{ name: 'reviewImgList', maxCount: 10 }]);
 
 router.get('/', authUtil.checkToken, reviewController.reviewAll);
 router.get('/bakery', authUtil.checkToken, reviewController.reviewOfBakery);

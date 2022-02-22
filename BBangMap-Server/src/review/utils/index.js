@@ -17,6 +17,16 @@ module.exports = {
         {
           model: Bakery,
           attributes: ['bakeryName'],
+          include:[{
+            model: User,
+            as: 'SaverBakery'
+          },{
+            model: User,
+            as: "VisiterBakery"
+          }]
+        },{
+          model: User,
+          attributes: {}
         },
       ],
       order: [['createdAt', 'DESC']],
@@ -30,7 +40,17 @@ module.exports = {
             model: Bakery,
             as: 'Bakery',
             attributes: ['bakeryName'],
-          },
+            include:[{
+              model: User,
+              as: 'SaverBakery'
+            },{
+              model: User,
+              as: "VisiterBakery"
+            }]
+          },{
+            model: User,
+            attributes: {}
+          }
         ],
         where: {
           [Op.and]: [
@@ -54,7 +74,17 @@ module.exports = {
             model: Bakery,
             as: 'Bakery',
             attributes: ['bakeryName'],
-          },
+            include:[{
+              model: User,
+              as: 'SaverBakery'
+            },{
+              model: User,
+              as: "VisiterBakery"
+            }]
+          },{
+            model: User,
+            attributes: {}
+          }
         ],
         where: {
           [Op.and]: [
@@ -76,7 +106,17 @@ module.exports = {
             model: Bakery,
             as: 'Bakery',
             attributes: ['bakeryName'],
-          },
+            include:[{
+              model: User,
+              as: 'SaverBakery'
+            },{
+              model: User,
+              as: "VisiterBakery"
+            }]
+          },{
+            model: User,
+            attributes: {}
+          }
         ],
         where: {
           [Op.and]: [
@@ -98,7 +138,17 @@ module.exports = {
             model: Bakery,
             as: 'Bakery',
             attributes: ['bakeryName'],
-          },
+            include:[{
+              model: User,
+              as: 'SaverBakery'
+            },{
+              model: User,
+              as: "VisiterBakery"
+            }]
+          },{
+            model: User,
+            attributes: {}
+          }
         ],
         where: {
           [Op.and]: [
@@ -127,7 +177,17 @@ module.exports = {
           {
             model: Bakery,
             as: 'Bakery',
-            attributes: ['bakeryName']
+            attributes: ['bakeryName'],
+            include:[{
+              model: User,
+              as: 'SaverBakery'
+            },{
+              model: User,
+              as: "VisiterBakery"
+            }]
+          },{
+            model : User,
+            attributes: {}
           }
         ],
         where: {
@@ -145,7 +205,17 @@ module.exports = {
           {
             model: Bakery,
             as: 'Bakery',
-            attributes: ['bakeryName']
+            attributes: ['bakeryName'],
+            include:[{
+              model: User,
+              as: 'SaverBakery'
+            },{
+              model: User,
+              as: "VisiterBakery"
+            }]
+          },{
+            model: User,
+            attributes: {}
           }
         ],
         where: {
@@ -159,7 +229,17 @@ module.exports = {
           {
             model: Bakery,
             as: 'Bakery',
-            attributes: ['bakeryName']
+            attributes: ['bakeryName'],
+            include:[{
+              model: User,
+              as: 'SaverBakery'
+            },{
+              model: User,
+              as: "VisiterBakery"
+            }]
+          },{
+            model: User,
+            attributes: {}
           }
         ],
         where: {
@@ -173,7 +253,17 @@ module.exports = {
           {
             model: Bakery,
             as: 'Bakery',
-            attributes: ['bakeryName']
+            attributes: ['bakeryName'],
+            include:[{
+              model: User,
+              as: 'SaverBakery'
+            },{
+              model: User,
+              as: "VisiterBakery"
+            }]
+          },{
+            model: User,
+            attributes: {}
           }
         ],
         where: {
@@ -199,7 +289,11 @@ module.exports = {
         {
           model: Bakery,
           attributes: ['bakeryName'],
-        },
+          include:[{
+            model: User,
+            as: 'VisiterBakery'
+          }]
+        }
       ],
       order: [['createdAt', 'DESC']],
     });

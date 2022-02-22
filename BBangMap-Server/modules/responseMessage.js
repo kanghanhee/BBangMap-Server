@@ -52,4 +52,10 @@ module.exports = {
   SUCCESS_GET_USER_RANK: '등급 조회 성공',
   NO_MISSION: '미션이 존재하지 않습니다.',
   NOT_SUCCEEDED: '달성하지 않은 미션입니다.',
+
+  /*큐레이션*/
+  SUCCESS_CREATE_CURATION: '큐레이션 추가 성공',
+  SUCCESS_GET_CURATION: '큐레이션 불러오기 성공',
+  SUCCESS_LIKE_CURATION: '큐레이션 좋아요 ',
+  SUCCESS_UNLIKE_CURATION : '큐레이션 좋아요 취소'
 };
