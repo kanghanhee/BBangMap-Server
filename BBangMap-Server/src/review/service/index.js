@@ -33,7 +33,7 @@ module.exports = {
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
-    let result = reviewListDto(reviewList, likedReviewList, likeCountList);
+    let result = reviewListDto(reviewList, likedReviewList, likeCountList, user.id);
     // 추천수로 정렬
     if (order === 'best') {
       reviewUtils.getSortByLikeCount(result);
@@ -53,7 +53,7 @@ module.exports = {
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
-    let result = reviewListDto(reviewList, likedReviewList, likeCountList);
+    let result = reviewListDto(reviewList, likedReviewList, likeCountList, user.id);
     // 추천수로 정렬
     if (order === 'best') {
       reviewUtils.getSortByLikeCount(result);
@@ -68,7 +68,7 @@ module.exports = {
     let likedReviewList = await reviewUtils.findUsersLikedReviewList(user);
     let likeReviewCount = await reviewUtils.findLikeReviewCount(reviewId);
 
-    return reviewDetailDto(review, savedReviewList, myReviewList, likedReviewList, likeReviewCount.count);
+    return reviewDetailDto(review, savedReviewList, myReviewList, likedReviewList, likeReviewCount.count, user.id);
   },
   getSavedReviewFolderList: async user => {
     let findUser = await userUtils.findUserIncludeSavedReview(user);
@@ -119,7 +119,7 @@ module.exports = {
       reviewImgList,
     );
     // check visit bakery
-    const result = await reviewUtils.checkVisitBakery(user, bakeryId);
+    await reviewUtils.checkVisitBakery(user, bakeryId);
     return addReview;
   },
   updateReview: async (

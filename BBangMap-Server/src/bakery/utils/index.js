@@ -1,4 +1,4 @@
-const {Bakery, SaveBakery, VisitBakery, Review} = require('../../../models')
+const {Bakery, SaveBakery, VisitBakery, Review, User} = require('../../../models')
 const {Op} = require('sequelize')
 
 module.exports = {
@@ -30,7 +30,13 @@ module.exports = {
             },
             include: [{
                 model: Review,
-                attributes: {}
+                attributes: {},
+                include: [{
+                    model: User
+                },{
+                    model: User,
+                    as: 'Liker'
+                }]
             }]
         });
     },
