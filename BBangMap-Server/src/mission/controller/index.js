@@ -61,7 +61,8 @@ module.exports = {
     try {
       const { user } = req.header;
       const { bakeryId } = req.params;
-      const result = await missionService.checkSucceededMission(user, bakeryId);
+      const { reviewId } = req.body;
+      const result = await missionService.checkSucceededMission(user, bakeryId, reviewId);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_USER_RANK, result));
     } catch (err) {
       res

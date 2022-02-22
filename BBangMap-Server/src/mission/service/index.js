@@ -40,36 +40,41 @@ module.exports = {
   // 미션 메인페이지
   getMissionMain: async user => {
     const mission = await missionUtil.findMissionByDate();
-
-    if (!mission)
-      throw {
-        statusCode: statusCode.BAD_REQUEST,
-        responseMessage: responseMessage.NO_MISSION,
-      };
-    const missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
-
-    const missionSuccessWhether = await missionUtil.getMissionAchievedCount(user, mission.id);
-    let missionAchieveCount = 0;
-    if (missionSuccessWhether) missionAchieveCount = missionSuccessWhether.missionAchieveCount;
-
-    const bakeryListInfo = await Promise.all(
-      missionBakeryList.map(async bakery => {
-        const bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
-        const isSucceeded = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
-        return missionBakeryDto(bakeryInfo, isSucceeded);
-      }),
-    );
-
-    const monthlyMission = monthlyMissionDto(mission);
-    const succeededMissionList = await missionUtil.findUserSucceededMission(user);
+    let missionBakeryList = null;
+    let missionSuccessWhether = null;
+    let bakeryListInfo = [];
     let badgeList = [];
+    let missionAchieveCount = 0;
+    let monthlyMission = {
+      missionId: null,
+      missionTitle: null,
+      missionContent: null,
+      missionActiveStampImg: null,
+      missionInactiveStampImg: null,
+    };
+    if (mission) {
+      missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
+
+      missionSuccessWhether = await missionUtil.getMissionAchievedCount(user, mission.id);
+
+      if (missionSuccessWhether) missionAchieveCount = missionSuccessWhether.missionAchieveCount;
+
+      bakeryListInfo = await Promise.all(
+        missionBakeryList.map(async bakery => {
+          const bakeryInfo = await missionUtil.findBakeryById(bakery.BakeryId);
+          const isSucceeded = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
+          return missionBakeryDto(bakeryInfo, isSucceeded);
+        }),
+      );
+
+      monthlyMission = monthlyMissionDto(mission);
+    }
+
+    const succeededMissionList = await missionUtil.findUserSucceededMission(user);
+
     for (let i = 0; i < succeededMissionList.count; i++) {
       const missionInfo = await missionUtil.findMissionById(succeededMissionList.rows[i].MissionId);
       badgeList.push(badgeListDto(missionInfo));
-    }
-
-    if (badgeList == null) {
-      badgeList = {};
     }
 
     return missionMainDto(monthlyMission, bakeryListInfo, badgeList, missionAchieveCount);
@@ -109,48 +114,60 @@ module.exports = {
 
   // 미션 달성시 체크
   checkSucceededMission: async (user, bakeryId, reviewId) => {
-    const mission = await missionUtil.findMissionByDate();
-    const isMissionBakery = await missionUtil.isMissionBakery(mission, bakeryId);
+    try {
+      let mission = await missionUtil.findMissionByDate();
+      let isMissionBakery = false;
+      let isSucceeded = false;
+      //미션 없을 경우
+      if (!mission) {
+        mission = {
+          badgeName: null,
+          badgeImg: null,
+        };
+      } else {
+        isMissionBakery = await missionUtil.isMissionBakery(mission, bakeryId);
+        const missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
+        let missionAchieveCount = 0;
+        await Promise.all(
+          missionBakeryList.map(async bakery => {
+            let isVisited = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
+            if (isVisited === true) missionAchieveCount += 1;
+          }),
+        );
+        // 후기 작성/삭제시, 배지 달성 체크(missionWhether Table)
+        await missionUtil.isSucceededMission(user, mission.id, missionAchieveCount);
+        // 이번달 미션 몇개 달성
+        let beforeMissionWhether = await missionUtil.getMissionAchievedCount(user, mission.id);
+        if (missionAchieveCount == 3 && beforeMissionWhether.missionSuccessWhether == false) {
+          isSucceeded = true;
+          await missionUtil.checkMissionSucceeded(user, mission.id);
+        }
+      }
+      // 등급산정 Util(후기개수, 미션빵집)
+      const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
+      const userReviewCount = await missionUtil.findUserReview(user);
+      const beforeRank = user.grade;
+      const afterRank = await missionUtil.calculateRank(userMissionCount.count, userReviewCount.count);
+      let isChangedRank = false;
+      if (user.grade !== afterRank.rank) {
+        isChangedRank = true;
+        await missionUtil.updateUserRank(user, afterRank.rank);
+      }
 
-    const missionBakeryList = await missionUtil.findMissionBakeryByMission(mission.id);
-    let missionAchieveCount = 0;
-    await Promise.all(
-      missionBakeryList.map(async bakery => {
-        const isSucceeded = await missionUtil.isVisitedBakery(user, bakery.BakeryId);
-        if (isSucceeded === true) missionAchieveCount += 1;
-      }),
-    );
+      result = checkSucceededMissionDto(
+        isMissionBakery,
+        isSucceeded,
+        isChangedRank,
+        beforeRank,
+        afterRank,
+        mission,
+        reviewId,
+      );
 
-    // 후기 작성/삭제시, 배지 달성 체크
-    await missionUtil.isSucceededMission(user, mission.id, missionAchieveCount);
-
-    // 미션 몇개 달성
-    let isSucceeded = false;
-    if (missionAchieveCount >= 3) {
-      isSucceeded = true;
-      await missionUtil.checkMissionSucceeded(user, mission.id);
+      return result;
+    } catch (err) {
+      console.log(err);
     }
-
-    // 등급산정 Util(후기개수, 미션빵집)
-    const userMissionCount = await missionUtil.findUserSucceededMission(user); // 전체 미션개수
-    const userReviewCount = await missionUtil.findUserReview(user);
-    const beforeRank = user.grade;
-    const afterRank = await missionUtil.calculateRank(userMissionCount.count, userReviewCount.count);
-    let isChangedRank = false;
-    if (user.grade !== afterRank.rank) {
-      isChangedRank = true;
-      await missionUtil.updateUserRank(user, afterRank.rank);
-    }
-
-    return checkSucceededMissionDto(
-      isMissionBakery,
-      isSucceeded,
-      isChangedRank,
-      beforeRank,
-      afterRank,
-      mission,
-      reviewId,
-    );
   },
   // 나의 등급
   getUserRank: async user => {

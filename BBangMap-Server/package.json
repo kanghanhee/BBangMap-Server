@@ -8,8 +8,10 @@
   "dependencies": {
     "@types/sequelize": "^4.28.10",
     "aws-sdk": "^2.1028.0",
+    "axios": "^0.25.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^14.2.0",
     "express": "^4.17.1",
     "http-errors": "~1.6.3",
     "jade": "^0.29.0",
