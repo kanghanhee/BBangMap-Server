@@ -37,6 +37,9 @@ module.exports = {
                     model: User,
                     as: 'Liker'
                 }]
+            },{
+                model: User,
+                as: 'SaverBakery'
             }]
         });
     },
@@ -101,5 +104,13 @@ module.exports = {
         }
         bakery.bakeryImg = originalBakeryImgList.concat(reviewImgList);
         return bakery;
+    },
+    getBakeryStar : async (reviewList) => {
+        const starList = reviewList.map(review => review.star);
+        const result = starList.reduce((sum, currValue) => {
+            return sum + currValue;
+        }, 0)
+
+        return result / reviewList.length;
     }
 }

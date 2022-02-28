@@ -9,6 +9,7 @@ const bakerySearchListDto = require('../dto/bakerySearchListDto')
 const bakeryDetailDto = require('../dto/bakeryDetailDto')
 const bakeryImgListDto = require('../dto/bakeryImgListDto')
 const savedBakeryListDto = require('../dto/savedBakeryListDto')
+const bakeryLocationInfoDto = require('../dto/BakeryLocationInfoDto')
 
 module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -26,7 +27,7 @@ module.exports = {
         let findUser = await userUtils.findUserIncludeVisitedBakery(user);
         let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
 
-        if(filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
+        if (filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
 
         let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
 
@@ -60,19 +61,23 @@ module.exports = {
     },
     createBakery: async (registerBakery) => {
         await Bakery.create({
-            bakeryName : registerBakery.bakeryName,
-            openTime : registerBakery.openTime,
-            offDay : registerBakery.offDay,
-            seasonMenu : registerBakery.seasonMenu,
-            isOnline : registerBakery.isOnline,
-            isVegan : registerBakery.isVegan,
-            isDrink : registerBakery.isDrink,
-            bestMenu : registerBakery.bestMenu,
-            totalMenu : registerBakery.totalMenu,
-            address : registerBakery.address,
-            latitude : registerBakery.latitude,
-            longitude : registerBakery.longitude,
-            bakeryImg : registerBakery.bakeryImg
+            bakeryName: registerBakery.bakeryName,
+            openTime: registerBakery.openTime,
+            offDay: registerBakery.offDay,
+            seasonMenu: registerBakery.seasonMenu,
+            isOnline: registerBakery.isOnline,
+            isVegan: registerBakery.isVegan,
+            isDrink: registerBakery.isDrink,
+            bestMenu: registerBakery.bestMenu,
+            totalMenu: registerBakery.totalMenu,
+            address: registerBakery.address,
+            latitude: registerBakery.latitude,
+            longitude: registerBakery.longitude,
+            bakeryImg: registerBakery.bakeryImg
         });
+    },
+    bakeryLocation: async (bakeryId, user) => {
+        let bakery = await bakeryUtils.findBakeryById(bakeryId);
+        return bakeryLocationInfoDto(bakery, user);
     }
 }

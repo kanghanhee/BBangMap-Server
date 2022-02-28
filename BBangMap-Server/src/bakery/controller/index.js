@@ -87,4 +87,14 @@ module.exports = {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
+    bakeryLocation: async (req, res) => {
+        try{
+            const {bakeryId} = req.params;
+            const {user} = req.header;
+            const bakeryLocationInfo = await bakeryService.bakeryLocation(bakeryId, user);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_LOCATION_INFO, bakeryLocationInfo));
+        }catch(err){
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    }
 };
