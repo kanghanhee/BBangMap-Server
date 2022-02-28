@@ -1,6 +1,7 @@
 const modelUtil = require('../../../models/modelUtil')
 const userUtils = require('../../user/utils')
 const bakeryUtils = require('../utils')
+const reviewUtils = require('../../review/utils')
 const {Bakery} = require('../../../models')
 
 const bakeryMapListDto = require('../dto/bakeryMapListDto')
@@ -15,8 +16,9 @@ module.exports = {
         let savedBakeryList = findUser.SavedBakery.map(saveBakery => saveBakery.id);
         let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
         let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
+        await reviewUtils.findReviewByBakeryList(bakeryList);
 
-        return bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
+        return await bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
     },
     getSearchBakeryList: async (bakeryName, latitude, longitude, user) => {
         let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
