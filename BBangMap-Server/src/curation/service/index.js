@@ -7,13 +7,13 @@ module.exports = {
         if (image === undefined) {
             throw new Error("CURATION_IMAGE_REQUIRE")
         }
-        const {mainTitle, subTitle, aWord, reviewList, curationContentsId} = body;
+        const {mainTitle, subTitle, curatorComment, reviewList, curationContentsId} = body;
         const findCurationContents = await curationUtil.findCurationContent(curationContentsId);
         await curationUtil.addCuration(
             user,
             mainTitle,
             subTitle,
-            aWord,
+            curatorComment,
             image.location,
             reviewList,
             findCurationContents
