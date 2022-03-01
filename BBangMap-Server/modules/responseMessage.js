@@ -23,6 +23,9 @@ module.exports = {
     SUCCESS_SAVED_BAKERY: '빵집 보관하기 성공',
     SUCCESS_REGISTRATION_BAKERY: '빵집 등록 성공',
     SUCCESS_GET_BAKERY_LOCATION_INFO: '빵집 위치 정보 불러오기 성공',
+    SUCCESS_VISITED_BAKERY:'빵집 방문 성공',
+    SUCCESS_CANCEL_VISITED_BAKERY:'빵집 방문 취소 성공',
+
 
     /*후기*/
     SUCCESS_GET_REVIEW: '후기불러오기 성공',

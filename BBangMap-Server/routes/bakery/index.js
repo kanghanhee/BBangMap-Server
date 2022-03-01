@@ -12,5 +12,6 @@ router.post('/:bakeryId/storage',authUtil.checkToken, bakeryController.storeBake
 router.delete('/:bakeryId/storage',authUtil.checkToken, bakeryController.unStoreBakery);
 router.post('/registration', bakeryController.registerBakery);
 router.get('/:bakeryId/position',authUtil.checkToken, bakeryController.bakeryLocation);
+router.put('/:bakeryId/visited',authUtil.checkToken, bakeryController.doBakeryVisited);
 
 module.exports = router;
