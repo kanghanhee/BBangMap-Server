@@ -9,7 +9,7 @@ const curationDetailListDto = (userId, curation) => {
         curator : curation.User.nickName,
         mainTitle : curation.mainTitle,
         subTitle : curation.subTitle,
-        aWord : curation.aWord,
+        curatorComment : curation.curatorComment,
         curationDetailList : curation.Targets.map(review => CurationDetailDto(review, userId))
     }
 }

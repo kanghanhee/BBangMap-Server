@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING(1000),
                 allowNull: false
             },
-            aWord:{
+            curatorComment:{
                 type: DataTypes.STRING(1000),
                 allowNull: false
             },

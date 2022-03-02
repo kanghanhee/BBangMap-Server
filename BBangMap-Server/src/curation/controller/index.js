@@ -30,7 +30,6 @@ module.exports = {
         try {
             const user = req.header.user
             const {curationId} = req.query
-            console.log('curationId : ', curationId)
             const result = await curationService.getCurationDetail(user.id, curationId)
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_CURATION, result));
         } catch (err) {

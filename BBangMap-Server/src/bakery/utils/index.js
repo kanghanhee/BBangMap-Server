@@ -24,7 +24,7 @@ module.exports = {
         })
     },
     findBakeryById: async (bakeryId) => {
-        return Bakery.findOne({
+        const findBakery = Bakery.findOne({
             where: {
                 id: bakeryId
             },
@@ -33,12 +33,19 @@ module.exports = {
                 attributes: {},
                 include: [{
                     model: User
-                },{
+                }, {
                     model: User,
                     as: 'Liker'
                 }]
+            }, {
+                model: User,
+                as: 'SaverBakery'
             }]
         });
+        if(findBakery == null){
+            throw new Error("NOT_EXIST_BAKERY")
+        }
+        return findBakery;
     },
     findUsersSavedBakeryList: async (user) => {
         return SaveBakery.findAll({
@@ -61,8 +68,19 @@ module.exports = {
     savedBakery: async (userId, bakeryId) => {
         await SaveBakery.create({UserId: userId, BakeryId: bakeryId})
     },
+    visitedBakery: async (userId, bakeryId) => {
+        await VisitBakery.create({UserId: userId, BakeryId: bakeryId})
+    },
     deleteSaveBakery: async (userId, bakeryId) => {
         await SaveBakery.destroy({
+            where: {
+                UserId: userId,
+                BakeryId: bakeryId
+            }
+        })
+    },
+    deleteVisitBakery: async (userId, bakeryId) => {
+        await VisitBakery.destroy({
             where: {
                 UserId: userId,
                 BakeryId: bakeryId
@@ -101,5 +119,13 @@ module.exports = {
         }
         bakery.bakeryImg = originalBakeryImgList.concat(reviewImgList);
         return bakery;
-    }
+    },
+    getBakeryStar: async (reviewList) => {
+        const starList = reviewList.map(review => review.star);
+        const result = starList.reduce((sum, currValue) => {
+            return sum + currValue;
+        }, 0)
+
+        return result / reviewList.length;
+    },
 }

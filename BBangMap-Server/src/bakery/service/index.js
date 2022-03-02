@@ -1,6 +1,7 @@
 const modelUtil = require('../../../models/modelUtil')
 const userUtils = require('../../user/utils')
 const bakeryUtils = require('../utils')
+const reviewUtils = require('../../review/utils')
 const {Bakery} = require('../../../models')
 
 const bakeryMapListDto = require('../dto/bakeryMapListDto')
@@ -8,6 +9,8 @@ const bakerySearchListDto = require('../dto/bakerySearchListDto')
 const bakeryDetailDto = require('../dto/bakeryDetailDto')
 const bakeryImgListDto = require('../dto/bakeryImgListDto')
 const savedBakeryListDto = require('../dto/savedBakeryListDto')
+const bakeryLocationInfoDto = require('../dto/BakeryLocationInfoDto')
+const {visitedBakery} = require("../utils");
 
 module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -15,8 +18,9 @@ module.exports = {
         let savedBakeryList = findUser.SavedBakery.map(saveBakery => saveBakery.id);
         let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
         let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
+        await reviewUtils.findReviewByBakeryList(bakeryList);
 
-        return bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
+        return await bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
     },
     getSearchBakeryList: async (bakeryName, latitude, longitude, user) => {
         let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
@@ -24,7 +28,7 @@ module.exports = {
         let findUser = await userUtils.findUserIncludeVisitedBakery(user);
         let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
 
-        if(filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
+        if (filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
 
         let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
 
@@ -58,19 +62,35 @@ module.exports = {
     },
     createBakery: async (registerBakery) => {
         await Bakery.create({
-            bakeryName : registerBakery.bakeryName,
-            openTime : registerBakery.openTime,
-            offDay : registerBakery.offDay,
-            seasonMenu : registerBakery.seasonMenu,
-            isOnline : registerBakery.isOnline,
-            isVegan : registerBakery.isVegan,
-            isDrink : registerBakery.isDrink,
-            bestMenu : registerBakery.bestMenu,
-            totalMenu : registerBakery.totalMenu,
-            address : registerBakery.address,
-            latitude : registerBakery.latitude,
-            longitude : registerBakery.longitude,
-            bakeryImg : registerBakery.bakeryImg
+            bakeryName: registerBakery.bakeryName,
+            openTime: registerBakery.openTime,
+            offDay: registerBakery.offDay,
+            seasonMenu: registerBakery.seasonMenu,
+            isOnline: registerBakery.isOnline,
+            isVegan: registerBakery.isVegan,
+            isDrink: registerBakery.isDrink,
+            bestMenu: registerBakery.bestMenu,
+            totalMenu: registerBakery.totalMenu,
+            address: registerBakery.address,
+            latitude: registerBakery.latitude,
+            longitude: registerBakery.longitude,
+            bakeryImg: registerBakery.bakeryImg
         });
+    },
+    bakeryLocation: async (bakeryId, user) => {
+        let bakery = await bakeryUtils.findBakeryById(bakeryId);
+        return bakeryLocationInfoDto(bakery, user);
+    },
+    doBakeryVisited: async (bakeryId, user) => {
+        const findBakery = await bakeryUtils.findBakeryById(bakeryId);
+        const findVisitedBakery = await bakeryUtils.findUsersVisitedBakeryList(user);
+        const isVisited = await bakeryUtils.isVisitedBakery(findBakery, findVisitedBakery);
+        if(isVisited){
+            await bakeryUtils.deleteVisitBakery(user.id, bakeryId);
+            return -1;
+        }else{
+            await bakeryUtils.visitedBakery(user.id, bakeryId);
+            return 1;
+        }
     }
 }
