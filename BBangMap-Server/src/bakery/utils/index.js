@@ -36,6 +36,9 @@ module.exports = {
                 }, {
                     model: User,
                     as: 'Liker'
+                },{
+                    model : User,
+                    as : 'SaverReview'
                 }]
             }, {
                 model: User,

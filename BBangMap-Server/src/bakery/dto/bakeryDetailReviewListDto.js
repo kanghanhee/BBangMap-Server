@@ -7,7 +7,8 @@ const bakeryDetailReviewListDto = (review, userId) =>{
         reviewCreatedDate : review.createdAt,
         likeReviewCount : review.Liker.length,
         isLikedReview : likeThisReview(review.Liker, userId),
-        reviewImg : getReviewImg(review.reviewImgList)
+        isSavedReview : saveThisReview(review.SaverReview, userId),
+        reviewImg : getReviewImg(review.reviewImgList),
     }
 }
 
@@ -18,6 +19,11 @@ const getReviewImg = (reviewImgList) => {
 const likeThisReview = (reviewLikerList, userId) => {
     let isUserLikeThisReviewList = reviewLikerList.map(liker => liker.id === userId);
     return isUserLikeThisReviewList.includes(true);
+}
+
+const saveThisReview = (reviewSaverList, userId) =>{
+    let isUserSaverThisReviewList = reviewSaverList.map(saver => saver.id === userId);
+    return isUserSaverThisReviewList.includes(true);
 }
 
 module.exports = bakeryDetailReviewListDto;
