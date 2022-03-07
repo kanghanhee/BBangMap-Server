@@ -99,21 +99,35 @@ module.exports = {
         }
     },
     doBakeryVisited: async (req, res) => {
-        try{
+        try {
             const {bakeryId} = req.params;
             const {user} = req.header;
-            const result = await bakeryService.doBakeryVisited(bakeryId, user);
-            if(result === 1){
-                res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_VISITED_BAKERY));
-            }else if(result === -1){
-                res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CANCEL_VISITED_BAKERY));
-            }
-            throw new Error("올바르지 않는 값이 반환되었습니다!")
-        }catch(err){
-            if(err === "NOT_EXIST_BAKERY"){
+            await bakeryService.doBakeryVisited(bakeryId, user);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_VISITED_BAKERY));
+        } catch (err) {
+            if (err.message === "NOT_EXIST_BAKERY") {
                 res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            } else if(err.message === "ALREADY_BAKERY_VISITED"){
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            }else {
+                res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
             }
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    },
+    cancelBakeryVisited: async (req, res) => {
+        try {
+            const {bakeryId} = req.params;
+            const {user} = req.header;
+            await bakeryService.cancelBakeryVisited(bakeryId, user);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CANCEL_VISITED_BAKERY));
+        } catch (err) {
+            if (err.message === "NOT_EXIST_BAKERY") {
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            } else if(err.message === "ALREADY_CANCEL_BAKERY_VISITED"){
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            }else {
+                res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            }
         }
     }
 };
