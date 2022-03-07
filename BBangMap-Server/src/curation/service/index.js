@@ -31,12 +31,19 @@ module.exports = {
     likeCuration: async (userId, curationId) => {
         const isLikeCuration = await curationUtil.isLikeCuration(userId, curationId);
 
-        if(isLikeCuration){
-            await curationUtil.deleteLikeCuration(userId, curationId)
-            return "UNLIKE"
-        }else{
+        if (!isLikeCuration) {
             await curationUtil.createLikeCuration(userId, curationId);
-            return "LIKE"
+        }else{
+            throw new Error("ALREADY_LIKE_CURATION")
+        }
+    },
+    cancelLikeCuration: async (userId, curationId) => {
+        const isLikeCuration = await curationUtil.isLikeCuration(userId, curationId);
+
+        if(isLikeCuration){
+            await curationUtil.deleteLikeCuration(userId, curationId);
+        }else{
+            throw new Error("ALREADY_UNLIKE_CURATION")
         }
     }
 }

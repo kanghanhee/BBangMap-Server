@@ -35,7 +35,7 @@ module.exports = {
         } catch (err) {
             if (err.message === "NOT_FOUND_CURATION") {
                 res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
-            }else{
+            } else {
                 res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
             }
         }
@@ -43,17 +43,31 @@ module.exports = {
     likeCuration: async (req, res) => {
         const user = req.header.user
         const {curationId} = req.query
-        try{
-            const isLike = await curationService.likeCuration(user.id, curationId)
-            if(isLike === "LIKE"){
-                res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKE_CURATION));
-            }else{
-                res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKE_CURATION));
-            }
-        }catch(err){
-            if(err.message === "NOT_FOUND_CURATION"){
+        try {
+            await curationService.likeCuration(user.id, curationId)
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKE_CURATION));
+        } catch (err) {
+            if (err.message === "NOT_FOUND_CURATION") {
                 res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
-            }else{
+            } else if (err.message === "ALREADY_LIKE_CURATION") {
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            } else {
+                res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            }
+        }
+    },
+    cancelLikeCuration: async (req, res) => {
+        const user = req.header.user;
+        const {curationId} = req.query;
+        try {
+            await curationService.cancelLikeCuration(user.id, curationId);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKE_CURATION));
+        } catch (err) {
+            if (err.message === "NOT_FOUND_CURATION") {
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            } else if (err.message === "ALREADY_UNLIKE_CURATION") {
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            } else {
                 res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
             }
         }

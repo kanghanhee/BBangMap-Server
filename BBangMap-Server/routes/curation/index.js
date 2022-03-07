@@ -8,6 +8,7 @@ const curationUpload = require('../../modules/multer/curationMulter')
 router.post('/', authUtil.checkToken, authUtil.checkAdminToken, curationUpload.single('curationImage'), curationController.addCuration)
 router.get('/',authUtil.checkToken, curationController.curationListByCurationContents)
 router.get('/detail', authUtil.checkToken, curationController.curationDetail)
-router.put('/like', authUtil.checkToken, curationController.likeCuration)
+router.post('/like', authUtil.checkToken, curationController.likeCuration)
+router.delete('/like', authUtil.checkToken, curationController.cancelLikeCuration)
 
 module.exports = router;
