@@ -71,5 +71,19 @@ module.exports = {
                 res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
             }
         }
+    },
+    bakeryLocationInfo: async (req, res) => {
+        const {user} = req.header;
+        const {curationId} = req.params;
+        try{
+            const result = await curationService.getBakeryLocationInfo(user.id, curationId);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_LOCATION_INFO, result));
+        }catch(err){
+            if (err.message === "NOT_FOUND_CURATION") {
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            }else{
+                res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            }
+        }
     }
 }

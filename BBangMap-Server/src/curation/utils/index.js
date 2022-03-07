@@ -92,6 +92,12 @@ module.exports = {
                                         model: User,
                                         as: 'VisiterBakery',
                                         attributes: ['id']
+                                    },{
+                                        model: User,
+                                        as: 'SaverBakery',
+                                        attributes: ['id']
+                                    },{
+                                        model: Review,
                                     }
                                 ]
                             },

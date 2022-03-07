@@ -10,5 +10,6 @@ router.get('/',authUtil.checkToken, curationController.curationListByCurationCon
 router.get('/detail', authUtil.checkToken, curationController.curationDetail)
 router.post('/like', authUtil.checkToken, curationController.likeCuration)
 router.delete('/like', authUtil.checkToken, curationController.cancelLikeCuration)
+router.get('/:curationId/bakery/location',authUtil.checkToken, curationController.bakeryLocationInfo)
 
 module.exports = router;

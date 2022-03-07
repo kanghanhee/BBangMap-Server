@@ -123,7 +123,7 @@ module.exports = {
         bakery.bakeryImg = originalBakeryImgList.concat(reviewImgList);
         return bakery;
     },
-    getBakeryStar: async (reviewList) => {
+    getBakeryStar:  (reviewList) => {
         const starList = reviewList.map(review => review.star);
         const result = starList.reduce((sum, currValue) => {
             return sum + currValue;

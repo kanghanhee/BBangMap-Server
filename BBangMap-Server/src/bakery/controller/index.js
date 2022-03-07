@@ -87,17 +87,6 @@ module.exports = {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
-    bakeryLocation: async (req, res) => {
-        try {
-            const {bakeryId} = req.params;
-            const {user} = req.header;
-            const bakeryLocationInfo = await bakeryService.bakeryLocation(bakeryId, user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_LOCATION_INFO, bakeryLocationInfo));
-        } catch (err) {
-            //빵집 없을때 예외처리
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
-        }
-    },
     doBakeryVisited: async (req, res) => {
         try {
             const {bakeryId} = req.params;
