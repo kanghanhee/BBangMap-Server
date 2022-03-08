@@ -9,7 +9,6 @@ const bakerySearchListDto = require('../dto/bakerySearchListDto')
 const bakeryDetailDto = require('../dto/bakeryDetailDto')
 const bakeryImgListDto = require('../dto/bakeryImgListDto')
 const savedBakeryListDto = require('../dto/savedBakeryListDto')
-const bakeryLocationInfoDto = require('../dto/BakeryLocationInfoDto')
 const {visitedBakery} = require("../utils");
 
 module.exports = {
@@ -77,20 +76,25 @@ module.exports = {
             bakeryImg: registerBakery.bakeryImg
         });
     },
-    bakeryLocation: async (bakeryId, user) => {
-        let bakery = await bakeryUtils.findBakeryById(bakeryId);
-        return bakeryLocationInfoDto(bakery, user);
-    },
     doBakeryVisited: async (bakeryId, user) => {
         const findBakery = await bakeryUtils.findBakeryById(bakeryId);
         const findVisitedBakery = await bakeryUtils.findUsersVisitedBakeryList(user);
         const isVisited = await bakeryUtils.isVisitedBakery(findBakery, findVisitedBakery);
-        if(isVisited){
-            await bakeryUtils.deleteVisitBakery(user.id, bakeryId);
-            return -1;
-        }else{
+        if (!isVisited) {
             await bakeryUtils.visitedBakery(user.id, bakeryId);
-            return 1;
+        }else{
+            throw new Error("ALREADY_BAKERY_VISITED");
+        }
+    },
+    cancelBakeryVisited: async (bakeryId, user) => {
+        const findBakery = await bakeryUtils.findBakeryById(bakeryId);
+        const findVisitedBakery = await bakeryUtils.findUsersVisitedBakeryList(user);
+        const isVisited = await bakeryUtils.isVisitedBakery(findBakery, findVisitedBakery);
+
+        if (isVisited) {
+            await bakeryUtils.deleteVisitBakery(user.id, bakeryId);
+        } else {
+            throw new Error("ALREADY_CANCEL_BAKERY_VISITED");
         }
     }
 }
