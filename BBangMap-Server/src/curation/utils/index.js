@@ -64,6 +64,26 @@ module.exports = {
         if (curationContent == null) throw new Error("NOT_FOUND_CURATION_CONTENT")
         return curationContent
     },
+    findAllCurationContentWithCuration: async () => {
+      return await CurationContent.findAll({
+          include:[
+              {
+                  model: Curation,
+                  as: 'Curations',
+                  include:[
+                      {
+                          model: User,
+                      },
+                      {
+                          model: User,
+                          as: 'LikerCuration',
+                          attributes: ['id']
+                      }
+                  ]
+              }
+          ]
+      })
+    },
     findCuration: async (curationId) => {
         const curation = await Curation.findOne(
             {
@@ -92,6 +112,12 @@ module.exports = {
                                         model: User,
                                         as: 'VisiterBakery',
                                         attributes: ['id']
+                                    }, {
+                                        model: User,
+                                        as: 'SaverBakery',
+                                        attributes: ['id']
+                                    }, {
+                                        model: Review,
                                     }
                                 ]
                             },
