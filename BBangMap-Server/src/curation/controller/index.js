@@ -42,7 +42,7 @@ module.exports = {
     },
     likeCuration: async (req, res) => {
         const user = req.header.user
-        const {curationId} = req.query
+        const {curationId} = req.params
         try {
             await curationService.likeCuration(user.id, curationId)
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKE_CURATION));
@@ -58,7 +58,7 @@ module.exports = {
     },
     cancelLikeCuration: async (req, res) => {
         const user = req.header.user;
-        const {curationId} = req.query;
+        const {curationId} = req.params;
         try {
             await curationService.cancelLikeCuration(user.id, curationId);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKE_CURATION));
