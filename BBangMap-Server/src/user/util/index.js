@@ -145,9 +145,9 @@ module.exports = {
       },
     );
   },
-  findUserByAccessToken: async accessToken => {
+  findUserByDecodedId: async id => {
     return await User.findOne({
-      where: { accessToken: accessToken },
+      where: { id },
     });
   },
 };
