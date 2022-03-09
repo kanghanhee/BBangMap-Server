@@ -36,8 +36,7 @@ module.exports = {
   },
   reissueToken: async accessToken => {
     try {
-      // accessToken이 가지고 있는 식별값으로 사용자를 찾아서 새로 발급
-      const decode = await jwt.verify(accessToken);
+      const decode = await jwt.decode(accessToken);
       const findUser = await userUtil.findUserByDecodedId(decode.id);
       if (findUser == null) throw new Error('InvalidAccessToken');
       const newAccessToken = await jwt.sign(findUser);
