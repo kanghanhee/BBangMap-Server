@@ -14,14 +14,14 @@ module.exports = {
     },
     verify: async (token) => {
         let decoded;
-        try{
+        try {
             decoded = jwt.verify(token, secretKey);
-        }catch(err){
-            if(err.message === 'jwt expired'){
+        } catch (err) {
+            if (err.message === 'jwt expired') {
                 console.log('expired token');
                 return TOKEN_EXPIRED;
             }
-            if(err.message === 'invalid token'){
+            if (err.message === 'invalid token') {
                 console.log('invalid token');
                 return TOKEN_INVALID;
             }
@@ -29,5 +29,8 @@ module.exports = {
             return TOKEN_INVALID;
         }
         return decoded;
+    },
+    decode: async (token) => {
+        return jwt.decode(token);
     }
 }
