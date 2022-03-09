@@ -147,7 +147,7 @@ module.exports = {
   },
   findUserByAccessToken: async accessToken => {
     return await User.findOne({
-      where: { accessToken: accessToken },
+      where: { id: accessToken },
     });
   },
 };
