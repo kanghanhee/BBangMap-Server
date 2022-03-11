@@ -11,7 +11,7 @@ module.exports = {
       const loginDto = await authService.authLogin(identifyToken, provider);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LOGIN, loginDto));
     } catch (err) {
-      return res.status(err.statusCode).send(util.fail(err.statusCode, err.message));
+      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   logout: async (req, res) => {
@@ -20,7 +20,7 @@ module.exports = {
       await authService.logout(user);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LOGOUT));
     } catch (err) {
-      return res.status(err.statusCode).send(util.fail(err.statusCode, err.message));
+      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   reissue: async (req, res) => {
@@ -33,7 +33,7 @@ module.exports = {
     } catch (err) {
       if (err.message === 'InvalidAccessToken') {
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
-      } else return res.status(err.statusCode).send(util.fail(err.statusCode, err.message));
+      } else return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));;
     }
   },
 };
