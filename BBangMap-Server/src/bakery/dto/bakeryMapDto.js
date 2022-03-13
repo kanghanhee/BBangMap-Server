@@ -7,7 +7,8 @@ const bakeryMapDto = (bakery, savedBakeryList, visitedBakeryList) => {
         isVisitedBakery: visitedBakeryList.includes(bakery.id),
         bakeryName : bakery.bakeryName,
         bakeryAddress : bakery.address,
-        start : bakery.star
+        start : bakery.star,
+        star : bakery.star
     }
 }
 
