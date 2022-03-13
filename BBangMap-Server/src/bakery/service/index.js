@@ -13,10 +13,10 @@ const {visitedBakery} = require("../utils");
 
 module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
-        let findUser = await userUtils.findUserIncludeSavedBakery(user);
-        let savedBakeryList = findUser.SavedBakery.map(saveBakery => saveBakery.id);
-        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
+        let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
+        let visitedBakeryList = await bakeryUtils.findUsersVisitedBakeryList(user);
         let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
+
         await reviewUtils.findReviewByBakeryList(bakeryList);
 
         return await bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
