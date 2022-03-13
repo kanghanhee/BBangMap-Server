@@ -47,9 +47,12 @@ module.exports = {
         return bakeryImgListDto(imgUpdateBakery);
     },
     getSavedBakeryList: async (user) => {
-        let findUser = await userUtils.findUserIncludeSavedBakery(user);
-        let savedBakeryList = findUser.SavedBakery;
-        return savedBakeryListDto(savedBakeryList);
+        let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
+        let bakeryList = await Promise.all(savedBakeryList.map(async savedBakery =>{
+            return await bakeryUtils.findOnlyBakery(savedBakery.BakeryId)
+        }))
+        bakeryList.forEach(bakery => console.log(bakery.id))
+        return savedBakeryListDto(bakeryList);
     },
     savedBakery: async (bakeryId, user) => {
         let userId = user.id;
