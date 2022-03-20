@@ -24,7 +24,7 @@ module.exports = {
         let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
         let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
         let findUser = await userUtils.findUserIncludeVisitedBakery(user);
-        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
+        let visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
 
         if (filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
 
