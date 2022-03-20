@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const env = process.env.NODE_ENV || 'production';
+const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
 
 const db = {};
@@ -79,8 +79,18 @@ db.Curation.belongsToMany(db.Review,{through: 'CurationTarget', as: 'Targets'});
 db.Review.belongsToMany(db.Curation,{through: 'CurationTarget', as: 'Curations'});
 
 /* 큐레이션과 유저(좋아요) curation:user(N:M)*/
-db.Curation.belongsToMany(db.User,{through: 'LikeCuration', as: 'LikerCuration'});
-db.User.belongsToMany(db.Curation,{through: 'LikeCuration', as: 'LikedCuration'});
+db.Curation.belongsToMany(db.User,{
+  through: 'LikeCuration',
+  as: 'LikerCuration',
+  foreignKey : 'CurationId',
+  otherKey : 'UserId'
+});
+db.User.belongsToMany(db.Curation,{
+  through: 'LikeCuration',
+  as: 'LikedCuration',
+  foreignKey : 'UserId',
+  otherKey : 'CurationId'
+});
 
 /* 큐레이션과 유저(작성자) curation:user(N:1)*/
 db.User.hasMany(db.Curation);

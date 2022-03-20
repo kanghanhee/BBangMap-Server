@@ -1,10 +1,12 @@
-const curationSimpleDto = (curation) => {
+const curationSimpleDto = (curation, user) => {
     return {
         curationId : curation.id,
         curationImage : curation.curationImage,
         curator : curation.User.nickName,
-        mainTitle : curation.mainTitle,
+        title : curation.mainTitle,
         subTitle : curation.subTitle,
+        isCertificated : curation.User.isCertification,
+        isCurationLiked : curation.LikerCuration.map(likerCuration => likerCuration.id).includes(user.id),
         likeCurationCount : curation.LikerCuration.length
     }
 }
