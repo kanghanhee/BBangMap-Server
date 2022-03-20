@@ -3,12 +3,12 @@ const bakeryMapDto = (bakery, savedBakeryList, visitedBakeryList) => {
         bakeryId: bakery.id,
         latitude: bakery.latitude,
         longitude: bakery.longitude,
-        isSaveBakery: savedBakeryList.includes(bakery.id),
+        isSaveBakery: savedBakeryList.map(bakery => bakery.BakeryId).includes(bakery.id),
         isVisitedBakery: visitedBakeryList.map(bakery => bakery.BakeryId).includes(bakery.id),
-        bakeryName : bakery.bakeryName,
-        bakeryAddress : bakery.address,
-        start : bakery.star,
-        star : bakery.star
+        bakeryName: bakery.bakeryName,
+        bakeryAddress: bakery.address,
+        start: bakery.star,
+        star: bakery.star
     }
 }
 
