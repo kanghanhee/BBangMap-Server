@@ -1,5 +1,6 @@
 const bakeryDetailReviewListDto = require('./bakeryDetailReviewListDto')
 const bakeryUtil = require('../utils')
+const {defaultBgImg} = require("../../../modules/definition");
 
 const bakeryDetailDto = async (bakery, savedBakeryList, invitedBakeryList, userId) => {
     let reviewList = bakery.Reviews
@@ -7,6 +8,7 @@ const bakeryDetailDto = async (bakery, savedBakeryList, invitedBakeryList, userI
         bakeryId: bakery.id,
         bakeryName: bakery.bakeryName,
         address: bakery.address,
+        mainImg : bakery.bakeryImg[0],
         isVisitedBakery : await bakeryUtil.isVisitedBakery(bakery, invitedBakeryList),
         isSaveBakery : await bakeryUtil.isSavedBakery(bakery, savedBakeryList),
         star: await getBakeryStar(reviewList),
@@ -41,6 +43,7 @@ const getBakeryDetailImgList = async (bakeryImg) => {
         }
         return detailImg;
     }
+    if(bakeryImg.length === 1 && bakeryImg[0] === defaultBgImg) bakeryImg = [];
     return bakeryImg;
 }
 

@@ -1,7 +1,7 @@
 const CurationListByContent = require('./CurationListByContent')
-const CurationContentList = async (contentList) => {
+const CurationContentList = async (contentList, user) => {
     return {
-        curationListByContent : contentList.map(content => CurationListByContent(content))
+        curationListByContent : contentList.map(content => CurationListByContent(content, user))
     }
 }
 

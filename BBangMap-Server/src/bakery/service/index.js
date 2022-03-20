@@ -9,7 +9,6 @@ const bakerySearchListDto = require('../dto/bakerySearchListDto')
 const bakeryDetailDto = require('../dto/bakeryDetailDto')
 const bakeryImgListDto = require('../dto/bakeryImgListDto')
 const savedBakeryListDto = require('../dto/savedBakeryListDto')
-const {visitedBakery} = require("../utils");
 
 module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -25,7 +24,7 @@ module.exports = {
         let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
         let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
         let findUser = await userUtils.findUserIncludeVisitedBakery(user);
-        let visitedBakeryList = findUser.VisitedBakery.map(visitedBakery => visitedBakery.id);
+        let visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
 
         if (filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
 
@@ -51,7 +50,6 @@ module.exports = {
         let bakeryList = await Promise.all(savedBakeryList.map(async savedBakery =>{
             return await bakeryUtils.findOnlyBakery(savedBakery.BakeryId)
         }))
-        bakeryList.forEach(bakery => console.log(bakery.id))
         return savedBakeryListDto(bakeryList);
     },
     savedBakery: async (bakeryId, user) => {

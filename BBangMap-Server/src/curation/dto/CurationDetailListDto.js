@@ -4,13 +4,14 @@ const curationDetailListDto = (userId, curation) => {
     return {
         curationContentId : curation.Contents.id,
         likeCurationCount : curation.LikerCuration.length,
-        isLikedCuration :curation.LikerCuration.map(liker => liker.id).includes(userId),
         curationContentTitle : curation.Contents.contentsTitle,
         curator : curation.User.nickName,
-        mainTitle : curation.mainTitle,
+        title : curation.mainTitle,
         subTitle : curation.subTitle,
         curatorComment : curation.curatorComment,
-        curationDetailList : curation.Targets.map(review => CurationDetailDto(review, userId))
+        isLikedCuration :curation.LikerCuration.map(liker => liker.id).includes(userId),
+        isCertificated : curation.User.isCertificated,
+        curationDetailList : curation.Targets.map(review => CurationDetailDto(review, userId)),
     }
 }
 

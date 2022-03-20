@@ -1,4 +1,5 @@
 const reviewUtils = require('../utils');
+const {defaultBgImg} = require("../../../modules/definition");
 
 const reviewDto = (review, likedReviewList, likeCountList, userId) => {
   return {
@@ -6,7 +7,7 @@ const reviewDto = (review, likedReviewList, likeCountList, userId) => {
     bakeryName: review.Bakery.bakeryName,
     content: review.content,
     reviewer: review.User.nickName,
-    reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList[0],
+    reviewImg: review.reviewImgList.length < 1 ? defaultBgImg : review.reviewImgList[0],
     reviewCreatedDate: review.createdAt,
     purchaseBreadList: review.purchaseBreadList,
     isOnline: review.isOnline,
