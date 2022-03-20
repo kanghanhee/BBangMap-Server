@@ -1,3 +1,4 @@
+const {defaultBgImg} = require("../../../modules/definition");
 const bakeryDetailReviewListDto = (review, userId) =>{
     return {
         reviewId : review.id,
@@ -13,7 +14,7 @@ const bakeryDetailReviewListDto = (review, userId) =>{
 }
 
 const getReviewImg = (reviewImgList) => {
-    return reviewImgList.length>0 ? reviewImgList[0] : null;
+    return reviewImgList.length>0 ? reviewImgList[0] : defaultBgImg;
 }
 
 const likeThisReview = (reviewLikerList, userId) => {

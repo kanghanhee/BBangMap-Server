@@ -39,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         define: 0,
       },
+        isCertificated:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        }
     },
     {
       freezeTableName: true,

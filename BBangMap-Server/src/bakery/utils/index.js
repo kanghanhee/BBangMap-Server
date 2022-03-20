@@ -1,5 +1,6 @@
 const {Bakery, SaveBakery, VisitBakery, Review, User} = require('../../../models')
 const {Op} = require('sequelize')
+const {defaultBgImg} = require("../../../modules/definition");
 
 module.exports = {
     findBakeryListByBakeryName: async (bakeryName) => {
@@ -110,16 +111,20 @@ module.exports = {
         })
     },
     addBakeryImg: async (bakery) => {
-        var originalBakeryImgList = bakery.bakeryImg.length > 0 ? bakery.bakeryImg : ["https://bbang-map.s3.ap-northeast-2.amazonaws.com/images/bakery/empty-bakery-image.jpg"];
+        var originalBakeryImgList = bakery.bakeryImg.length > 0 ? bakery.bakeryImg : [defaultBgImg];
 
         let reviewImgList = [];
         if (bakery.Reviews.length > 0) {
-            originalBakeryImgList = [];
-            reviewImgList = bakery.Reviews
+            bakery.Reviews
                 .map(review => review.reviewImgList)
-                .reduce((reviewImgArr, next) =>
-                    reviewImgArr.concat(next));
+                .filter(imgList => imgList.length>0)
+                .forEach(imgList => {
+                    if(imgList.length > 0){
+                        reviewImgList=reviewImgList.concat(imgList)
+                    }
+                })
         }
+        if(reviewImgList.length > 0) originalBakeryImgList = [];
         bakery.bakeryImg = originalBakeryImgList.concat(reviewImgList);
         return bakery;
     },

@@ -2,20 +2,26 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define(
         'LikeCuration',
         {
-            CurationId:{
+            id : {
                 type : DataTypes.INTEGER,
-                references: {
-                    model: 'Curation',
-                    key: 'id'
-                }
+                autoIncrement : true,
+                primaryKey : true,
+                allowNull : false
             },
-            UserId:{
-                type: DataTypes.INTEGER,
-                references: {
-                    model: 'User',
-                    key: 'id'
-                }
-            }
+            // CurationId:{
+            //     type : DataTypes.INTEGER,
+            //     references: {
+            //         model: 'Curation',
+            //         key: 'id'
+            //     }
+            // },
+            // UserId:{
+            //     type: DataTypes.INTEGER,
+            //     references: {
+            //         model: 'User',
+            //         key: 'id'
+            //     }
+            // }
         },
         {
             freezeTableName: true,

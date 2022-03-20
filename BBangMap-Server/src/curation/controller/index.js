@@ -20,7 +20,8 @@ module.exports = {
 
     curationListByCurationContents: async (req, res) => {
         try {
-            const result = await curationService.getCurationList()
+            const user = req.header.user;
+            const result = await curationService.getCurationList(user);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_CURATION, result));
         } catch (err) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));

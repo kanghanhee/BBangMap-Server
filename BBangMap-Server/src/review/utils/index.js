@@ -33,7 +33,7 @@ module.exports = {
         });
     },
     findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
-        if (isOnline == 1 && isVegan == 1) {
+        if (isOnline === 1 && isVegan === 1) {
             return Review.findAll({
                 include: [
                     {
@@ -67,7 +67,7 @@ module.exports = {
                 order: [['createdAt', 'DESC']],
             });
         }
-        if (isOnline == 1) {
+        if (isOnline === 1) {
             return Review.findAll({
                 include: [
                     {
@@ -99,7 +99,7 @@ module.exports = {
                 },
                 order: [['createdAt', 'DESC']],
             });
-        } else if (isVegan == 1) {
+        } else if (isVegan === 1) {
             return Review.findAll({
                 include: [
                     {
@@ -171,7 +171,7 @@ module.exports = {
         }
     },
     findReviewListByOption: async (isOnline, isVegan) => {
-        if (isOnline == 1 && isVegan == 1) {
+        if (isOnline === 1 && isVegan === 1) {
             return Review.findAll({
                 include: [
                     {
@@ -199,7 +199,7 @@ module.exports = {
                 order: [['createdAt', 'DESC']],
             })
         }
-        if (isOnline == 1) {
+        if (isOnline === 1) {
             return Review.findAll({
                 include: [
                     {
@@ -223,7 +223,7 @@ module.exports = {
                 },
                 order: [['createdAt', 'DESC']],
             })
-        } else if (isVegan == 1) {
+        } else if (isVegan === 1) {
             return Review.findAll({
                 include: [
                     {
@@ -284,7 +284,7 @@ module.exports = {
             include: [
                 {
                     model: User,
-                    attributes: ['nickName'],
+                    attributes: ['nickName','profileImg'],
                 },
                 {
                     model: Bakery,
@@ -412,8 +412,7 @@ module.exports = {
         return await LikeReview.findAll({});
     },
     getCount: (id, countList) => {
-        let count = countList.filter(count => count === id).length;
-        return count;
+        return countList.filter(count => count === id).length;
     },
     // 추천순으로 정렬
     getSortByLikeCount: list => {
