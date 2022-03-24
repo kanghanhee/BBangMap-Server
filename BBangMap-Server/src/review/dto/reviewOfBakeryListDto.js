@@ -1,9 +1,9 @@
 const reviewOfBakeryDto = require('./reviewOfBakeryDto');
 
-const reviewListOfBakeryDto = (reviewOfBakeryList, likedReviewList, likeCountList) => {
-  return reviewOfBakeryList.map(reviewOfBakery => {
-    return reviewOfBakeryDto(reviewOfBakery, likedReviewList, likeCountList);
-  });
+const reviewListOfBakeryDto = (findUser, reviewOfBakeryList, savedReviewList, likedReviewList, visitedBakeryList, likeCountList) => {
+    return reviewOfBakeryList.map(reviewOfBakery => {
+        return reviewOfBakeryDto(findUser, reviewOfBakery, savedReviewList, likedReviewList, visitedBakeryList, likeCountList);
+    });
 };
 
 module.exports = reviewListOfBakeryDto;

@@ -69,11 +69,18 @@ module.exports = {
     findUserIncludeLikedReview: async user => {
         return await User.findOne({
             where: {id: user.id},
-            include: {
+            include: [{
                 model: Review,
                 as: 'Liked',
                 attributes: {},
-            },
+            },{
+                model : Review,
+                as: 'SavedReview',
+                attributes: {}
+            },{
+                model : Bakery,
+                as: 'VisitedBakery'
+            }]
         });
     },
     findUserIncludeVisitedBakery: async user => {
