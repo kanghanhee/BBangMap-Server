@@ -1,8 +1,8 @@
 const bakerySearchDto = require("./bakerySearchDto")
 
-const bakerySearchListDto = async(searchBakeryList, latitude, longitude, visitedBakeryList) => {
+const bakerySearchListDto = async(searchBakeryList, latitude, longitude, visitedBakeryList, star) => {
     return searchBakeryList.map(searchBakery => {
-        return bakerySearchDto(searchBakery, latitude, longitude, visitedBakeryList);
+        return bakerySearchDto(searchBakery, latitude, longitude, visitedBakeryList, star);
     })
 }
 
