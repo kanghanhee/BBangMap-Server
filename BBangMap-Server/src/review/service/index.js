@@ -54,6 +54,7 @@ module.exports = {
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
+    reviewList.forEach(review => console.log(review.SaverReview))
     let result = reviewListDto(reviewList, likedReviewList, likeCountList, user.id);
     // 추천수로 정렬
     if (order === 'best') {
