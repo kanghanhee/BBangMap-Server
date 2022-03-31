@@ -27,7 +27,10 @@ module.exports = {
                 }, {
                     model: User,
                     attributes: {}
-                },
+                },{
+                    model: User,
+                    as : "SaverReview"
+                }
             ],
             order: [['createdAt', 'DESC']],
         });
