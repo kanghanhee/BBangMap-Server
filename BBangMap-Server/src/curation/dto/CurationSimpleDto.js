@@ -5,6 +5,7 @@ const curationSimpleDto = (curation, user) => {
         curator : curation.User.nickName,
         title : curation.mainTitle,
         subTitle : curation.subTitle,
+        isCertificated : curation.User.role === 1,
         isLikedCuration : curation.LikerCuration.map(likerCuration => likerCuration.id).includes(user.id),
         likeCurationCount : curation.LikerCuration.length
     }

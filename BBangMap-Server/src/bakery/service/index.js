@@ -29,9 +29,11 @@ module.exports = {
         if (filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
 
         let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
+        let bakeryReview = searchBakeryList.flatMap(bakeryList => bakeryList.Reviews);
+        bakeryReview.forEach(review => console.log(review))
+        let star = reviewUtils.getBakeryStar(bakeryReview);
 
-
-        return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
+        return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList, star);
     },
     getBakeryDetail: async (bakeryId, user) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);

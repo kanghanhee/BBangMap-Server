@@ -8,6 +8,7 @@ const {
     Review,
     Bakery
 } = require('../../../models')
+const {Sequelize} = require("sequelize");
 
 module.exports = {
     findCurationContent: async (curationContentsId) => {
@@ -81,7 +82,8 @@ module.exports = {
                       }
                   ]
               }
-          ]
+          ],
+          order: [Sequelize.literal("`Curations->MatchingCurationContents`.`priority`", 'ASC')]
       })
     },
     findCuration: async (curationId) => {

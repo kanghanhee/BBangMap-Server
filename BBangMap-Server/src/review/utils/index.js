@@ -50,6 +50,9 @@ module.exports = {
                     }, {
                         model: User,
                         attributes: {}
+                    },{
+                        model: User,
+                        as: "SaverReview"
                     }
                 ],
                 where: {
@@ -84,6 +87,9 @@ module.exports = {
                     }, {
                         model: User,
                         attributes: {}
+                    },{
+                        model: User,
+                        as: "SaverReview"
                     }
                 ],
                 where: {
@@ -116,6 +122,9 @@ module.exports = {
                     }, {
                         model: User,
                         attributes: {}
+                    },{
+                        model: User,
+                        as: "SaverReview"
                     }
                 ],
                 where: {
@@ -148,6 +157,9 @@ module.exports = {
                     }, {
                         model: User,
                         attributes: {}
+                    },{
+                        model: User,
+                        as: "SaverReview"
                     }
                 ],
                 where: {
@@ -188,6 +200,9 @@ module.exports = {
                     }, {
                         model: User,
                         attributes: {}
+                    },{
+                        model: User,
+                        as: "SaverReview"
                     }
                 ],
                 where: {
@@ -216,6 +231,9 @@ module.exports = {
                     }, {
                         model: User,
                         attributes: {}
+                    },{
+                        model: User,
+                        as: "SaverReview"
                     }
                 ],
                 where: {
@@ -240,6 +258,9 @@ module.exports = {
                     }, {
                         model: User,
                         attributes: {}
+                    },{
+                        model: User,
+                        as: "SaverReview"
                     }
                 ],
                 where: {
@@ -264,6 +285,9 @@ module.exports = {
                     }, {
                         model: User,
                         attributes: {}
+                    },{
+                        model: User,
+                        as: "SaverReview"
                     }
                 ],
                 where: {
@@ -284,7 +308,7 @@ module.exports = {
             include: [
                 {
                     model: User,
-                    attributes: ['nickName','profileImg'],
+                    attributes: ['nickName', 'profileImg'],
                 },
                 {
                     model: Bakery,
@@ -469,6 +493,9 @@ module.exports = {
             bakery.star = await getBakeryStar(reviewList)
             return bakery
         }))
+    },
+    getBakeryStar: (reviewList) => {
+        return getBakeryStar(reviewList)
     }
 };
 

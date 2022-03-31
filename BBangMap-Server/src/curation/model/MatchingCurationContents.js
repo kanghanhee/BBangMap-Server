@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
                     model: 'CurationContents',
                     key: 'id'
                 }
+            },
+            priority:{
+                type: DataTypes.INTEGER
             }
         },
         {
