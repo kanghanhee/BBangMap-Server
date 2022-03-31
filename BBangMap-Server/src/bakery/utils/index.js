@@ -10,7 +10,12 @@ module.exports = {
                     {bakeryName: {[Op.like]: `${bakeryName}%`}},
                     {bakeryName: {[Op.like]: `%${bakeryName}%`}}
                 ]
-            }
+            },
+            include:[
+                {
+                    model : Review
+                }
+            ]
             //방문 빵집이 많은 순으로 정렬
         })
     },

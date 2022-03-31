@@ -3,6 +3,7 @@ const bakeryUtils = require('../../bakery/utils')
 const bakeryLocationInfoDto = (bakery, userId) =>{
     return{
         bakeryId : bakery.id,
+        bakeryName : bakery.bakeryName,
         bakeryAddress : bakery.address,
         latitude : bakery.latitude,
         longitude : bakery.longitude,

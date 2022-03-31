@@ -12,12 +12,13 @@ module.exports = {
   getReviewOfBakery: async (order, bakeryId, user) => {
     let reviewOfBakeryList = await reviewUtils.findReviewOfBakery(bakeryId);
     let findUser = await userUtils.findUserIncludeLikedReview(user);
+    let visitedBakeryList = findUser.VisitedBakery.map(bakery => bakery.id);
+    let savedReviewList = findUser.SavedReview;
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
     // LikeReview
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
-
-    let result = reviewOfBakeryListDto(reviewOfBakeryList, likedReviewList, likeCountList);
+    let result = reviewOfBakeryListDto(findUser, reviewOfBakeryList, savedReviewList,likedReviewList, visitedBakeryList,likeCountList);
     // 추천수로 정렬
     if (order === 'best') {
       reviewUtils.getSortByLikeCount(result);
@@ -53,6 +54,7 @@ module.exports = {
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
 
+    reviewList.forEach(review => console.log(review.SaverReview))
     let result = reviewListDto(reviewList, likedReviewList, likeCountList, user.id);
     // 추천수로 정렬
     if (order === 'best') {
