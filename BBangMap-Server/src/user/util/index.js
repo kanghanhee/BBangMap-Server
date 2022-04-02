@@ -83,9 +83,9 @@ module.exports = {
     );
   },
 
-  // db set null 삭제
-  reviewSetNull: async user => {
-    const query = `UPDATE Review SET UserId = null WHERE UserId= :userId`;
+  // db set n 삭제
+  reviewSetUnknown: async user => {
+    const query = `UPDATE Review SET UserId = 1 WHERE UserId= :userId`;
     await sequelize.query(query, {
       replacements: {
         userId: user.id,

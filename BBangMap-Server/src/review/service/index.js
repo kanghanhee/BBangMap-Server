@@ -121,7 +121,7 @@ module.exports = {
       reviewImgList,
     );
     // check visit bakery
-    const result = await reviewUtils.checkVisitBakery(user, bakeryId);
+    await reviewUtils.checkVisitBakery(user, bakeryId);
     return addReview;
   },
   updateReview: async (
