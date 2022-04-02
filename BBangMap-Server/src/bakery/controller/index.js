@@ -2,7 +2,7 @@ const util = require('../../../modules/util');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const bakeryService = require('../service');
-const slack = require('../../../other/slackAPI');
+const slackSender = require('../../../other/slackSender');
 
 module.exports = {
   bakeryMap: async (req, res) => {
@@ -12,10 +12,7 @@ module.exports = {
       const bakeryMapListDto = await bakeryService.getBakeryMap(user, latitude, longitude, radius);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakeryMapListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -28,10 +25,7 @@ module.exports = {
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -42,10 +36,7 @@ module.exports = {
       const bakeryDetailDto = await bakeryService.getBakeryDetail(bakeryId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakeryDetailDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -57,10 +48,7 @@ module.exports = {
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_IMG, bakeryImgListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -72,10 +60,7 @@ module.exports = {
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_IMG, savedBakeryListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -86,10 +71,7 @@ module.exports = {
       await bakeryService.savedBakery(bakeryId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_BAKERY));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -100,10 +82,7 @@ module.exports = {
       await bakeryService.deleteSaveBakery(bakeryId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_BAKERY));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -113,10 +92,7 @@ module.exports = {
       await bakeryService.createBakery(body);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_REGISTRATION_BAKERY));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -128,22 +104,13 @@ module.exports = {
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_VISITED_BAKERY));
     } catch (err) {
       if (err.message === 'NOT_EXIST_BAKERY') {
-        const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${statusCode.BAD_REQUEST}] [${req.method.toUpperCase()}] ${
-          req.originalUrl
-        } ${err} ${JSON.stringify(err)}`;
-        slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+        slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
         res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
       } else if (err.message === 'ALREADY_BAKERY_VISITED') {
-        const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${statusCode.BAD_REQUEST}] [${req.method.toUpperCase()}] ${
-          req.originalUrl
-        } ${err} ${JSON.stringify(err)}`;
-        slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+        slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
         res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
       } else {
-        const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-          statusCode.INTERNAL_SERVER_ERROR
-        }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-        slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+        slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
         res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
       }
     }
@@ -156,22 +123,13 @@ module.exports = {
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CANCEL_VISITED_BAKERY));
     } catch (err) {
       if (err.message === 'NOT_EXIST_BAKERY') {
-        const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${statusCode.BAD_REQUEST}] [${req.method.toUpperCase()}] ${
-          req.originalUrl
-        } ${err} ${JSON.stringify(err)}`;
-        slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+        slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
         res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
       } else if (err.message === 'ALREADY_CANCEL_BAKERY_VISITED') {
-        const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${statusCode.BAD_REQUEST}] [${req.method.toUpperCase()}] ${
-          req.originalUrl
-        } ${err} ${JSON.stringify(err)}`;
-        slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+        slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
         res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
       } else {
-        const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-          statusCode.INTERNAL_SERVER_ERROR
-        }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-        slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+        slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
         res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
       }
     }

@@ -4,7 +4,7 @@ const responseMessage = require('../../../modules/responseMessage');
 const reviewService = require('../service');
 const missionService = require('../../mission/service');
 const reviewUtils = require('../utils');
-const slack = require('../../../other/slackAPI');
+const slackSender = require('../../../other/slackSender');
 
 module.exports = {
   reviewOfBakery: async (req, res) => {
@@ -16,10 +16,7 @@ module.exports = {
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewOfBakeryListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -30,10 +27,7 @@ module.exports = {
       let reivewAllListDto = await reviewService.getReviewAll(order, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -46,10 +40,7 @@ module.exports = {
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewSearchListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -60,10 +51,7 @@ module.exports = {
       let reviewDetailDto = await reviewService.getReviewDetail(reviewId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewDetailDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -75,10 +63,7 @@ module.exports = {
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewFolderListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -93,10 +78,7 @@ module.exports = {
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -106,10 +88,7 @@ module.exports = {
       let myReviewListDto = await reviewService.getMyReviewList(user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, myReviewListDto));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -139,10 +118,7 @@ module.exports = {
       const missionResult = await missionService.checkSucceededMission(user, bakeryId, review.id);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_REVIEW, missionResult));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -175,10 +151,7 @@ module.exports = {
 
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REVIEW, updateReview));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -189,10 +162,7 @@ module.exports = {
       await reviewService.savedReview(reviewId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_REVIEW));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -203,10 +173,7 @@ module.exports = {
       await reviewService.likedReview(reviewId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKED_REVIEW));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -217,10 +184,7 @@ module.exports = {
       await reviewService.deleteSavedReview(reviewId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -231,10 +195,7 @@ module.exports = {
       await reviewService.deleteLikedReview(reviewId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKED_REVIEW));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
@@ -245,10 +206,7 @@ module.exports = {
       await reviewService.deleteMyReview(reviewId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_REVIEW));
     } catch (err) {
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${
-        statusCode.INTERNAL_SERVER_ERROR
-      }] [${req.method.toUpperCase()}] ${req.originalUrl} ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },

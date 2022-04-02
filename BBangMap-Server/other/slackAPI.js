@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const DEV_WEB_HOOK_ERROR_MONITORING = process.env.DEV_WEB_HOOK_ERROR_MONITORING;
+const { DEV_WEB_HOOK_ERROR_MONITORING } = process.env;
 
 const sendMessage = (message, apiEndPoint = DEV_WEB_HOOK_ERROR_MONITORING) => {
   try {

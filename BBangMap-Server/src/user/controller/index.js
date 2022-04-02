@@ -3,7 +3,7 @@ const util = require('../../../modules/util');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const missionService = require('../service');
-const slack = require('../../../other/slackAPI');
+const slackSender = require('../../../other/slackSender');
 
 module.exports = {
   // 회원가입
@@ -17,10 +17,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${err.statusCode}] [${req.method.toUpperCase()}] ${
-        req.originalUrl
-      } ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -46,10 +43,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${err.statusCode}] [${req.method.toUpperCase()}] ${
-        req.originalUrl
-      } ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -64,10 +58,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${err.statusCode}] [${req.method.toUpperCase()}] ${
-        req.originalUrl
-      } ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -82,10 +73,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${err.statusCode}] [${req.method.toUpperCase()}] ${
-        req.originalUrl
-      } ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -100,10 +88,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${err.statusCode}] [${req.method.toUpperCase()}] ${
-        req.originalUrl
-      } ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -118,10 +103,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
-      const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${err.statusCode}] [${req.method.toUpperCase()}] ${
-        req.originalUrl
-      } ${err} ${JSON.stringify(err)}`;
-      slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },

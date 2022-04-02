@@ -2,7 +2,7 @@ const util = require('../../../modules/util');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const authService = require('../service');
-const slack = require('../../../other/slackAPI');
+const slackSender = require('../../../other/slackSender');
 
 module.exports = {
   authLogin: async (req, res) => {
@@ -12,7 +12,10 @@ module.exports = {
       const loginDto = await authService.authLogin(identifyToken, provider);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LOGIN, loginDto));
     } catch (err) {
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   logout: async (req, res) => {
@@ -21,7 +24,10 @@ module.exports = {
       await authService.logout(user);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LOGOUT));
     } catch (err) {
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   reissue: async (req, res) => {
@@ -33,12 +39,13 @@ module.exports = {
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_REISSUE_TOKEN, loginDto));
     } catch (err) {
       if (err.message === 'InvalidAccessToken') {
-        const slackMessage = `[ERROR 발생 🚨][ErrorCode : ${statusCode.BAD_REQUEST}] [${req.method.toUpperCase()}] ${
-          req.originalUrl
-        } ${err} ${JSON.stringify(err)}`;
-        slack.sendMessage(slackMessage, slack.DEV_WEB_HOOK_ERROR_MONITORING);
+        slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
-      } else return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));;
+      }
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
 };
