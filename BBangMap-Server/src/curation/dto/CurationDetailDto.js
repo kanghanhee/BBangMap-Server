@@ -1,6 +1,7 @@
 const curationDetailDto = (review, userId) => {
     return {
         reviewId : review.id,
+        bakeryId : review.Bakery.id,
         bakeryName : review.Bakery.bakeryName,
         address : review.Bakery.address,
         reviewImg : review.reviewImgList,
