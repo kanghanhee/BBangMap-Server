@@ -74,10 +74,18 @@ module.exports = (sequelize, DataTypes) => {
           return JSON.parse(this.getDataValue('bakeryImg'));
         },
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('now()'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('now()'),
+      },
     },
     {
       freezeTableName: true,
-      timestamps: true,
+      timestamps: false,
     },
   );
 };
