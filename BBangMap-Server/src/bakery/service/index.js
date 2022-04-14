@@ -21,19 +21,23 @@ module.exports = {
         return await bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
     },
     getSearchBakeryList: async (bakeryName, latitude, longitude, user) => {
-        let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
-        let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
-        let findUser = await userUtils.findUserIncludeVisitedBakery(user);
-        let visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+        if(bakeryName.length > 0){
+            let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
+            let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
+            let findUser = await userUtils.findUserIncludeVisitedBakery(user);
+            let visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
 
-        if (filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
+            if (filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
 
-        let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
-        let bakeryReview = searchBakeryList.flatMap(bakeryList => bakeryList.Reviews);
-        bakeryReview.forEach(review => console.log(review))
-        let star = reviewUtils.getBakeryStar(bakeryReview);
+            let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
+            let bakeryReview = searchBakeryList.flatMap(bakeryList => bakeryList.Reviews);
+            bakeryReview.forEach(review => console.log(review))
+            let star = reviewUtils.getBakeryStar(bakeryReview);
 
-        return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList, star);
+            return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList, star);
+        }else{
+            return null;
+        }
     },
     getBakeryDetail: async (bakeryId, user) => {
         let bakery = await bakeryUtils.findBakeryById(bakeryId);
