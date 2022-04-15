@@ -3,6 +3,7 @@ const util = require('../../../modules/util');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const missionService = require('../service');
+const slackSender = require('../../../other/slackSender');
 
 module.exports = {
   // 회원가입
@@ -16,6 +17,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -41,6 +43,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -55,6 +58,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -69,6 +73,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -83,6 +88,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
@@ -97,6 +103,7 @@ module.exports = {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
       }
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
