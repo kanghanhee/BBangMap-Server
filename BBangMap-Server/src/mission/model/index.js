@@ -30,10 +30,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(1000),
         allowNull: true,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('now()'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('now()'),
+      },
     },
     {
       freezeTableName: true,
-      timestamps: true,
+      timestamps: false,
     },
   );
 };

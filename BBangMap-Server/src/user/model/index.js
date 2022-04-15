@@ -39,14 +39,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         define: 0,
       },
-        isCertificated:{
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
-        }
+      isCertificated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('now()'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('now()'),
+      },
     },
     {
       freezeTableName: true,
-      timestamps: true,
+      timestamps: false,
     },
   );
 };
