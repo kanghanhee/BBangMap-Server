@@ -11,9 +11,6 @@ const {
   Bakery,
   Review,
 } = require('../../../models');
-const dayjs = require('dayjs');
-
-const now = dayjs().add(9, 'hour');
 
 module.exports = {
   // 미션 추가
@@ -34,8 +31,6 @@ module.exports = {
       badgeName,
       missionActiveStampImg,
       missionInactiveStampImg,
-      createdAt: now,
-      updatedAt: now,
     });
   },
   // 미션 빵집 추가
@@ -43,8 +38,6 @@ module.exports = {
     await MissionBakery.create({
       MissionId: missionId,
       BakeryId: bakeryId,
-      createdAt: now,
-      updatedAt: now,
     });
   },
   // 이달의 미션 조회
@@ -136,13 +129,10 @@ module.exports = {
           UserId: user.id,
           MissionId: missionId,
           missionSuccessWhether: false,
-          createdAt: now,
-          updatedAt: now,
         });
       return MissionWhether.update(
         {
           missionAchieveCount,
-          updatedAt: now,
         },
         {
           where: {
@@ -164,7 +154,6 @@ module.exports = {
     await MissionWhether.update(
       {
         missionSuccessWhether: true,
-        updatedAt: now,
       },
       {
         where: {
