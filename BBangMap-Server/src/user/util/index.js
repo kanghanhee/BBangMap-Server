@@ -1,12 +1,9 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-return-await */
-const dayjs = require('dayjs');
 const fs = require('fs');
 const { sequelize } = require('../../../models');
 const { User, Review, SaveBakery, SaveReview } = require('../../../models');
 const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
-
-const now = dayjs().add(9, 'hour');
 
 module.exports = {
   findUserById: async id => {
@@ -45,8 +42,6 @@ module.exports = {
       role: 2,
       profileImg: defaultProfileImg,
       backgroundImg: defaultBgImg,
-      createdAt: now,
-      updatedAt: now,
     });
   },
   // 파일 읽기
@@ -79,7 +74,6 @@ module.exports = {
         nickName: updateUser.nickname,
         profileImg: updateUser.profileImg,
         backgroundImg: updateUser.backgroundImg,
-        updatedAt: now,
       },
       {
         where: {
@@ -143,7 +137,6 @@ module.exports = {
     await User.update(
       {
         accessToken: accessToken,
-        updatedAt: now,
       },
       {
         where: {
