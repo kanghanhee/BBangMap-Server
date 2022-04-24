@@ -16,18 +16,10 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
-      createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: sequelize.literal('now()'),
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        defaultValue: sequelize.literal('now()'),
-      },
     },
     {
       freezeTableName: true,
-      timestamps: false,
+      timestamps: true,
     },
   );
 };
