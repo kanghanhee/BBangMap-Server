@@ -13,7 +13,7 @@ const reviewDetailDto = async (review, savedReviewList, myReviewList, likedRevie
     content: review.content,
     reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList,
     reviewerName: review.User.nickName,
-    reviewCreatedDate: review.createdAt,
+    reviewCreatedDate: new Date(review.createdAt+"z"),
     reviewerImg : review.User.profileImg,
     isSavedReview: await reviewUtil.isSavedReview(review, savedReviewList),
     isMyReview: await reviewUtil.isMyReview(review, myReviewList),
