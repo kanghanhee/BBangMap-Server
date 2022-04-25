@@ -8,7 +8,7 @@ const reviewDto = (review, likedReviewList, likeCountList, userId) => {
     content: review.content,
     reviewer: review.User.nickName,
     reviewImg: review.reviewImgList.length < 1 ? defaultBgImg : review.reviewImgList[0],
-    reviewCreatedDate: review.createdAt,
+    reviewCreatedDate: new Date(review.createdAt+"z"),
     purchaseBreadList: review.purchaseBreadList,
     isOnline: review.isOnline,
     isVegan: review.isVegan,
