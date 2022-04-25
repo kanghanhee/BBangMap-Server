@@ -6,7 +6,7 @@ const myReviewDto = (myReview, likedReviewList, likeCountList) => {
     bakeryName: myReview.Bakery.bakeryName,
     content: myReview.content,
     reviewImg: myReview.reviewImgList.length < 1 ? null : myReview.reviewImgList[0],
-    reviewCreatedDate: myReview.createdAt,
+    reviewCreatedDate: new Date(myReview.createdAt+"z"),
     isLikedReview: !!likedReviewList.includes(myReview.id),
     likeReviewCount: reviewUtils.getCount(myReview.id, likeCountList),
   };

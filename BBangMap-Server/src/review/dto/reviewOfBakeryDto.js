@@ -9,7 +9,7 @@ const reviewOfBakeryDto = (findUser, reviewOfBakery, savedReviewList, likedRevie
         content: reviewOfBakery.content,
         reviewImg: reviewOfBakery.reviewImgList.length < 1 ? defaultBgImg : reviewOfBakery.reviewImgList[0],
         purchaseBreadCount: reviewOfBakery.purchaseBreadList.length,
-        reviewCreatedDate: reviewOfBakery.createdAt,
+        reviewCreatedDate: new Date(reviewOfBakery.createdAt+"z"),
         isLikedReview: !!likedReviewList.includes(reviewOfBakery.id),
         isSavedReview: savedReviewList.map(review => review.UserId).includes(findUser.id),
         isVisitedReview: visitedBakeryList.includes(reviewOfBakery.BakeryId),
