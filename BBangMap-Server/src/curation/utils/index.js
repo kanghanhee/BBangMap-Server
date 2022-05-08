@@ -83,7 +83,11 @@ module.exports = {
                   ]
               }
           ],
-          order: [Sequelize.literal("`Curations->MatchingCurationContents`.`priority`", 'ASC')]
+          order: [
+              [Sequelize.literal("`Curations->MatchingCurationContents`.`priority`", 'ASC')],
+              [Sequelize.literal("`Curations->MatchingCurationContents`.`CurationContentId`", 'ASC')]
+
+          ]
       })
     },
     findCuration: async (curationId) => {
