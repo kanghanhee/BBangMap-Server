@@ -3,6 +3,7 @@ const userUtils = require('../../user/utils')
 const bakeryUtils = require('../utils')
 const reviewUtils = require('../../review/utils')
 const {Bakery} = require('../../../models')
+const db = require('../../../models')
 
 const bakeryMapListDto = require('../dto/bakeryMapListDto')
 const bakerySearchListDto = require('../dto/bakerySearchListDto')
@@ -21,7 +22,7 @@ module.exports = {
         return await bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
     },
     getSearchBakeryList: async (bakeryName, latitude, longitude, user) => {
-        if(bakeryName.length > 0){
+        if (bakeryName.length > 0) {
             let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
             let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
             let findUser = await userUtils.findUserIncludeVisitedBakery(user);
@@ -35,7 +36,7 @@ module.exports = {
             let star = reviewUtils.getBakeryStar(bakeryReview);
 
             return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList, star);
-        }else{
+        } else {
             return null;
         }
     },
@@ -53,7 +54,7 @@ module.exports = {
     },
     getSavedBakeryList: async (user) => {
         let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
-        let bakeryList = await Promise.all(savedBakeryList.map(async savedBakery =>{
+        let bakeryList = await Promise.all(savedBakeryList.map(async savedBakery => {
             return await bakeryUtils.findOnlyBakery(savedBakery.BakeryId)
         }))
         return savedBakeryListDto(bakeryList);
@@ -66,30 +67,13 @@ module.exports = {
         let userId = user.id;
         await bakeryUtils.deleteSaveBakery(userId, bakeryId);
     },
-    createBakery: async (registerBakery) => {
-        await Bakery.create({
-            bakeryName: registerBakery.bakeryName,
-            openTime: registerBakery.openTime,
-            offDay: registerBakery.offDay,
-            seasonMenu: registerBakery.seasonMenu,
-            isOnline: registerBakery.isOnline,
-            isVegan: registerBakery.isVegan,
-            isDrink: registerBakery.isDrink,
-            bestMenu: registerBakery.bestMenu,
-            totalMenu: registerBakery.totalMenu,
-            address: registerBakery.address,
-            latitude: registerBakery.latitude,
-            longitude: registerBakery.longitude,
-            bakeryImg: registerBakery.bakeryImg
-        });
-    },
     doBakeryVisited: async (bakeryId, user) => {
         const findBakery = await bakeryUtils.findBakeryById(bakeryId);
         const findVisitedBakery = await bakeryUtils.findUsersVisitedBakeryList(user);
         const isVisited = await bakeryUtils.isVisitedBakery(findBakery, findVisitedBakery);
         if (!isVisited) {
             await bakeryUtils.visitedBakery(user.id, bakeryId);
-        }else{
+        } else {
             throw new Error("ALREADY_BAKERY_VISITED");
         }
     },
@@ -103,5 +87,29 @@ module.exports = {
         } else {
             throw new Error("ALREADY_CANCEL_BAKERY_VISITED");
         }
-    }
+    },
+    createBakery: async (registerBakery) => {
+        try {
+            await db.sequelize.transaction(async(transaction)=>{
+                await Bakery.create({
+                    id: registerBakery.id,
+                    bakeryName: registerBakery.bakeryName,
+                    openTime: registerBakery.openTime,
+                    offDay: registerBakery.offDay,
+                    seasonMenu: registerBakery.seasonMenu,
+                    isOnline: registerBakery.isOnline,
+                    isVegan: registerBakery.isVegan,
+                    isDrink: registerBakery.isDrink,
+                    bestMenu: registerBakery.bestMenu,
+                    totalMenu: registerBakery.totalMenu,
+                    address: registerBakery.address,
+                    latitude: registerBakery.latitude,
+                    longitude: registerBakery.longitude
+                }, {transaction});
+            });
+
+        } catch (err) {
+            throw new Error(err)
+        }
+    },
 }
