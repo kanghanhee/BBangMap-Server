@@ -130,7 +130,7 @@ module.exports = {
             await bakeryService.createBakery(body);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_REGISTRATION_BAKERY));
         } catch (err) {
-            //UQ or PK 값 중복 이슈 발생시 등록하려는 빵집 id의 중복
+            //UQ or PK 값 중복 이슈 발생시 등록하려는 빵집 id의 중기
             if (err.message === 'SequelizeUniqueConstraintError: Validation error') {
                 res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, "NON_MATCHING_BAKERY_ID"));
             } else {
