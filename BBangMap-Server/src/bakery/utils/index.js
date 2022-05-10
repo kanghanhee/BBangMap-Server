@@ -144,14 +144,16 @@ module.exports = {
     findOnlyBakery: async (bakery) => {
         return await Bakery.findByPk(bakery);
     },
-    findBakeryByBakeryNameAndAddressAndLatitudeAndLongitude: async (bakeryName, address, latitude, longitude) => {
-        return Bakery.findOne({
-            where : {
-                bakeryName : bakeryName,
-                address : address,
-                latitude : latitude,
-                longitude : longitude
+    validateDuplicateBakeryInfo: async (bakeryName, address, latitude, longitude) => {
+        const findBakery =  await Bakery.findOne({
+            where: {
+                bakeryName: bakeryName,
+                address: address,
+                latitude: latitude,
+                longitude: longitude
             }
-        })
+        });
+
+        if (findBakery !== null) throw new Error("DUPLICATE_INFO");
     }
 }

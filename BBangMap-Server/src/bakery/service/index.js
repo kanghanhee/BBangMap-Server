@@ -92,13 +92,12 @@ module.exports = {
     },
     createBakery: async (registerBakery) => {
         try {
-            const findBakery = await bakeryUtils.findBakeryByBakeryNameAndAddressAndLatitudeAndLongitude(
+            await bakeryUtils.validateDuplicateBakeryInfo(
                 registerBakery.bakeryName,
                 registerBakery.address,
                 registerBakery.latitude,
                 registerBakery.longitude
-            )
-            if(findBakery !== null) throw new Error("DUPLICATE_INFO")
+            );
 
             await db.sequelize.transaction(async (transaction) => {
                 await Bakery.create({
@@ -114,7 +113,8 @@ module.exports = {
                     totalMenu: registerBakery.totalMenu,
                     address: registerBakery.address,
                     latitude: registerBakery.latitude,
-                    longitude: registerBakery.longitude
+                    longitude: registerBakery.longitude,
+                    bakeryImg: []
                 }, {transaction});
             });
 
@@ -128,9 +128,40 @@ module.exports = {
     },
     bakeryDetailByAdmin: async (bakeryId) => {
         const bakery = await Bakery.findByPk(bakeryId);
-        if(bakery === null){
+        if (bakery === null) {
             throw new Error("NOT_EXIST_BAKERY")
         }
         return adminBakeryDetailDto(bakery);
+    },
+    bakeryModify: async (bakeryId, modifyInfo) => {
+        try{
+            await bakeryUtils.validateDuplicateBakeryInfo(
+                modifyInfo.bakeryName,
+                modifyInfo.address,
+                modifyInfo.latitude,
+                modifyInfo.longitude
+            )
+
+            const bakery = await Bakery.findByPk(bakeryId);
+            if(bakery === null) throw new Error("NOT_EXIST_BAKERY")
+            bakery.set({
+                bakeryName : modifyInfo.bakeryName,
+                openTime : modifyInfo.openTime,
+                offDay : modifyInfo.offDay,
+                seasonMenu : modifyInfo.seasonMenu,
+                isDrink : modifyInfo.isDrink,
+                bestMenu : modifyInfo.bestMenu,
+                totalMenu : modifyInfo.totalMenu,
+                address : modifyInfo.address,
+                latitude : modifyInfo.latitude,
+                longitude : modifyInfo.longitude,
+                isOnline : modifyInfo.isOnline,
+                isVegan : modifyInfo.isVegan
+            })
+
+            await bakery.save();
+        }catch(err){
+            throw new Error(err);
+        }
     }
 }
