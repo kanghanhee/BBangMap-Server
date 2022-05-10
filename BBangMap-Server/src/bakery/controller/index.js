@@ -126,11 +126,12 @@ module.exports = {
     },
     registerBakery: async (req, res) => {
         try {
+            console.log('hi!!')
             const {body} = req;
             await bakeryService.createBakery(body);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_REGISTRATION_BAKERY));
         } catch (err) {
-            //UQ or PK 값 중복 이슈 발생시 등록하려는 빵집 id의 중기
+            //UQ or PK 값 중복 이슈 발생시 등록하려는 빵집 id의 중복
             if (err.message === 'SequelizeUniqueConstraintError: Validation error') {
                 res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, "NON_MATCHING_BAKERY_ID"));
             } else {
@@ -139,4 +140,15 @@ module.exports = {
             }
         }
     },
+    bakeryListByAdmin: async (req, res) => {
+        try{
+            console.log('hi')
+            const bakeryList = await bakeryService.bakeryListByAdmin();
+            console.log('hi2')
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_LIST, bakeryList));
+        }catch(err){
+            slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    }
 };

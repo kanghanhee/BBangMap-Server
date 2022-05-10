@@ -10,6 +10,7 @@ const bakerySearchListDto = require('../dto/bakerySearchListDto')
 const bakeryDetailDto = require('../dto/bakeryDetailDto')
 const bakeryImgListDto = require('../dto/bakeryImgListDto')
 const savedBakeryListDto = require('../dto/savedBakeryListDto')
+const adminBakeryListDto = require('../dto/adminBakeryListDto')
 
 module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -90,7 +91,7 @@ module.exports = {
     },
     createBakery: async (registerBakery) => {
         try {
-            await db.sequelize.transaction(async(transaction)=>{
+            await db.sequelize.transaction(async (transaction) => {
                 await Bakery.create({
                     id: registerBakery.id,
                     bakeryName: registerBakery.bakeryName,
@@ -112,4 +113,8 @@ module.exports = {
             throw new Error(err)
         }
     },
+    bakeryListByAdmin: async () => {
+        const bakeryList = await Bakery.findAll();
+        return adminBakeryListDto(bakeryList);
+    }
 }
