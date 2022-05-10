@@ -1,5 +1,4 @@
 const adminBakeryDetailDto = (bakery) =>{
-    console.log(bakery.id)
     return{
         id : bakery.id,
         bakeryName : bakery.bakeryName,
@@ -16,7 +15,6 @@ const adminBakeryDetailDto = (bakery) =>{
         isVegan : bakery.isVegan,
         bakeryImg : bakery.bakeryImg,
         createdAt : bakery.createdAt,
-        updatedAt : bakery.updatedAt
     }
 }
 

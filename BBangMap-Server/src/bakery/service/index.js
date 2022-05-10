@@ -11,6 +11,7 @@ const bakeryDetailDto = require('../dto/bakeryDetailDto')
 const bakeryImgListDto = require('../dto/bakeryImgListDto')
 const savedBakeryListDto = require('../dto/savedBakeryListDto')
 const adminBakeryListDto = require('../dto/adminBakeryListDto')
+const adminBakeryDetailDto = require('../dto/adminBakeryDetailDto')
 
 module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -91,6 +92,14 @@ module.exports = {
     },
     createBakery: async (registerBakery) => {
         try {
+            const findBakery = await bakeryUtils.findBakeryByBakeryNameAndAddressAndLatitudeAndLongitude(
+                registerBakery.bakeryName,
+                registerBakery.address,
+                registerBakery.latitude,
+                registerBakery.longitude
+            )
+            if(findBakery !== null) throw new Error("DUPLICATE_INFO")
+
             await db.sequelize.transaction(async (transaction) => {
                 await Bakery.create({
                     id: registerBakery.id,
@@ -116,5 +125,12 @@ module.exports = {
     bakeryListByAdmin: async () => {
         const bakeryList = await Bakery.findAll();
         return adminBakeryListDto(bakeryList);
+    },
+    bakeryDetailByAdmin: async (bakeryId) => {
+        const bakery = await Bakery.findByPk(bakeryId);
+        if(bakery === null){
+            throw new Error("NOT_EXIST_BAKERY")
+        }
+        return adminBakeryDetailDto(bakery);
     }
 }
