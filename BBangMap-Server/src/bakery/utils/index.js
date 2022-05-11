@@ -11,9 +11,9 @@ module.exports = {
                     {bakeryName: {[Op.like]: `%${bakeryName}%`}}
                 ]
             },
-            include:[
+            include: [
                 {
-                    model : Review
+                    model: Review
                 }
             ]
             //방문 빵집이 많은 순으로 정렬
@@ -122,14 +122,14 @@ module.exports = {
         if (bakery.Reviews.length > 0) {
             bakery.Reviews
                 .map(review => review.reviewImgList)
-                .filter(imgList => imgList.length>0)
+                .filter(imgList => imgList.length > 0)
                 .forEach(imgList => {
-                    if(imgList.length > 0){
-                        reviewImgList=reviewImgList.concat(imgList)
+                    if (imgList.length > 0) {
+                        reviewImgList = reviewImgList.concat(imgList)
                     }
                 })
         }
-        if(reviewImgList.length > 0) originalBakeryImgList = [];
+        if (reviewImgList.length > 0) originalBakeryImgList = [];
         bakery.bakeryImg = originalBakeryImgList.concat(reviewImgList);
         return bakery;
     },
@@ -143,5 +143,17 @@ module.exports = {
     },
     findOnlyBakery: async (bakery) => {
         return await Bakery.findByPk(bakery);
+    },
+    validateDuplicateBakeryInfo: async (bakeryName, address, latitude, longitude) => {
+        const findBakery =  await Bakery.findOne({
+            where: {
+                bakeryName: bakeryName,
+                address: address,
+                latitude: latitude,
+                longitude: longitude
+            }
+        });
+
+        if (findBakery !== null) throw new Error("DUPLICATE_INFO");
     }
 }

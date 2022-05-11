@@ -3,12 +3,15 @@ const userUtils = require('../../user/utils')
 const bakeryUtils = require('../utils')
 const reviewUtils = require('../../review/utils')
 const {Bakery} = require('../../../models')
+const db = require('../../../models')
 
 const bakeryMapListDto = require('../dto/bakeryMapListDto')
 const bakerySearchListDto = require('../dto/bakerySearchListDto')
 const bakeryDetailDto = require('../dto/bakeryDetailDto')
 const bakeryImgListDto = require('../dto/bakeryImgListDto')
 const savedBakeryListDto = require('../dto/savedBakeryListDto')
+const adminBakeryListDto = require('../dto/adminBakeryListDto')
+const adminBakeryDetailDto = require('../dto/adminBakeryDetailDto')
 
 module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -21,7 +24,7 @@ module.exports = {
         return await bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
     },
     getSearchBakeryList: async (bakeryName, latitude, longitude, user) => {
-        if(bakeryName.length > 0){
+        if (bakeryName.length > 0) {
             let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
             let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
             let findUser = await userUtils.findUserIncludeVisitedBakery(user);
@@ -35,7 +38,7 @@ module.exports = {
             let star = reviewUtils.getBakeryStar(bakeryReview);
 
             return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList, star);
-        }else{
+        } else {
             return null;
         }
     },
@@ -53,7 +56,7 @@ module.exports = {
     },
     getSavedBakeryList: async (user) => {
         let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
-        let bakeryList = await Promise.all(savedBakeryList.map(async savedBakery =>{
+        let bakeryList = await Promise.all(savedBakeryList.map(async savedBakery => {
             return await bakeryUtils.findOnlyBakery(savedBakery.BakeryId)
         }))
         return savedBakeryListDto(bakeryList);
@@ -66,30 +69,13 @@ module.exports = {
         let userId = user.id;
         await bakeryUtils.deleteSaveBakery(userId, bakeryId);
     },
-    createBakery: async (registerBakery) => {
-        await Bakery.create({
-            bakeryName: registerBakery.bakeryName,
-            openTime: registerBakery.openTime,
-            offDay: registerBakery.offDay,
-            seasonMenu: registerBakery.seasonMenu,
-            isOnline: registerBakery.isOnline,
-            isVegan: registerBakery.isVegan,
-            isDrink: registerBakery.isDrink,
-            bestMenu: registerBakery.bestMenu,
-            totalMenu: registerBakery.totalMenu,
-            address: registerBakery.address,
-            latitude: registerBakery.latitude,
-            longitude: registerBakery.longitude,
-            bakeryImg: registerBakery.bakeryImg
-        });
-    },
     doBakeryVisited: async (bakeryId, user) => {
         const findBakery = await bakeryUtils.findBakeryById(bakeryId);
         const findVisitedBakery = await bakeryUtils.findUsersVisitedBakeryList(user);
         const isVisited = await bakeryUtils.isVisitedBakery(findBakery, findVisitedBakery);
         if (!isVisited) {
             await bakeryUtils.visitedBakery(user.id, bakeryId);
-        }else{
+        } else {
             throw new Error("ALREADY_BAKERY_VISITED");
         }
     },
@@ -103,5 +89,82 @@ module.exports = {
         } else {
             throw new Error("ALREADY_CANCEL_BAKERY_VISITED");
         }
+    },
+    createBakery: async (registerBakery) => {
+        try {
+            await bakeryUtils.validateDuplicateBakeryInfo(
+                registerBakery.bakeryName,
+                registerBakery.address,
+                registerBakery.latitude,
+                registerBakery.longitude
+            );
+
+            await db.sequelize.transaction(async (transaction) => {
+                await Bakery.create({
+                    id: registerBakery.id,
+                    bakeryName: registerBakery.bakeryName,
+                    openTime: registerBakery.openTime,
+                    offDay: registerBakery.offDay,
+                    seasonMenu: registerBakery.seasonMenu,
+                    isOnline: registerBakery.isOnline,
+                    isVegan: registerBakery.isVegan,
+                    isDrink: registerBakery.isDrink,
+                    bestMenu: registerBakery.bestMenu,
+                    totalMenu: registerBakery.totalMenu,
+                    address: registerBakery.address,
+                    latitude: registerBakery.latitude,
+                    longitude: registerBakery.longitude,
+                    bakeryImg: []
+                }, {transaction});
+            });
+
+        } catch (err) {
+            throw new Error(err)
+        }
+    },
+    bakeryListByAdmin: async () => {
+        const bakeryList = await Bakery.findAll();
+        return adminBakeryListDto(bakeryList);
+    },
+    bakeryDetailByAdmin: async (bakeryId) => {
+        const bakery = await Bakery.findByPk(bakeryId);
+        if (bakery === null) {
+            throw new Error("NOT_EXIST_BAKERY")
+        }
+        return adminBakeryDetailDto(bakery);
+    },
+    bakeryModify: async (bakeryId, modifyInfo) => {
+        try {
+            await bakeryUtils.validateDuplicateBakeryInfo(
+                modifyInfo.bakeryName,
+                modifyInfo.address,
+                modifyInfo.latitude,
+                modifyInfo.longitude
+            )
+
+            const bakery = await Bakery.findByPk(bakeryId);
+            if (bakery === null) throw new Error("NOT_EXIST_BAKERY")
+            bakery.set({
+                bakeryName: modifyInfo.bakeryName,
+                openTime: modifyInfo.openTime,
+                offDay: modifyInfo.offDay,
+                seasonMenu: modifyInfo.seasonMenu,
+                isDrink: modifyInfo.isDrink,
+                bestMenu: modifyInfo.bestMenu,
+                totalMenu: modifyInfo.totalMenu,
+                address: modifyInfo.address,
+                latitude: modifyInfo.latitude,
+                longitude: modifyInfo.longitude,
+                isOnline: modifyInfo.isOnline,
+                isVegan: modifyInfo.isVegan
+            })
+
+            await bakery.save();
+        } catch (err) {
+            throw new Error(err);
+        }
+    },
+    bakeryDelete: async (bakeryId) => {
+        await Bakery.destroy({where : {id : bakeryId}})
     }
 }

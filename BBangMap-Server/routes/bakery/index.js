@@ -10,7 +10,6 @@ router.get('/imgs',authUtil.checkToken, bakeryController.bakeryImgList);
 router.get('/storage',authUtil.checkToken, bakeryController.storedBakeryList);
 router.post('/:bakeryId/storage',authUtil.checkToken, bakeryController.storeBakery);
 router.delete('/:bakeryId/storage',authUtil.checkToken, bakeryController.unStoreBakery);
-router.post('/registration', bakeryController.registerBakery);
 router.post('/:bakeryId/visits',authUtil.checkToken, bakeryController.doBakeryVisited);
 router.delete('/:bakeryId/visits',authUtil.checkToken, bakeryController.cancelBakeryVisited);
 
