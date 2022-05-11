@@ -134,7 +134,7 @@ module.exports = {
         return adminBakeryDetailDto(bakery);
     },
     bakeryModify: async (bakeryId, modifyInfo) => {
-        try{
+        try {
             await bakeryUtils.validateDuplicateBakeryInfo(
                 modifyInfo.bakeryName,
                 modifyInfo.address,
@@ -143,25 +143,28 @@ module.exports = {
             )
 
             const bakery = await Bakery.findByPk(bakeryId);
-            if(bakery === null) throw new Error("NOT_EXIST_BAKERY")
+            if (bakery === null) throw new Error("NOT_EXIST_BAKERY")
             bakery.set({
-                bakeryName : modifyInfo.bakeryName,
-                openTime : modifyInfo.openTime,
-                offDay : modifyInfo.offDay,
-                seasonMenu : modifyInfo.seasonMenu,
-                isDrink : modifyInfo.isDrink,
-                bestMenu : modifyInfo.bestMenu,
-                totalMenu : modifyInfo.totalMenu,
-                address : modifyInfo.address,
-                latitude : modifyInfo.latitude,
-                longitude : modifyInfo.longitude,
-                isOnline : modifyInfo.isOnline,
-                isVegan : modifyInfo.isVegan
+                bakeryName: modifyInfo.bakeryName,
+                openTime: modifyInfo.openTime,
+                offDay: modifyInfo.offDay,
+                seasonMenu: modifyInfo.seasonMenu,
+                isDrink: modifyInfo.isDrink,
+                bestMenu: modifyInfo.bestMenu,
+                totalMenu: modifyInfo.totalMenu,
+                address: modifyInfo.address,
+                latitude: modifyInfo.latitude,
+                longitude: modifyInfo.longitude,
+                isOnline: modifyInfo.isOnline,
+                isVegan: modifyInfo.isVegan
             })
 
             await bakery.save();
-        }catch(err){
+        } catch (err) {
             throw new Error(err);
         }
+    },
+    bakeryDelete: async (bakeryId) => {
+        await Bakery.destroy({where : {id : bakeryId}})
     }
 }

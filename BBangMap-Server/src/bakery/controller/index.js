@@ -163,30 +163,39 @@ module.exports = {
             if (err.message === "NOT_EXIST_BAKERY") {
                 slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
                 res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
-            }else{
+            } else {
                 slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
                 res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
             }
         }
     },
     bakeryModifyByAdmin: async (req, res) => {
-        try{
+        try {
             const {bakeryId} = req.params;
             const {body} = req;
             await bakeryService.bakeryModify(bakeryId, body);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_BAKERY));
-        }catch(err){
-            if(err.message === "Error: DUPLICATE_INFO"){
+        } catch (err) {
+            if (err.message === "Error: DUPLICATE_INFO") {
                 slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
                 res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, 'DUPLICATE_INFO'));
-            }else if(err.message === "Error: NOT_EXIST_BAKERY"){
+            } else if (err.message === "Error: NOT_EXIST_BAKERY") {
                 slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
                 res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, 'NOT_EXIST_BAKERY'));
-            }
-            else{
+            } else {
                 slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
                 res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
             }
+        }
+    },
+    bakeryDelete: async (req, res) => {
+        try{
+            const {bakeryId} = req.params;
+            await bakeryService.bakeryDelete(bakeryId);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_BAKERY));
+        }catch(err){
+            slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     }
 };
