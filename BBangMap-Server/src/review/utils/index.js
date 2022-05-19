@@ -8,6 +8,12 @@ module.exports = {
             where: {
                 BakeryId: bakeryId,
             },
+            include: [
+                {
+                    model: User,
+                    attributes: ['nickName']
+                }
+            ],
             order: [['createdAt', 'DESC']],
         });
     },
