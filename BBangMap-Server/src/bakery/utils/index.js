@@ -1,6 +1,8 @@
 const {Bakery, SaveBakery, VisitBakery, Review, User} = require('../../../models')
 const {Op} = require('sequelize')
+const axios = require('axios').default;
 const {defaultBgImg} = require("../../../modules/definition");
+const { response } = require('express');
 
 module.exports = {
     findBakeryListByBakeryName: async (bakeryName) => {
@@ -155,5 +157,23 @@ module.exports = {
         });
 
         if (findBakery !== null) throw new Error("DUPLICATE_INFO");
-    }
+    },
+    getKakaoBakeryList: async (keyword) => {
+        axios.get('https://dapi.kakao.com/v2/local/search/keyword', {
+            headers: {
+                Authorization: `KakaoAK 5af7eabd48c92503fc359caf75c45039`
+            },
+            params: {
+            query: keyword
+            }
+          })
+          .then(function (response) {
+              console.log(response.data)
+           return response.data
+          })
+          .catch(function (error) {
+            console.log(error);
+              throw error;
+          });  
+}
 }

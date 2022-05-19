@@ -12,6 +12,7 @@ const bakeryImgListDto = require('../dto/bakeryImgListDto')
 const savedBakeryListDto = require('../dto/savedBakeryListDto')
 const adminBakeryListDto = require('../dto/adminBakeryListDto')
 const adminBakeryDetailDto = require('../dto/adminBakeryDetailDto')
+const { getKakaoBakeryList } = require('../utils')
 
 module.exports = {
     getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -166,5 +167,27 @@ module.exports = {
     },
     bakeryDelete: async (bakeryId) => {
         await Bakery.destroy({where : {id : bakeryId}})
-    }
+    },
+    getSearchRequestBakeryList :async(keyword)=>{
+        if (keyword) {
+            str=   await bakeryUtils.getKakaoBakeryList(keyword);
+      console.log("str" + str);
+            // let searchBakeryByBreadList = await bakeryUtils.findBakeryListByBakeryBestMenu(bakeryName);
+            // let filterBakeryByBread = await bakeryUtils.filterBakeryByBread(searchBakeryByBreadList, bakeryName);
+            // let findUser = await userUtils.findUserIncludeVisitedBakery(user);
+            // let visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+
+            // if (filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
+
+            // let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
+            // let bakeryReview = searchBakeryList.flatMap(bakeryList => bakeryList.Reviews);
+            // bakeryReview.forEach(review => console.log(review))
+            // let star = reviewUtils.getBakeryStar(bakeryReview);
+
+            // return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList, star);
+        } else {
+            return null;
+        }
+    },
+    
 }
