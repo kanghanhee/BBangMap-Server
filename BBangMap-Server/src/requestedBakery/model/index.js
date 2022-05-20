@@ -1,17 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    'requestedBakery',
+    'RequestedBakery',
     {
-      id: {
+      placeId: {
         type: DataTypes.STRING(100),
         allowNull: false,
-      },
-      userId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'User',
-          key: 'id',
-        },
       },
       bakeryName: {
         type: DataTypes.STRING(100),
