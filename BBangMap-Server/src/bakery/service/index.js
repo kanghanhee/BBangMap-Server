@@ -12,7 +12,6 @@ const bakeryImgListDto = require('../dto/bakeryImgListDto');
 const savedBakeryListDto = require('../dto/savedBakeryListDto');
 const adminBakeryListDto = require('../dto/adminBakeryListDto');
 const adminBakeryDetailDto = require('../dto/adminBakeryDetailDto');
-const requestBakerySearchDto = require('../dto/requestBakerySearchDto');
 
 module.exports = {
   getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -172,18 +171,5 @@ module.exports = {
   },
   bakeryDelete: async bakeryId => {
     await Bakery.destroy({ where: { id: bakeryId } });
-  },
-  getSearchRequestBakeryList: async keyword => {
-    if (keyword) {
-      const result = [];
-      const kakaoBakeryList = await bakeryUtils.getKakaoBakeryList(keyword);
-      // eslint-disable-next-line no-restricted-syntax
-      for (const bakery of kakaoBakeryList) {
-        const isExistedBakery = await bakeryUtils.findBakeryByLocation(bakery.place_name, bakery.y, bakery.x);
-        result.push(requestBakerySearchDto(bakery.place_name, bakery.road_address_name, bakery.id, isExistedBakery));
-      }
-      return result;
-    }
-    return null;
   },
 };

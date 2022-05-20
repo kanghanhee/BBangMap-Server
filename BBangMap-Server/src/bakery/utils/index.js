@@ -164,35 +164,4 @@ module.exports = {
 
     if (findBakery !== null) throw new Error('DUPLICATE_INFO');
   },
-  getKakaoBakeryList: async keyword => {
-    try {
-      const response = await axios.get('https://dapi.kakao.com/v2/local/search/keyword', {
-        headers: {
-          Authorization: `KakaoAK 5af7eabd48c92503fc359caf75c45039`,
-        },
-        params: {
-          query: keyword,
-          page: 1,
-          size: 15,
-        },
-      });
-      return response.data.documents;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  },
-  findBakeryByLocation: async (bakeryName, latitude, longitude) => {
-    // eslint-disable-next-line no-return-await
-    const findBakery = await sequelize.query(
-      'SELECT EXISTS (SELECT id FROM Bakery WHERE bakeryName = (:bakeryName) AND ROUND(latitude,3) = ROUND((:latitude),3) AND ROUND(longitude, 3) = ROUND((:longitude),3) LIMIT 1) AS SUCCESS;',
-      {
-        replacements: { latitude: `${latitude}`, longitude: `${longitude}`, bakeryName: `${bakeryName}` },
-        type: sequelize.QueryTypes.SELECT,
-        raw: true,
-      },
-    );
-    if (findBakery[0].SUCCESS === 1) return true;
-    return false;
-  },
 };

@@ -1,0 +1,38 @@
+module.exports = (sequelize, DataTypes) => {
+  return sequelize.define(
+    'requestedBakery',
+    {
+      id: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'User',
+          key: 'id',
+        },
+      },
+      bakeryName: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+      address: {
+        type: DataTypes.STRING(1000),
+        allowNull: false,
+      },
+      latitude: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+      },
+      longitude: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+      },
+    },
+    {
+      freezeTableName: true,
+      timestamps: true,
+    },
+  );
+};
