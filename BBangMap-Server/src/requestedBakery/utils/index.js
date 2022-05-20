@@ -57,4 +57,13 @@ module.exports = {
       };
     }
   },
+  findRequestedBakeryList: async userId => {
+    const findBakeryList = await RequestedBakery.findAll({
+      where: {
+        UserId: userId,
+      },
+      raw: true,
+    });
+    return findBakeryList;
+  },
 };

@@ -2,12 +2,11 @@ const modelUtil = require('../../../models/modelUtil');
 const requestedBakeryUtils = require('../utils');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
-const { Bakery, RequestedBakery } = require('../../../models');
-const db = require('../../../models');
-
 const requestBakerySearchDto = require('../dto/requestBakerySearchDto');
+const requestBakeryDto = require('../dto/requestBakeryDto');
+
 module.exports = {
-  getSearchRequestBakeryList: async keyword => {
+  getSearchRequestedBakeryList: async keyword => {
     if (keyword) {
       const result = [];
       const kakaoBakeryList = await requestedBakeryUtils.getKakaoBakeryList(keyword);
@@ -20,7 +19,7 @@ module.exports = {
     }
     return null;
   },
-  saveRequestBakery: async (user, id, name) => {
+  saveRequestedBakery: async (user, id, name) => {
     if (id && name) {
       const kakaoBakeryList = await requestedBakeryUtils.getKakaoBakeryList(name);
       const targetBakery = kakaoBakeryList.map(bakery => {
@@ -42,5 +41,13 @@ module.exports = {
         targetBakery[0].y,
       );
     }
+  },
+  getRequestedBakeryList: async user => {
+    const result = [];
+    const requestedBakeryList = await requestedBakeryUtils.findRequestedBakeryList(user.id);
+    requestedBakeryList.forEach(bakery => {
+      result.push(requestBakeryDto(bakery.id, bakery.bakeryName, bakery.address, bakery.status));
+    });
+    return result;
   },
 };
