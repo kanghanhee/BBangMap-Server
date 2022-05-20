@@ -5,6 +5,7 @@ const { response } = require('express');
 const { sequelize } = require('../../../models/index');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
+const { requestBakerySearch } = require('../controller');
 
 module.exports = {
   getKakaoBakeryList: async keyword => {
@@ -65,5 +66,22 @@ module.exports = {
       raw: true,
     });
     return findBakeryList;
+  },
+  acceptBakeryRequest: async (id, isAccept) => {
+    if (isAccept) {
+      await RequestedBakery.update(
+        {
+          status: 'REGISTERED',
+        },
+        { where: { id } },
+      );
+    } else {
+      await RequestedBakery.update(
+        {
+          status: 'INREVIEW',
+        },
+        { where: { id } },
+      );
+    }
   },
 };

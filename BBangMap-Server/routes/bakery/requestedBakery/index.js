@@ -6,6 +6,7 @@ const requestedBakeryController = require('../../../src/requestedBakery/controll
 
 router.post('/', authUtil.checkToken, requestedBakeryController.requestedBakery);
 router.get('/', authUtil.checkToken, requestedBakeryController.getRequestedBakeryList);
+router.put('/response', authUtil.checkToken, requestedBakeryController.changeRequestBakeryStatus);
 router.get('/search', authUtil.checkToken, requestedBakeryController.requestBakerySearch);
 
 module.exports = router;

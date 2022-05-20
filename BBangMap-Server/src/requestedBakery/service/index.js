@@ -4,6 +4,7 @@ const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const requestBakerySearchDto = require('../dto/requestBakerySearchDto');
 const requestBakeryDto = require('../dto/requestBakeryDto');
+const responseBakeryDto = require('../dto/responseBakeryDto');
 
 module.exports = {
   getSearchRequestedBakeryList: async keyword => {
@@ -49,5 +50,14 @@ module.exports = {
       result.push(requestBakeryDto(bakery.id, bakery.bakeryName, bakery.address, bakery.status));
     });
     return result;
+  },
+  changeRequestBakeryStatus: async (user, bakeryId, isAccept) => {
+    if (user.role !== 1)
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        statusCode: statusCode.UNAUTHORIZED,
+        responseMessage: responseMessage.UNAUTHORIZED,
+      };
+    await requestedBakeryUtils.acceptBakeryRequest(bakeryId, isAccept);
   },
 };

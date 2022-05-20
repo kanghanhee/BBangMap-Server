@@ -50,4 +50,21 @@ module.exports = {
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
+  changeRequestBakeryStatus: async (req, res) => {
+    try {
+      const { user } = req.header;
+      const { bakeryId, isAccept } = req.body;
+      const result = await bakeryService.changeRequestBakeryStatus(user, bakeryId, isAccept);
+      res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REQUEST_BAKERY_STATUS, result));
+    } catch (err) {
+      if (err.statusCode == null) {
+        err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
+        err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
+      }
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+      return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
+    }
+  },
 };

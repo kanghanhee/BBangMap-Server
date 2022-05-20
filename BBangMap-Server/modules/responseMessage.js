@@ -33,6 +33,7 @@ module.exports = {
   NO_BAKERY: '일치하는 빵집이 없습니다.',
   DUPLICATE_BAKERY: '이미 요청된 빵집입니다.',
   SUCCESS_GET_REQUEST_BAKERY: '요청 빵집 불러오기 성공',
+  SUCCESS_UPDATE_REQUEST_BAKERY_STATUS: '요청 빵집 상태 변경 성공',
 
   /*후기*/
   SUCCESS_GET_REVIEW: '후기불러오기 성공',
