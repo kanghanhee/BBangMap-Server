@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       placeId: {
         type: DataTypes.STRING(100),
+        unique: true,
         allowNull: false,
       },
       bakeryName: {
@@ -20,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       longitude: {
         type: DataTypes.DOUBLE,
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
     },

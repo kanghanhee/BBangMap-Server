@@ -29,6 +29,9 @@ module.exports = {
   SUCCESS_UPDATE_BAKERY: '빵집 수정 성공',
   SUCCESS_DELETE_BAKERY: '빵집 삭제 성공',
   SUCCESS_SEARCH_REQUEST_BAKERY: '요청 빵집 검색 성공',
+  SUCCESS_REQUEST_BAKERY: '빵집 요청 성공',
+  NO_BAKERY: '일치하는 빵집이 없습니다.',
+  DUPLICATE_BAKERY: '이미 요청된 빵집입니다.',
 
   /*후기*/
   SUCCESS_GET_REVIEW: '후기불러오기 성공',

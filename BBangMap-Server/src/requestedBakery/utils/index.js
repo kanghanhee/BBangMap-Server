@@ -1,8 +1,10 @@
-const { Bakery, User } = require('../../../models');
+const { Bakery, User, RequestedBakery } = require('../../../models');
 const { Op } = require('sequelize');
 const axios = require('axios').default;
 const { response } = require('express');
 const { sequelize } = require('../../../models/index');
+const responseMessage = require('../../../modules/responseMessage');
+const statusCode = require('../../../modules/statusCode');
 
 module.exports = {
   getKakaoBakeryList: async keyword => {
@@ -36,5 +38,23 @@ module.exports = {
     );
     if (findBakery[0].SUCCESS === 1) return true;
     return false;
+  },
+  save: async (userId, placeId, placeName, address, longitude, latitude) => {
+    try {
+      await RequestedBakery.create({
+        UserId: userId,
+        placeId,
+        bakeryName: placeName,
+        address,
+        longitude,
+        latitude,
+        status: 'REQUESTED',
+      });
+    } catch (error) {
+      throw {
+        statusCode: statusCode.BAD_REQUEST,
+        responseMessage: responseMessage.DUPLICATE_BAKERY,
+      };
+    }
   },
 };
