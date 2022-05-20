@@ -9,9 +9,9 @@ const statusCode = require('../../../modules/statusCode');
 module.exports = {
   getKakaoBakeryList: async keyword => {
     try {
-      const response = await axios.get('https://dapi.kakao.com/v2/local/search/keyword', {
+      const response = await axios.get(`${process.env.KAKAO_URL}/local/search/keyword`, {
         headers: {
-          Authorization: `KakaoAK 5af7eabd48c92503fc359caf75c45039`,
+          Authorization: process.env.KAKAO_AUTH,
         },
         params: {
           query: keyword,
