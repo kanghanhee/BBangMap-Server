@@ -52,9 +52,8 @@ module.exports = {
   },
   changeRequestBakeryStatus: async (req, res) => {
     try {
-      const { user } = req.header;
       const { bakeryId, isAccept } = req.body;
-      const result = await bakeryService.changeRequestBakeryStatus(user, bakeryId, isAccept);
+      const result = await bakeryService.changeRequestBakeryStatus(bakeryId, isAccept);
       res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REQUEST_BAKERY_STATUS, result));

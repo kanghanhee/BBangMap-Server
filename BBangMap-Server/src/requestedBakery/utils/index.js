@@ -23,7 +23,6 @@ module.exports = {
       });
       return response.data.documents;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   },

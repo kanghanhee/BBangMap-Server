@@ -52,12 +52,6 @@ module.exports = {
     return result;
   },
   changeRequestBakeryStatus: async (user, bakeryId, isAccept) => {
-    if (user.role !== 1)
-      // eslint-disable-next-line no-throw-literal
-      throw {
-        statusCode: statusCode.UNAUTHORIZED,
-        responseMessage: responseMessage.UNAUTHORIZED,
-      };
     await requestedBakeryUtils.acceptBakeryRequest(bakeryId, isAccept);
   },
 };
