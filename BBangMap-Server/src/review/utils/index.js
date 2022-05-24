@@ -511,6 +511,18 @@ module.exports = {
             bakery.star = getBakeryStar(bakery.Reviews);
             return bakery;
         })
+    },
+    findUsersReviewList: async (userId)=>{
+        return Review.findAll({
+            where:{
+                UserId : userId
+            },
+            include:[
+                {
+                    model : Bakery
+                }
+            ]
+        })
     }
 };
 
