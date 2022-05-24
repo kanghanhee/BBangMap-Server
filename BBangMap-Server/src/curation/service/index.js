@@ -50,5 +50,9 @@ module.exports = {
         const findCuration = await curationUtil.findCuration(curationId);
         const curationsBakeryList = findCuration.Targets.map(target => target.Bakery);
         return BakeryLocationInfoListDto(curationsBakeryList, userId);
+    },
+    getCurationContent: async () => {
+        const curationContentList = [{"id": 1}, {"id": 2}];
+        return curationContentList;
     }
 }

@@ -215,7 +215,7 @@ module.exports = {
         try {
             const {userId} = req.params;
             const result = await reviewService.getUserReview(userId);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_USER_INFO, result));
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, result));
         } catch (err) {
             slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
