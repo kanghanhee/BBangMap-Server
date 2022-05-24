@@ -171,5 +171,19 @@ module.exports = {
                 CurationId: curationId
             }
         })
+    },
+    updateCuration: async (curationId ,mainTitle, subTitle, curatorComment)=>{
+        await Curation.update(
+            {
+                mainTitle,
+                subTitle,
+                curatorComment
+            },
+            {
+                where : {
+                    id : curationId
+                }
+            }
+        )
     }
 }

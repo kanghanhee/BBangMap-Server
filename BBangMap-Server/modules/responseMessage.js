@@ -67,4 +67,5 @@ module.exports = {
     SUCCESS_LIKE_CURATION: '큐레이션 좋아요 성공',
     SUCCESS_UNLIKE_CURATION: '큐레이션 좋아요 취소 성공',
     SUCCESS_GET_CURATION_CONTENT: '큐레이션 컨텐츠 불러오기 성공',
+    SUCCESS_PUT_CURATION: '큐레이션 수정하기 성공',
 };
