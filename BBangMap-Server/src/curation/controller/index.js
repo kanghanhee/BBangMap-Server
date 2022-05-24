@@ -7,11 +7,11 @@ const slackSender = require('../../../other/slackSender');
 module.exports = {
   addCuration: async (req, res) => {
     try {
-      let user = req.header.user;
-      await curationService.addCuration(user, req.body, req.file);
+      console.log(req.body);
+      await curationService.addCuration(req.body, req.file);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_CURATION));
     } catch (err) {
-      if (err.message === 'NOT_FOUND_CURATION_CONTENT' && err.message === 'CURATION_IMAGE_REQUIRE') {
+      if (err.message === 'NOT_FOUND_CURATION_CONTENT' || err.message === 'CURATION_IMAGE_REQUIRE') {
         slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
         res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
       } else {

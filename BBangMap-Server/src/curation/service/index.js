@@ -4,20 +4,25 @@ const BakeryLocationInfoListDto = require('../dto/BakeryLocationInfoListDto')
 const CurationContentList = require('../dto/CurationContentList')
 
 module.exports = {
-    addCuration: async (user, body, image) => {
+    addCuration: async (body, image) => {
         if (image === undefined) {
             throw new Error("CURATION_IMAGE_REQUIRE")
         }
-        const {mainTitle, subTitle, curatorComment, reviewList, curationContentsId} = body;
-        const findCurationContents = await curationUtil.findCurationContent(curationContentsId);
+
+        const {mainTitle, subTitle, curatorComment, reviewerId, reviewIdList, curationContentId} = body;
+
+        if(curationContentId !== 1 && curationContentId !== 2){
+            throw new Error("NOT_FOUND_CURATION_CONTENT")
+        }
+
         await curationUtil.addCuration(
-            user,
+            reviewerId,
             mainTitle,
             subTitle,
             curatorComment,
             image.location,
-            reviewList,
-            findCurationContents
+            reviewIdList,
+            curationContentId
         );
     },
     getCurationList: async (user) => {
