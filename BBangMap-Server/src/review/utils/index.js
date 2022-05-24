@@ -505,6 +505,12 @@ module.exports = {
     },
     getBakeryStar: (reviewList) => {
         return getBakeryStar(reviewList)
+    },
+    getBakeryStarOfBakeryList: async (bakeryList)=>{
+        return bakeryList.map(bakery => {
+            bakery.star = getBakeryStar(bakery.Reviews);
+            return bakery;
+        })
     }
 };
 
