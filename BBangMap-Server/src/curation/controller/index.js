@@ -7,7 +7,6 @@ const slackSender = require('../../../other/slackSender');
 module.exports = {
     addCuration: async (req, res) => {
         try {
-            console.log(req.body);
             await curationService.addCuration(req.body, req.file);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_CURATION));
         } catch (err) {
@@ -113,13 +112,30 @@ module.exports = {
         }
     },
     updateCuration: async (req, res) => {
-        try{
+        try {
             const {curationId} = req.params;
+            console.log(curationId)
             await curationService.updateCuration(curationId, req.body);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_PUT_CURATION));
-        }catch(err){
+        } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    },
+    updateCurationPriority: async (req, res) => {
+        try{
+            const {curationContents} = req.body;
+            await curationService.updateCurationPriority(curationContents);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_PUT_CURATION_PRIORITY));
+        }catch(err){
+            console.log(err.message)
+            if(err.message === "Error: DUPLICATE_PRIORITY"){
+                slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            }else{
+                slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+                res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            }
         }
     }
 };

@@ -19,25 +19,25 @@ module.exports = {
     },
     addCuration: async (reviewerId, mainTitle, subTitle, curatorComment, curationImage, reviewList, curationContentId) => {
         try {
-            await sequelize.transaction(async (transaction) =>{
+            await sequelize.transaction(async (transaction) => {
                 const newCuration = await Curation.create({
                     UserId: reviewerId,
                     mainTitle,
                     subTitle,
                     curatorComment,
                     curationImage
-                },{transaction})
+                }, {transaction})
 
                 for (let reviewId of reviewList) {
                     await CurationTarget.create({
                         CurationId: newCuration.id,
                         ReviewId: reviewId
-                    },{transaction})
+                    }, {transaction})
                 }
 
                 const matchingCurationsOfContent = await MatchingCurationContents.findAll({
                     where: {CurationContentId: curationContentId},
-                    order: [['priority','DESC']]
+                    order: [['priority', 'DESC']]
                 });
                 const convertPriority = matchingCurationsOfContent.map(matchingCuration => matchingCuration.priority)
                 const lastPriority = convertPriority.length === 0 ? 0 : convertPriority[0];
@@ -45,8 +45,8 @@ module.exports = {
                 await MatchingCurationContents.create({
                     CurationId: newCuration.id,
                     CurationContentId: curationContentId,
-                    priority: lastPriority+1
-                },{transaction})
+                    priority: lastPriority + 1
+                }, {transaction})
             })
         } catch (err) {
             throw err;
@@ -172,7 +172,7 @@ module.exports = {
             }
         })
     },
-    updateCuration: async (curationId ,mainTitle, subTitle, curatorComment)=>{
+    updateCuration: async (curationId, mainTitle, subTitle, curatorComment) => {
         await Curation.update(
             {
                 mainTitle,
@@ -180,10 +180,25 @@ module.exports = {
                 curatorComment
             },
             {
-                where : {
-                    id : curationId
+                where: {
+                    id: curationId
                 }
             }
         )
+    },
+    updateCurationPriority: async (curationContentId, curationList) => {
+        try {
+            await sequelize.transaction(async (transaction) => {
+                for (const curation of curationList) {
+                    MatchingCurationContents.update({
+                        priority: curation.priority
+                    }, {
+                        where: [{CurationContentId: curationContentId}, {CurationId: curation.curationId}]
+                    }, {transaction})
+                }
+            })
+        } catch (err) {
+            throw err;
+        }
     }
 }

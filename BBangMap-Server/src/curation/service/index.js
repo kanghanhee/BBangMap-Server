@@ -11,10 +11,9 @@ module.exports = {
 
         const {mainTitle, subTitle, curatorComment, reviewerId, reviewIdList, curationContentId} = body;
 
-        if (curationContentId !== 1 && curationContentId !== 2) {
+        if (curationContentId !== 1 || curationContentId !== 2) {
             throw new Error("NOT_FOUND_CURATION_CONTENT")
         }
-
         await curationUtil.addCuration(
             reviewerId,
             mainTitle,
@@ -64,5 +63,27 @@ module.exports = {
         const {mainTitle, subTitle, curatorComment} = body;
 
         await curationUtil.updateCuration(curationId, mainTitle, subTitle, curatorComment)
+    },
+    updateCurationPriority: async (curationContentList) => {
+        try{
+            for(const curationContent of curationContentList){
+                const curationContentId = curationContent.curationContentId;
+                const curationList = curationContent.curationList;
+                const checkDuplicateArr = new Array(curationList.length);
+
+                for(let i=0;i<checkDuplicateArr.length;i++){
+                    if(!checkDuplicateArr.includes(curationList[i].priority)){
+                        checkDuplicateArr[i] = curationList[i].priority
+                    }else{
+                        console.log("custom error")
+                        throw Error("DUPLICATE_PRIORITY");
+                    }
+                }
+
+                await curationUtil.updateCurationPriority(curationContentId, curationList);
+            }
+        }catch(err){
+            throw new Error(err);
+        }
     }
 }
