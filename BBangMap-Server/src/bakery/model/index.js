@@ -80,13 +80,13 @@ module.exports = (sequelize, DataTypes) => {
                 defaultValue: false
             },
             //태그 & 상시
-            allTheTime: {
+            isAllTheTime: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: false
             },
             //태그 & 비정기
-            irregularPeriod: {
+            isIrregularPeriod: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: false
