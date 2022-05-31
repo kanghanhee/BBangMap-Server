@@ -1,9 +1,9 @@
-const requestBakerySearchDto = (name, address, id, isRegistered) => {
+const requestBakerySearchDto = (name, address, id, status) => {
   return {
     name,
     address,
     id,
-    isRegistered,
+    status,
   };
 };
 module.exports = requestBakerySearchDto;

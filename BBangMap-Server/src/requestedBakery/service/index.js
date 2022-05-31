@@ -14,7 +14,13 @@ module.exports = {
       // eslint-disable-next-line no-restricted-syntax
       for (const bakery of kakaoBakeryList) {
         const isExistedBakery = await requestedBakeryUtils.findBakeryByLocation(bakery.place_name, bakery.y, bakery.x);
-        result.push(requestBakerySearchDto(bakery.place_name, bakery.road_address_name, bakery.id, isExistedBakery));
+        const isRequestedBakery = await requestedBakeryUtils.findRequestedBakeryByLocation(
+          bakery.place_name,
+          bakery.y,
+          bakery.x,
+        );
+        const status = isExistedBakery ? 'REGISTERED' : isRequestedBakery ? 'REQUESTED' : 'NONE';
+        result.push(requestBakerySearchDto(bakery.place_name, bakery.road_address_name, bakery.id, status));
       }
       return result;
     }

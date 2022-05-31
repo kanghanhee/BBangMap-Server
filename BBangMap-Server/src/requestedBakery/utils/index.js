@@ -39,6 +39,19 @@ module.exports = {
     if (findBakery[0].SUCCESS === 1) return true;
     return false;
   },
+  findRequestedBakeryByLocation: async (bakeryName, latitude, longitude) => {
+    // eslint-disable-next-line no-return-await
+    const findBakery = await sequelize.query(
+      'SELECT EXISTS (SELECT id FROM RequestedBakery WHERE bakeryName = (:bakeryName) AND ROUND(latitude,3) = ROUND((:latitude),3) AND ROUND(longitude, 3) = ROUND((:longitude),3) LIMIT 1) AS SUCCESS;',
+      {
+        replacements: { latitude: `${latitude}`, longitude: `${longitude}`, bakeryName: `${bakeryName}` },
+        type: sequelize.QueryTypes.SELECT,
+        raw: true,
+      },
+    );
+    if (findBakery[0].SUCCESS === 1) return true;
+    return false;
+  },
   save: async (userId, placeId, placeName, address, longitude, latitude) => {
     try {
       await RequestedBakery.create({
