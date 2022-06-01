@@ -192,7 +192,7 @@ module.exports = {
         }
     },
     findReviewListByOption: async (isOnline, isVegan) => {
-        if (isOnline === 1 && isVegan === 1) {
+        if (isOnline === '1' && isVegan === '1') {
             return Review.findAll({
                 include: [
                     {
@@ -223,7 +223,7 @@ module.exports = {
                 order: [['createdAt', 'DESC']],
             })
         }
-        if (isOnline === 1) {
+        if (isOnline === '1') {
             return Review.findAll({
                 include: [
                     {
@@ -250,7 +250,7 @@ module.exports = {
                 },
                 order: [['createdAt', 'DESC']],
             })
-        } else if (isVegan === 1) {
+        } else if (isVegan === '1') {
             return Review.findAll({
                 include: [
                     {
@@ -299,12 +299,6 @@ module.exports = {
                         as: "SaverReview"
                     }
                 ],
-                where: {
-                    [Op.or]: [
-                        {isOnline: isOnline},
-                        {isVegan: isVegan}
-                    ]
-                },
                 order: [['createdAt', 'DESC']],
             })
         }
