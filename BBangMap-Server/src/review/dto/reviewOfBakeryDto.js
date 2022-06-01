@@ -4,7 +4,7 @@ const {defaultBgImg} = require("../../../modules/definition");
 const reviewOfBakeryDto = (findUser, reviewOfBakery, savedReviewList, likedReviewList, visitedBakeryList, likeCountList) => {
     return {
         reviewId: reviewOfBakery.id,
-        reviewer: findUser.nickName,
+        reviewer: reviewOfBakery.User.nickName,
         bakeryId: reviewOfBakery.BakeryId,
         content: reviewOfBakery.content,
         reviewImg: reviewOfBakery.reviewImgList.length < 1 ? defaultBgImg : reviewOfBakery.reviewImgList[0],

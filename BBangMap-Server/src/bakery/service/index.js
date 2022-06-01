@@ -33,11 +33,9 @@ module.exports = {
             if (filterBakeryByBread.length > 0) return bakerySearchListDto(searchBakeryByBreadList, latitude, longitude, visitedBakeryList);
 
             let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(bakeryName);
-            let bakeryReview = searchBakeryList.flatMap(bakeryList => bakeryList.Reviews);
-            bakeryReview.forEach(review => console.log(review))
-            let star = reviewUtils.getBakeryStar(bakeryReview);
+            searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
-            return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList, star);
+            return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
         } else {
             return null;
         }
@@ -114,6 +112,14 @@ module.exports = {
                     address: registerBakery.address,
                     latitude: registerBakery.latitude,
                     longitude: registerBakery.longitude,
+                    isAllTheTime: registerBakery.isAllTheTime,
+                    isIrregularPeriod: registerBakery.isIrregularPeriod,
+                    isParkingAvailable: registerBakery.isParkingAvailable,
+                    isChildAvailable: registerBakery.isChildAvailable,
+                    isReservationAvailable: registerBakery.isReservationAvailable,
+                    isPetAvailable: registerBakery.isPetAvailable,
+                    blog: registerBakery.blog,
+                    instagram: registerBakery.instagram,
                     bakeryImg: []
                 }, {transaction});
             });
@@ -156,7 +162,15 @@ module.exports = {
                 latitude: modifyInfo.latitude,
                 longitude: modifyInfo.longitude,
                 isOnline: modifyInfo.isOnline,
-                isVegan: modifyInfo.isVegan
+                isVegan: modifyInfo.isVegan,
+                isAllTheTime: modifyInfo.isAllTheTime,
+                isIrregularPeriod: modifyInfo.isIrregularPeriod,
+                isParkingAvailable: modifyInfo.isParkingAvailable,
+                isChildAvailable: modifyInfo.isChildAvailable,
+                isReservationAvailable: modifyInfo.isReservationAvailable,
+                isPetAvailable: modifyInfo.isPetAvailable,
+                blog: modifyInfo.blog,
+                instagram: modifyInfo.instagram,
             })
 
             await bakery.save();
@@ -165,6 +179,6 @@ module.exports = {
         }
     },
     bakeryDelete: async (bakeryId) => {
-        await Bakery.destroy({where : {id : bakeryId}})
+        await Bakery.destroy({where: {id: bakeryId}})
     }
 }
