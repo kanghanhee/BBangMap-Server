@@ -8,6 +8,12 @@ module.exports = {
             where: {
                 BakeryId: bakeryId,
             },
+            include: [
+                {
+                    model: User,
+                    attributes: ['nickName']
+                }
+            ],
             order: [['createdAt', 'DESC']],
         });
     },
@@ -499,6 +505,24 @@ module.exports = {
     },
     getBakeryStar: (reviewList) => {
         return getBakeryStar(reviewList)
+    },
+    getBakeryStarOfBakeryList: async (bakeryList)=>{
+        return bakeryList.map(bakery => {
+            bakery.star = getBakeryStar(bakery.Reviews);
+            return bakery;
+        })
+    },
+    findUsersReviewList: async (userId)=>{
+        return Review.findAll({
+            where:{
+                UserId : userId
+            },
+            include:[
+                {
+                    model : Bakery
+                }
+            ]
+        })
     }
 };
 

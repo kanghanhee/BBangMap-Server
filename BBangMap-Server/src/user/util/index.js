@@ -4,6 +4,7 @@ const fs = require('fs');
 const { sequelize } = require('../../../models');
 const { User, Review, SaveBakery, SaveReview } = require('../../../models');
 const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
+const {Op} = require("sequelize");
 
 module.exports = {
   findUserById: async id => {
@@ -150,4 +151,11 @@ module.exports = {
       where: { id },
     });
   },
+  findUserByNickName: async(nickname)=>{
+    return await User.findAll({
+      where: {
+        nickname: {[Op.like]: `%${nickname}%`}
+      }
+    })
+  }
 };

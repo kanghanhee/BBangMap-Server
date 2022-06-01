@@ -6,8 +6,9 @@
 const userUtil = require('../util');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
-const myPageDto = require('../dto/myPageDto');
 const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
+const myPageDto = require('../dto/myPageDto');
+const reviewerInfoListDto = require('../dto/ReviewerInfoListDto')
 
 module.exports = {
   // 회원가입
@@ -101,4 +102,8 @@ module.exports = {
     else grade = '박력분';
     return myPageDto(user, grade, review.count, savedBakery.count, savedReview.count);
   },
+  getUserInfo: async (nickname)=>{
+    const userList = await userUtil.findUserByNickName(nickname);
+    return reviewerInfoListDto(userList);
+  }
 };
