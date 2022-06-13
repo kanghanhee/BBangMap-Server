@@ -28,7 +28,7 @@ module.exports = {
     SUCCESS_GET_BAKERY_LIST: '빵집리스트 불러오기 성공',
     SUCCESS_UPDATE_BAKERY: '빵집 수정 성공',
     SUCCESS_DELETE_BAKERY: '빵집 삭제 성공',
-
+  SUCCESS_GET_RECENT_VISITED_BAKERY: '최근 방문 빵집 조회 성공',
 
     /*후기*/
     SUCCESS_GET_REVIEW: '후기불러오기 성공',
