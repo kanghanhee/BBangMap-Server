@@ -57,6 +57,7 @@ module.exports = {
   ALREADY_NICKNAME: '이미 존재하는 닉네임입니다.',
   INVALID_USER: '유효하지 않는 회원입니다.',
 
+    SUCCESS_USER_INFO: '사용자 정보 불러오기 성공',
   /*미션*/
   SUCCESS_CREATE_MISSION: '미션 추가 성공',
   SUCCESS_GET_MONTHLY_MISSION: '이달의 미션 메인 조회 성공',
@@ -65,9 +66,12 @@ module.exports = {
   NO_MISSION: '미션이 존재하지 않습니다.',
   NOT_SUCCEEDED: '달성하지 않은 미션입니다.',
 
-  /*큐레이션*/
-  SUCCESS_CREATE_CURATION: '큐레이션 추가 성공',
-  SUCCESS_GET_CURATION: '큐레이션 불러오기 성공',
-  SUCCESS_LIKE_CURATION: '큐레이션 좋아요 성공',
-  SUCCESS_UNLIKE_CURATION: '큐레이션 좋아요 취소 성공',
+    /*큐레이션*/
+    SUCCESS_CREATE_CURATION: '큐레이션 추가 성공',
+    SUCCESS_GET_CURATION: '큐레이션 불러오기 성공',
+    SUCCESS_LIKE_CURATION: '큐레이션 좋아요 성공',
+    SUCCESS_UNLIKE_CURATION: '큐레이션 좋아요 취소 성공',
+    SUCCESS_GET_CURATION_CONTENT: '큐레이션 컨텐츠 불러오기 성공',
+    SUCCESS_PUT_CURATION: '큐레이션 수정하기 성공',
+    SUCCESS_PUT_CURATION_PRIORITY: '큐레이션 우선순위 수정 성공',
 };

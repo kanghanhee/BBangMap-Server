@@ -6,7 +6,8 @@ const {
     MatchingCurationContents,
     User,
     Review,
-    Bakery
+    Bakery,
+    sequelize
 } = require('../../../models')
 const {Sequelize} = require("sequelize");
 
@@ -16,26 +17,36 @@ module.exports = {
         if (curationContent == null) throw new Error("NOT_FOUND_CURATION_CONTENT")
         return curationContent
     },
-    addCuration: async (user, mainTitle, subTitle, aWord, curationImage, reviewList, curationContents) => {
+    addCuration: async (reviewerId, mainTitle, subTitle, curatorComment, curationImage, reviewList, curationContentId) => {
         try {
-            const newCuration = await Curation.create({
-                UserId: user.id,
-                mainTitle,
-                subTitle,
-                aWord,
-                curationImage
-            })
-            await user.addCuration(newCuration);
-            for (let reviewId of reviewList) {
-                await CurationTarget.create({
-                    CurationId: newCuration.id,
-                    ReviewId: reviewId
-                })
-            }
+            await sequelize.transaction(async (transaction) => {
+                const newCuration = await Curation.create({
+                    UserId: reviewerId,
+                    mainTitle,
+                    subTitle,
+                    curatorComment,
+                    curationImage
+                }, {transaction})
 
-            await MatchingCurationContents.create({
-                CurationId: newCuration.id,
-                CurationContentId: curationContents.id
+                for (let reviewId of reviewList) {
+                    await CurationTarget.create({
+                        CurationId: newCuration.id,
+                        ReviewId: reviewId
+                    }, {transaction})
+                }
+
+                const matchingCurationsOfContent = await MatchingCurationContents.findAll({
+                    where: {CurationContentId: curationContentId},
+                    order: [['priority', 'DESC']]
+                });
+                const convertPriority = matchingCurationsOfContent.map(matchingCuration => matchingCuration.priority)
+                const lastPriority = convertPriority.length === 0 ? 0 : convertPriority[0];
+
+                await MatchingCurationContents.create({
+                    CurationId: newCuration.id,
+                    CurationContentId: curationContentId,
+                    priority: lastPriority + 1
+                }, {transaction})
             })
         } catch (err) {
             throw err;
@@ -66,29 +77,29 @@ module.exports = {
         return curationContent
     },
     findAllCurationContentWithCuration: async () => {
-      return await CurationContent.findAll({
-          include:[
-              {
-                  model: Curation,
-                  as: 'Curations',
-                  include:[
-                      {
-                          model: User,
-                      },
-                      {
-                          model: User,
-                          as: 'LikerCuration',
-                          attributes: ['id']
-                      }
-                  ]
-              }
-          ],
-          order: [
-              [Sequelize.literal("`Curations->MatchingCurationContents`.`priority`", 'ASC')],
-              [Sequelize.literal("`Curations->MatchingCurationContents`.`CurationContentId`", 'ASC')]
+        return await CurationContent.findAll({
+            include: [
+                {
+                    model: Curation,
+                    as: 'Curations',
+                    include: [
+                        {
+                            model: User,
+                        },
+                        {
+                            model: User,
+                            as: 'LikerCuration',
+                            attributes: ['id']
+                        }
+                    ]
+                }
+            ],
+            order: [
+                [Sequelize.literal("`Curations->MatchingCurationContents`.`priority`", 'ASC')],
+                [Sequelize.literal("`Curations->MatchingCurationContents`.`CurationContentId`", 'ASC')]
 
-          ]
-      })
+            ]
+        })
     },
     findCuration: async (curationId) => {
         const curation = await Curation.findOne(
@@ -160,5 +171,34 @@ module.exports = {
                 CurationId: curationId
             }
         })
+    },
+    updateCuration: async (curationId, mainTitle, subTitle, curatorComment) => {
+        await Curation.update(
+            {
+                mainTitle,
+                subTitle,
+                curatorComment
+            },
+            {
+                where: {
+                    id: curationId
+                }
+            }
+        )
+    },
+    updateCurationPriority: async (curationContentId, curationList) => {
+        try {
+            await sequelize.transaction(async (transaction) => {
+                for (const curation of curationList) {
+                    MatchingCurationContents.update({
+                        priority: curation.priority
+                    }, {
+                        where: [{CurationContentId: curationContentId}, {CurationId: curation.curationId}]
+                    }, {transaction})
+                }
+            })
+        } catch (err) {
+            throw err;
+        }
     }
 }

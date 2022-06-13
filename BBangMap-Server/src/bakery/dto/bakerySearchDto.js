@@ -1,6 +1,6 @@
 const bakeryUtils = require('../utils')
 
-const bakerySearchDto = (searchBakery, latitude, longitude, visitedBakeryList, star) => {
+const bakerySearchDto = (searchBakery, latitude, longitude, visitedBakeryList) => {
     return {
         bakeryId: searchBakery.id,
         bakeryName: searchBakery.bakeryName,
@@ -10,7 +10,7 @@ const bakerySearchDto = (searchBakery, latitude, longitude, visitedBakeryList, s
             searchBakery.latitude, searchBakery.longitude, latitude, longitude),
         isVisitedBakery : visitedBakeryList.includes(searchBakery.id),
         address : searchBakery.address,
-        star : star
+        star : searchBakery.star
     }
 }
 
