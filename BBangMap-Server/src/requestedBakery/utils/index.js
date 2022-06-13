@@ -6,13 +6,14 @@ const { sequelize } = require('../../../models/index');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const { requestBakerySearch } = require('../controller');
+const {KAKAO_AUTH,KAKAO_URL}= require('../../../config/kakao');
 
 module.exports = {
   getKakaoBakeryList: async keyword => {
     try {
-      const response = await axios.get(`${process.env.KAKAO_URL}/local/search/keyword`, {
+      const response = await axios.get(`${KAKAO_URL}/local/search/keyword`, {
         headers: {
-          Authorization: process.env.KAKAO_AUTH,
+          Authorization: KAKAO_AUTH,
         },
         params: {
           query: keyword,
