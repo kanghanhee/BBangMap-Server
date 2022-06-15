@@ -180,5 +180,17 @@ module.exports = {
     },
     bakeryDelete: async (bakeryId) => {
         await Bakery.destroy({where: {id: bakeryId}})
+    },
+    updateBakeryMainImage: async (bakeryId, image) => {
+        if (image === undefined) {
+            throw new Error("BAKERY_IMAGE_REQUIRE")
+        }
+
+        const bakery = await Bakery.findByPk(bakeryId);
+
+        let newBakeryImg = [];
+        newBakeryImg.push(image.location);
+        bakery.bakeryImg = newBakeryImg.concat(bakery.bakeryImg);
+        await bakery.save();
     }
 }

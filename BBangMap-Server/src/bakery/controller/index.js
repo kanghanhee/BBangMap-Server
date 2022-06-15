@@ -197,5 +197,21 @@ module.exports = {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
+    },
+    bakeryMainImage: async(req, res)=>{
+        try{
+            const {bakeryId} = req.params;
+
+            await bakeryService.updateBakeryMainImage(bakeryId, req.file);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_BAKERY_MAIN_IMAGE));
+        }catch(err){
+            if (err.message === "BAKERY_IMAGE_REQUIRE") {
+                slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
+                res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+            }else{
+                slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+                res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            }
+        }
     }
 };
