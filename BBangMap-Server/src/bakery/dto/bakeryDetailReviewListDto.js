@@ -5,7 +5,7 @@ const bakeryDetailReviewListDto = (review, userId) =>{
         reviewer: review.User.nickName,
         purchaseBreadCount : review.purchaseBreadList.length,
         content : review.content,
-        reviewCreatedDate : review.createdAt,
+        reviewCreatedDate : new Date(review.createdAt+"z"),
         likeReviewCount : review.Liker.length,
         isLikedReview : likeThisReview(review.Liker, userId),
         isSavedReview : saveThisReview(review.SaverReview, userId),

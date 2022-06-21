@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const curationUpload = require('../../modules/multer/curationMulter');
+const imagenUpload = require('../../modules/multer/curationMulter');
 const authUtil = require('../../middlewares/authUtil');
 const bakeryController = require('../../src/bakery/controller');
 const userController = require('../../src/user/controller');
@@ -12,11 +12,12 @@ router.get('/bakery', authUtil.checkToken, authUtil.checkAdminToken, bakeryContr
 router.get('/bakery/:bakeryId', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.bakeryDetailByAdmin);
 router.put('/bakery/:bakeryId', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.bakeryModifyByAdmin)
 router.delete('/bakery/:bakeryId', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.bakeryDelete);
+router.post('/bakery/image/:bakeryId', authUtil.checkToken, authUtil.checkAdminToken, imagenUpload.single('bakeryImage'),bakeryController.bakeryMainImage);
 
 router.get('/reviewer', authUtil.checkToken, authUtil.checkAdminToken, userController.getUserInfo);
 router.get('/review/user/:userId',authUtil.checkToken, authUtil.checkAdminToken, reviewController.getUserReview);
 router.get('/curation/content',authUtil.checkToken, authUtil.checkAdminToken, curationController.getCurationContent);
-router.post('/curation',authUtil.checkToken, authUtil.checkAdminToken, curationUpload.single('curationImage'), curationController.addCuration);
+router.post('/curation',authUtil.checkToken, authUtil.checkAdminToken, imagenUpload.single('curationImage'), curationController.addCuration);
 router.put('/curation/priority',authUtil.checkToken, authUtil.checkAdminToken, curationController.updateCurationPriority);
 router.put('/curation/:curationId',authUtil.checkToken, authUtil.checkAdminToken, curationController.updateCuration);
 

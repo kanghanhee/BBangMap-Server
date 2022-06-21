@@ -178,11 +178,25 @@ module.exports = {
         blog: modifyInfo.blog,
         instagram: modifyInfo.instagram,
       });
+            await bakery.save();
+        } catch (err) {
+            throw new Error(err);
+        }
+    },
+    bakeryDelete: async (bakeryId) => {
+        await Bakery.destroy({where: {id: bakeryId}})
+    },
+    updateBakeryMainImage: async (bakeryId, image) => {
+        if (image === undefined) {
+            throw new Error("BAKERY_IMAGE_REQUIRE")
+        }
 
-      await bakery.save();
-    } catch (err) {
-      throw new Error(err);
-    }
+        const bakery = await Bakery.findByPk(bakeryId);
+
+        let newBakeryImg = [];
+        newBakeryImg.push(image.location);
+        bakery.bakeryImg = newBakeryImg.concat(bakery.bakeryImg);
+        await bakery.save();
   },
   bakeryDelete: async bakeryId => {
     await Bakery.destroy({ where: { id: bakeryId } });
