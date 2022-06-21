@@ -12,6 +12,7 @@ const bakeryImgListDto = require('../dto/bakeryImgListDto');
 const savedBakeryListDto = require('../dto/savedBakeryListDto');
 const adminBakeryListDto = require('../dto/adminBakeryListDto');
 const adminBakeryDetailDto = require('../dto/adminBakeryDetailDto');
+const recentVisitedBakeryDto = require('../dto/recentVisitedBakeryDto');
 
 module.exports = {
   getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -185,5 +186,10 @@ module.exports = {
   },
   bakeryDelete: async bakeryId => {
     await Bakery.destroy({ where: { id: bakeryId } });
+  },
+  getRecentBakeryList: async user => {
+    const bakeryList = await bakeryUtils.getRecentVisitedBakeryList(user.id);
+    const result = bakeryList.map(bakery => recentVisitedBakeryDto(bakery));
+    return result;
   },
 };

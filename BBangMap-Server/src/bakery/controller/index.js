@@ -200,4 +200,16 @@ module.exports = {
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
+  recentBakeryList: async (req, res) => {
+    try {
+      const { user } = req.header;
+      const result = await bakeryService.getRecentBakeryList(user);
+      res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_RECENT_VISITED_BAKERY, result));
+    } catch (err) {
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
 };

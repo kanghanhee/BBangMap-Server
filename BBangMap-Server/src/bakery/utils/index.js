@@ -1,9 +1,7 @@
 const { Bakery, SaveBakery, VisitBakery, Review, User } = require('../../../models');
 const { Op } = require('sequelize');
-const axios = require('axios').default;
-const { defaultBgImg } = require('../../../modules/definition');
-const { response } = require('express');
 const { sequelize } = require('../../../models/index');
+const { defaultBgImg } = require('../../../modules/definition');
 
 module.exports = {
   findBakeryListByBakeryName: async bakeryName => {
@@ -163,5 +161,16 @@ module.exports = {
     });
 
     if (findBakery !== null) throw new Error('DUPLICATE_INFO');
+  },
+  getRecentVisitedBakeryList: async userId => {
+    const bakeryList = await sequelize.query(
+      'SELECT B.id,B.address,B.bakeryName FROM VisitBakery as V JOIN Bakery B on B.id = V.BakeryId WHERE UserId = :userId ORDER BY V.createdAt DESC LIMIT 10;',
+      {
+        replacements: { userId: `${userId}` },
+        type: sequelize.QueryTypes.SELECT,
+        raw: true,
+      },
+    );
+    return bakeryList;
   },
 };

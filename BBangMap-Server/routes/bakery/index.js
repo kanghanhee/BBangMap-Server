@@ -7,6 +7,7 @@ router.get('/map', authUtil.checkToken, bakeryController.bakeryMap);
 router.get('/search', authUtil.checkToken, bakeryController.bakerySearch);
 router.get('/detail', authUtil.checkToken, bakeryController.bakeryDetail);
 router.get('/imgs', authUtil.checkToken, bakeryController.bakeryImgList);
+router.get('/recent', authUtil.checkToken, bakeryController.recentBakeryList);
 router.get('/storage', authUtil.checkToken, bakeryController.storedBakeryList);
 router.post('/:bakeryId/storage', authUtil.checkToken, bakeryController.storeBakery);
 router.delete('/:bakeryId/storage', authUtil.checkToken, bakeryController.unStoreBakery);
