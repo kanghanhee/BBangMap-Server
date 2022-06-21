@@ -13,5 +13,6 @@ router.post('/:bakeryId/storage', authUtil.checkToken, bakeryController.storeBak
 router.delete('/:bakeryId/storage', authUtil.checkToken, bakeryController.unStoreBakery);
 router.post('/:bakeryId/visits', authUtil.checkToken, bakeryController.doBakeryVisited);
 router.delete('/:bakeryId/visits', authUtil.checkToken, bakeryController.cancelBakeryVisited);
+router.use('/request', require('./requestedBakery'));
 
 module.exports = router;
