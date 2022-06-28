@@ -125,6 +125,12 @@ module.exports = {
     await reviewUtils.checkVisitBakery(user, bakeryId);
     return addReview;
   },
+  addReviewV2: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
+    if(purchaseBreadList == null) purchaseBreadList=[""];
+    const newReview = await reviewUtils.addReviewV2(user,bakeryId,purchaseBreadList,star,content,reviewImgList);
+
+    return newReview;
+  },
   updateReview: async (
     reviewId,
     user,

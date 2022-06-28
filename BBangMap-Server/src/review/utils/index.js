@@ -1,6 +1,6 @@
 const {Op} = require('sequelize');
+const { sequelize } = require('../../../models/index');
 const {Bakery, Review, User, SaveReview, LikeReview, VisitBakery} = require('../../../models');
-// const VisitBakery = require('../../user/model/VisitBakery');
 
 module.exports = {
     findReviewOfBakery: async bakeryId => {
@@ -358,6 +358,34 @@ module.exports = {
             content: content,
             reviewImgList: reviewImgList,
         });
+    },
+    addReviewV2: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList)=>{
+        return await sequelize.transaction(async (transaction) =>{
+           const review = await Review.create({
+                UserId: user.id,
+                BakeryId: bakeryId,
+                purchaseBreadList: purchaseBreadList,
+                star: star,
+                content: content,
+                reviewImgList: reviewImgList,
+            },{transaction});
+
+            await VisitBakery.findOrCreate({
+                where: {[Op.and]: [{UserId: user.id}, {BakeryId: bakeryId}]},
+                defaults: {
+                    UserId: user.id,
+                    BakeryId: bakeryId,
+                },
+            transaction
+            });
+            return review;
+        }).then(function (result) {
+            return result.dataValues;
+        }).catch(function (err) {
+            console.log(err);
+           throw err;
+        });   
+    
     },
     updateReview: async (
         reviewId,
