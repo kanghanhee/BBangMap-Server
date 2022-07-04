@@ -53,10 +53,11 @@ module.exports = {
     if (findBakery[0].SUCCESS === 1) return true;
     return false;
   },
-  save: async (userId, placeId, placeName, address, longitude, latitude) => {
+  save: async (userId, reason, placeId, placeName, address, longitude, latitude) => {
     try {
       await RequestedBakery.create({
         UserId: userId,
+        reason,
         placeId,
         bakeryName: placeName,
         address,

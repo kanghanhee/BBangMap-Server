@@ -26,7 +26,7 @@ module.exports = {
     }
     return null;
   },
-  saveRequestedBakery: async (user, id, name) => {
+  saveRequestedBakery: async (user, id, name, reason) => {
     if (id && name) {
       const kakaoBakeryList = await requestedBakeryUtils.getKakaoBakeryList(name);
       const targetBakery = kakaoBakeryList.map(bakery => {
@@ -41,6 +41,7 @@ module.exports = {
 
       await requestedBakeryUtils.save(
         user.id,
+        reason,
         targetBakery[0].id,
         targetBakery[0].place_name,
         targetBakery[0].road_address_name,

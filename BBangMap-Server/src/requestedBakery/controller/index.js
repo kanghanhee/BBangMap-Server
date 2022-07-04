@@ -24,15 +24,20 @@ module.exports = {
   requestedBakery: async (req, res) => {
     try {
       const { user } = req.header;
-      const { bakeryId, bakeryName } = req.body;
-      await bakeryService.saveRequestedBakery(user, bakeryId, bakeryName);
+      const { bakeryId, bakeryName, reason } = req.body;
+      if(reason == null) 
+      throw {
+        statusCode : statusCode.BAD_REQUEST,
+        responseMessage : responseMessage.NULL_VALUE};
+
+      await bakeryService.saveRequestedBakery(user, bakeryId, bakeryName, reason);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_REQUEST_BAKERY, null));
     } catch (err) {
       if (err.statusCode == null) {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
         err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
+        slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       }
-      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
