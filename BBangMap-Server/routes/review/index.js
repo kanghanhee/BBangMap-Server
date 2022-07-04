@@ -18,7 +18,6 @@ router.get('/my', authUtil.checkToken, reviewController.myReview);
 router.post('/my', authUtil.checkToken, reviewImgUpload, reviewController.addReview);
 router.post('/storage/:reviewId', authUtil.checkToken, reviewController.saveReview);
 router.post('/like/:reviewId', authUtil.checkToken, reviewController.likeReview);
-router.post('/my/v2', authUtil.checkToken, reviewImgUpload, reviewController.addReviewV2);
 
 router.put('/my/:reviewId', authUtil.checkToken, reviewImgUpload, reviewController.updateReview);
 
