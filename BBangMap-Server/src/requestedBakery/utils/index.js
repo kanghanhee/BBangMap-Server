@@ -1,11 +1,10 @@
-const { Bakery, User, RequestedBakery } = require('../../../models');
+const { RequestedBakery } = require('../../../models');
 const { Op } = require('sequelize');
 const axios = require('axios').default;
 const { response } = require('express');
 const { sequelize } = require('../../../models/index');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
-const { requestBakerySearch } = require('../controller');
 const {KAKAO_AUTH,KAKAO_URL}= require('../../../config/kakao');
 
 module.exports = {
