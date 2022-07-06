@@ -422,18 +422,19 @@ module.exports = {
         content,
         reviewImgList,
     ) => {
-        await Review.update(
-            {
+        await sequelize.transaction(async (transaction) =>{
+            await Review.update({
                 UserId: user.id,
                 purchaseBreadList: purchaseBreadList,
                 star: star,
                 content: content,
                 reviewImgList: reviewImgList,
-            },
+             },
             {
                 where: {id: reviewId},
             },
-        );
+            {transaction});
+        });
     },
     isMyReview: async (review, myReviewList) => {
         const isMyReview = myReviewList => myReviewList.id === review.id;
