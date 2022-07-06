@@ -31,14 +31,4 @@ const v2Dto = review => {
   };
 };
 
-// const getCount = (reviewId, likeCountList) => {
-//   let count = 0;
-//   for (let i = 0; i < likeCountList.length; i++) {
-//     if (likeCountList[i] === reviewId) {
-//       count++;
-//     }
-//   }
-//   return count;
-// };
-
 module.exports = { v1Dto, v2Dto };

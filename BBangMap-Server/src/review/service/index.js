@@ -142,7 +142,7 @@ module.exports = {
     content,
     reviewImgList,
   ) => {
-    let updateReview = await reviewUtils.updateReview(
+    await reviewUtils.updateReview(
       reviewId,
       user,
       bakeryId,
@@ -153,9 +153,22 @@ module.exports = {
       content,
       reviewImgList,
     );
-
-    return updateReview;
   },
+
+  updateReviewV2: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+    if(purchaseBreadList == null) purchaseBreadList=[];
+    if(reviewImgList == null) reviewImgList=[];
+
+    await reviewUtils.updateReviewV2(
+      reviewId,
+      user,
+      purchaseBreadList,
+      star,
+      content,
+      reviewImgList,
+    );
+  },
+
   savedReview: async (reviewId, user) => {
     let userId = user.id;
     await reviewUtils.savedReview(userId, reviewId);

@@ -412,6 +412,27 @@ module.exports = {
             {
                 where: {id: reviewId},
             },
+        );    
+    },
+    updateReviewV2: async (
+        reviewId,
+        user,
+        purchaseBreadList,
+        star,
+        content,
+        reviewImgList,
+    ) => {
+        await Review.update(
+            {
+                UserId: user.id,
+                purchaseBreadList: purchaseBreadList,
+                star: star,
+                content: content,
+                reviewImgList: reviewImgList,
+            },
+            {
+                where: {id: reviewId},
+            },
         );
     },
     isMyReview: async (review, myReviewList) => {
