@@ -3,9 +3,8 @@ const statusCode = require('../../../modules/statusCode');
 const responseMessage = require('../../../modules/responseMessage');
 const reviewService = require('../service');
 const missionService = require('../../mission/service');
-const reviewUtils = require('../utils');
 const slackSender = require('../../../other/slackSender');
-const userService = require("../../user/service");
+const { api_version } = require('../../../modules/definition');
 
 module.exports = {
     reviewOfBakery: async (req, res) => {
@@ -107,7 +106,7 @@ module.exports = {
         }
         try {
             let result = "";
-            if (req.headers.version === '2') { 
+            if (req.headers.version === api_version.v2) { 
                 let {bakeryId, purchaseBreadList, star, content} = req.body;
                 
                 if(bakeryId == null || star == null || content== null) 
