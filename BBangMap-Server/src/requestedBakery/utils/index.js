@@ -1,11 +1,10 @@
-const { Bakery, User, RequestedBakery } = require('../../../models');
+const { RequestedBakery } = require('../../../models');
 const { Op } = require('sequelize');
 const axios = require('axios').default;
 const { response } = require('express');
 const { sequelize } = require('../../../models/index');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
-const { requestBakerySearch } = require('../controller');
 const {KAKAO_AUTH,KAKAO_URL}= require('../../../config/kakao');
 
 module.exports = {
@@ -53,10 +52,11 @@ module.exports = {
     if (findBakery[0].SUCCESS === 1) return true;
     return false;
   },
-  save: async (userId, placeId, placeName, address, longitude, latitude) => {
+  save: async (userId, reason, placeId, placeName, address, longitude, latitude) => {
     try {
       await RequestedBakery.create({
         UserId: userId,
+        reason,
         placeId,
         bakeryName: placeName,
         address,

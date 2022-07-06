@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
+      reason:{
+        type: DataTypes.STRING(1000),
+        allowNull: false,
+      }
     },
     {
       freezeTableName: true,
