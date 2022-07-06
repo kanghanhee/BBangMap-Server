@@ -106,7 +106,7 @@ module.exports = {
         }
         try {
             let result = "";
-            if (req.headers.version === api_version.v2) { 
+            if (req.headers.api_version === api_version.v2) { 
                 let {bakeryId, purchaseBreadList, star, content} = req.body;
                 
                 if(bakeryId == null || star == null || content== null) 

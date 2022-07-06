@@ -8,6 +8,7 @@ const savedReviewFolderListDto = require('../dto/savedReviewFolderListDto');
 const reviewOfBakeryListDto = require('../dto/reviewOfBakeryListDto');
 const myReviewListDto = require('../dto/myReviewListDto');
 const reviewListOfUserDto = require('../dto/reviewListOfUserDto');
+const reviewDto = require('../dto/reviewDto');
 
 module.exports = {
   getReviewOfBakery: async (order, bakeryId, user) => {
@@ -126,10 +127,9 @@ module.exports = {
     return addReview;
   },
   addReviewV2: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
-    if(purchaseBreadList === null) purchaseBreadList = [];
-    const newReview = await reviewUtils.addReviewV2(user,bakeryId,purchaseBreadList,star,content,reviewImgList);
-
-    return newReview;
+    if (purchaseBreadList == null) purchaseBreadList = [];
+    const newReview = await reviewUtils.addReviewV2(user, bakeryId, purchaseBreadList, star, content, reviewImgList);
+    return reviewDto.v2Dto(newReview);
   },
   updateReview: async (
     reviewId,
