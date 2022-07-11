@@ -45,18 +45,12 @@ module.exports = {
     return result;
   },
   getSearchReviewList: async (order, searchWord, isOnline, isVegan, user) => {
-    const searchWordLength = searchWord.length > 0;
-
-    let reviewList = searchWordLength ?
-        await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan)
-        : await reviewUtils.findReviewListByOption(isOnline, isVegan)
+    let reviewList =  await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
     // LikeReview
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
-
-    reviewList.forEach(review => console.log(review.SaverReview))
     let result = reviewListDto(reviewList, likedReviewList, likeCountList, user.id);
     // 추천수로 정렬
     if (order === 'best') {

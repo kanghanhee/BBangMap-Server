@@ -42,266 +42,42 @@ module.exports = {
         });
     },
     findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
-        if (isOnline === 1 && isVegan === 1) {
-            return Review.findAll({
-                include: [
-                    {
-                        model: Bakery,
-                        as: 'Bakery',
-                        attributes: ['bakeryName'],
-                        include: [{
-                            model: User,
-                            as: 'SaverBakery'
-                        }, {
-                            model: User,
-                            as: "VisiterBakery"
-                        }]
-                    }, {
-                        model: User,
-                        attributes: {}
-                    },{
-                        model: User,
-                        as: "SaverReview"
-                    }
-                ],
-                where: {
-                    [Op.and]: [
-                        {isOnline: isOnline},
-                        {isVegan: isVegan},
-                        {
-                            [Op.or]: [
-                                {[`$Bakery.bakeryName$`]: {[Op.like]: `%${searchWord}%`}},
-                                {purchaseBreadList: {[Op.like]: `%${searchWord}%`}},
-                            ],
-                        },
-                    ],
-                },
-                order: [['createdAt', 'DESC']],
-            });
+    let whereClause = {
+        [Op.and]:{
         }
-        if (isOnline === 1) {
-            return Review.findAll({
-                include: [
-                    {
-                        model: Bakery,
-                        as: 'Bakery',
-                        attributes: ['bakeryName'],
+    };
+    if(searchWord.length > 0) {
+        whereClause[Op.and]= {[Op.or]:{}}
+        whereClause[Op.and][Op.or][`$Bakery.bakeryName$`] = {[Op.like]: `%${searchWord}%`};
+        whereClause[Op.and][Op.or]['purchaseBreadList'] = {[Op.like]: `%${searchWord}%`};
+    }
+    if (isOnline)  whereClause[Op.and][`$Bakery.isOnline$`] = isOnline
+    if (isVegan)   whereClause[Op.and][`$Bakery.isVegan$`] = isVegan
+
+        return Review.findAll({
+            include: [
+                {
+                    model: Bakery,
+                    as: 'Bakery',
+                        attributes: ['bakeryName','isOnline','isVegan'],
                         include: [{
-                            model: User,
-                            as: 'SaverBakery'
-                        }, {
-                            model: User,
-                            as: "VisiterBakery"
-                        }]
+                        model: User,
+                        as: 'SaverBakery'
                     }, {
                         model: User,
-                        attributes: {}
-                    },{
-                        model: User,
-                        as: "SaverReview"
-                    }
-                ],
-                where: {
-                    [Op.and]: [
-                        {isOnline: isOnline},
-                        {
-                            [Op.or]: [
-                                {[`$Bakery.bakeryName$`]: {[Op.like]: `%${searchWord}%`}},
-                                {purchaseBreadList: {[Op.like]: `%${searchWord}%`}},
-                            ],
-                        },
-                    ],
-                },
-                order: [['createdAt', 'DESC']],
-            });
-        } else if (isVegan === 1) {
-            return Review.findAll({
-                include: [
-                    {
-                        model: Bakery,
-                        as: 'Bakery',
-                        attributes: ['bakeryName'],
-                        include: [{
-                            model: User,
-                            as: 'SaverBakery'
-                        }, {
-                            model: User,
-                            as: "VisiterBakery"
-                        }]
-                    }, {
-                        model: User,
-                        attributes: {}
-                    },{
-                        model: User,
-                        as: "SaverReview"
-                    }
-                ],
-                where: {
-                    [Op.and]: [
-                        {isVegan: isVegan},
-                        {
-                            [Op.or]: [
-                                {[`$Bakery.bakeryName$`]: {[Op.like]: `%${searchWord}%`}},
-                                {purchaseBreadList: {[Op.like]: `%${searchWord}%`}},
-                            ],
-                        },
-                    ],
-                },
-                order: [['createdAt', 'DESC']],
-            });
-        } else {
-            return Review.findAll({
-                include: [
-                    {
-                        model: Bakery,
-                        as: 'Bakery',
-                        attributes: ['bakeryName'],
-                        include: [{
-                            model: User,
-                            as: 'SaverBakery'
-                        }, {
-                            model: User,
-                            as: "VisiterBakery"
-                        }]
-                    }, {
-                        model: User,
-                        attributes: {}
-                    },{
-                        model: User,
-                        as: "SaverReview"
-                    }
-                ],
-                where: {
-                    [Op.and]: [
-                        {
-                            [Op.or]: [
-                                {isOnline: isOnline},
-                                {isVegan: isVegan},
-                            ]
-                        },
-                        {
-                            [Op.or]: [
-                                {[`$Bakery.bakeryName$`]: {[Op.like]: `%${searchWord}%`}},
-                                {purchaseBreadList: {[Op.like]: `%${searchWord}%`}},
-                            ],
-                        },
-                    ],
-                },
-                order: [['createdAt', 'DESC']],
-            });
-        }
-    },
-    findReviewListByOption: async (isOnline, isVegan) => {
-        if (isOnline === '1' && isVegan === '1') {
-            return Review.findAll({
-                include: [
-                    {
-                        model: Bakery,
-                        as: 'Bakery',
-                        attributes: ['bakeryName'],
-                        include: [{
-                            model: User,
-                            as: 'SaverBakery'
-                        }, {
-                            model: User,
-                            as: "VisiterBakery"
-                        }]
-                    }, {
-                        model: User,
-                        attributes: {}
-                    },{
-                        model: User,
-                        as: "SaverReview"
-                    }
-                ],
-                where: {
-                    [Op.and]: [
-                        {isOnline: isOnline},
-                        {isVegan: isVegan}
-                    ]
-                },
-                order: [['createdAt', 'DESC']],
-            })
-        }
-        if (isOnline === '1') {
-            return Review.findAll({
-                include: [
-                    {
-                        model: Bakery,
-                        as: 'Bakery',
-                        attributes: ['bakeryName'],
-                        include: [{
-                            model: User,
-                            as: 'SaverBakery'
-                        }, {
-                            model: User,
-                            as: "VisiterBakery"
-                        }]
-                    }, {
-                        model: User,
-                        attributes: {}
-                    },{
-                        model: User,
-                        as: "SaverReview"
-                    }
-                ],
-                where: {
-                    isOnline: isOnline,
-                },
-                order: [['createdAt', 'DESC']],
-            })
-        } else if (isVegan === '1') {
-            return Review.findAll({
-                include: [
-                    {
-                        model: Bakery,
-                        as: 'Bakery',
-                        attributes: ['bakeryName'],
-                        include: [{
-                            model: User,
-                            as: 'SaverBakery'
-                        }, {
-                            model: User,
-                            as: "VisiterBakery"
-                        }]
-                    }, {
-                        model: User,
-                        attributes: {}
-                    },{
-                        model: User,
-                        as: "SaverReview"
-                    }
-                ],
-                where: {
-                    isVegan: isVegan
-                },
-                order: [['createdAt', 'DESC']],
-            })
-        } else {
-            return Review.findAll({
-                include: [
-                    {
-                        model: Bakery,
-                        as: 'Bakery',
-                        attributes: ['bakeryName'],
-                        include: [{
-                            model: User,
-                            as: 'SaverBakery'
-                        }, {
-                            model: User,
-                            as: "VisiterBakery"
-                        }]
-                    }, {
-                        model: User,
-                        attributes: {}
-                    },{
-                        model: User,
-                        as: "SaverReview"
-                    }
-                ],
-                order: [['createdAt', 'DESC']],
-            })
-        }
+                        as: "VisiterBakery"
+                    }]
+                }, {
+                    model: User,
+                    attributes: {}
+                },{
+                    model: User,
+                    as: "SaverReview"
+                }
+            ],
+            where: whereClause,
+            order: [['createdAt', 'DESC']],
+        });
     },
     findReviewById: async reviewId => {
         return Review.findOne({
