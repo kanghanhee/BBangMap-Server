@@ -21,7 +21,9 @@ const bakeryDetailDto = async (bakery, savedBakeryList, invitedBakeryList, userI
         seasonMenu: bakery.seasonMenu,
         isDrink: bakery.isDrink,
         reviewCount: reviewList.length,
-        reviewList: reviewList.map(review => bakeryDetailReviewListDto(review, userId))
+        reviewList: reviewList.map(review => bakeryDetailReviewListDto(review, userId)),
+        latitude: bakery.latitude,
+        longitude: bakery.longitude
     }
 }
 
