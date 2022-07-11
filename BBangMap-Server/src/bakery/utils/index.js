@@ -80,7 +80,12 @@ module.exports = {
     return invitedBakeryList.some(isContainBakery);
   },
   savedBakery: async (userId, bakeryId) => {
-    await SaveBakery.create({ UserId: userId, BakeryId: bakeryId });
+    await SaveBakery.findOrCreate({
+      where: {
+        UserId: userId,
+        BakeryId: bakeryId,
+      },
+    });
   },
   visitedBakery: async (userId, bakeryId) => {
     await VisitBakery.create({ UserId: userId, BakeryId: bakeryId });
