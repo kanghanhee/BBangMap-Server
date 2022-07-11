@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       isVegan: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
       isOnline: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
       reviewImgList: {
         type: DataTypes.STRING(1000),
