@@ -41,11 +41,15 @@ module.exports = {
       if (err.message === 'InvalidAccessToken') {
         slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+      }else if(err.message === 'EmptyToken'){
+        slackSender.sendError(statusCode.UNAUTHORIZED, req.method.toUpperCase(), req.originalUrl, err);
+        return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, err.message));
+      }else{
+        slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+        return res
+            .status(statusCode.INTERNAL_SERVER_ERROR)
+            .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
       }
-      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res
-        .status(statusCode.INTERNAL_SERVER_ERROR)
-        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
 };

@@ -1,7 +1,7 @@
 const reviewUtils = require('../utils');
 const {defaultBgImg} = require("../../../modules/definition");
 
-const reviewDto = (review, likedReviewList, likeCountList, userId) => {
+const v1Dto = (review, likedReviewList, likeCountList, userId) => {
   return {
     reviewId: review.id,
     bakeryName: review.Bakery.bakeryName,
@@ -10,8 +10,8 @@ const reviewDto = (review, likedReviewList, likeCountList, userId) => {
     reviewImg: review.reviewImgList.length < 1 ? defaultBgImg : review.reviewImgList[0],
     reviewCreatedDate: new Date(review.createdAt+"z"),
     purchaseBreadList: review.purchaseBreadList,
-    isOnline: review.isOnline,
-    isVegan: review.isVegan,
+    isOnline: review.Bakery.isOnline,
+    isVegan: review.Bakery.isVegan,
     isLikedReview: !!likedReviewList.includes(review.id),
     likeReviewCount: reviewUtils.getCount(review.id, likeCountList),
     isSaveReview: review.SaverReview.map(saver => saver.id).includes(userId),
@@ -19,14 +19,16 @@ const reviewDto = (review, likedReviewList, likeCountList, userId) => {
   };
 };
 
-// const getCount = (reviewId, likeCountList) => {
-//   let count = 0;
-//   for (let i = 0; i < likeCountList.length; i++) {
-//     if (likeCountList[i] === reviewId) {
-//       count++;
-//     }
-//   }
-//   return count;
-// };
+const v2Dto = review => {
+  return {
+    reviewId: review.id,
+    userId: review.UserId,
+    bakeryId: parseInt(review.BakeryId, 10),
+    star: parseInt(review.star, 10),
+    content: review.content,
+    reviewImgList: review.reviewImgList,
+    purchaseBreadList: review.purchaseBreadList,
+  };
+};
 
-module.exports = reviewDto;
+module.exports = { v1Dto, v2Dto };

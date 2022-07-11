@@ -3,9 +3,8 @@ const statusCode = require('../../../modules/statusCode');
 const responseMessage = require('../../../modules/responseMessage');
 const reviewService = require('../service');
 const missionService = require('../../mission/service');
-const reviewUtils = require('../utils');
 const slackSender = require('../../../other/slackSender');
-const userService = require("../../user/service");
+const { api_version } = require('../../../modules/definition');
 
 module.exports = {
     reviewOfBakery: async (req, res) => {
@@ -94,7 +93,8 @@ module.exports = {
         }
     },
     addReview: async (req, res) => {
-        let {bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImg} = req.body;
+        let user = req.header.user;
+
         let files = [];
         if (req.files['reviewImgList']) files = req.files['reviewImgList'];
 
@@ -105,52 +105,88 @@ module.exports = {
             }
         }
         try {
-            let user = req.header.user;
-            let review = await reviewService.addReview(
-                user,
-                bakeryId,
-                isVegan,
-                isOnline,
-                purchaseBreadList,
-                star,
-                content,
-                reviewImgList,
-            );
-            const missionResult = await missionService.checkSucceededMission(user, bakeryId, review.id);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_REVIEW, missionResult));
+            let result = "";
+            if (req.headers.api_version === api_version.v2) { 
+                let {bakeryId, purchaseBreadList, star, content} = req.body;
+                
+                if(bakeryId == null || star == null || content == null) 
+                    res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+                
+                result = await reviewService.addReviewV2(
+                    user,
+                    bakeryId,
+                    purchaseBreadList,
+                    star,
+                    content,
+                    reviewImgList,
+                );
+            }
+            else {
+                let {bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImg} = req.body;
+                let review = await reviewService.addReview(
+                    user,
+                    bakeryId,
+                    isVegan,
+                    isOnline,
+                    purchaseBreadList,
+                    star,
+                    content,
+                    reviewImgList,
+                );
+                result = await missionService.checkSucceededMission(user, bakeryId, review.id);
+            }
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_REVIEW, result));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     updateReview: async (req, res) => {
-        let {reviewId} = req.params;
-        let {bakeryId, isVegan, isOnline, purchaseBreadList, star, content, reviewImg} = req.body;
+        let user = req.header.user;
+        let { reviewId } = req.params;
+
         let files = [];
         if (req.files['reviewImgList']) files = req.files['reviewImgList'];
 
         if (Array.isArray(files)) {
             var reviewImgList = new Array();
-
             for (var i = 0; i < files.length; i++) {
                 reviewImgList.push(files[i].location);
             }
         }
-        try {
-            let user = req.header.user;
-            let updateReview = await reviewService.updateReview(
-                reviewId,
-                user,
-                bakeryId,
-                isVegan,
-                isOnline,
-                purchaseBreadList,
-                star,
-                content,
-                reviewImgList,
-            );
 
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REVIEW, updateReview));
+        try {
+            if (req.headers.api_version === api_version.v2) { 
+                let {purchaseBreadList, star, content} = req.body;
+                
+                if(star == null || content== null) 
+                    res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+
+                await reviewService.updateReviewV2(
+                    reviewId,
+                    user,
+                    purchaseBreadList,
+                    star,
+                    content,
+                    reviewImgList,
+        );
+            }
+            else {
+                let { bakeryId, isVegan, isOnline, purchaseBreadList, star, content } = req.body;
+
+                await reviewService.updateReview(
+                    reviewId,
+                    user,
+                    bakeryId,
+                    isVegan,
+                    isOnline,
+                    purchaseBreadList,
+                    star,
+                    content,
+                    reviewImgList,
+                );
+            }
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REVIEW));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));

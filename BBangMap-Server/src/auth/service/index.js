@@ -36,6 +36,7 @@ module.exports = {
   },
   reissueToken: async accessToken => {
     try {
+      if(accessToken === null || accessToken === "") throw new Error('EmptyToken');
       const decode = await jwt.decode(accessToken);
       const findUser = await userUtil.findUserByDecodedId(decode.id);
       if (findUser == null) throw new Error('InvalidAccessToken');
