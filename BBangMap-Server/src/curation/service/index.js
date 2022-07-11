@@ -11,7 +11,7 @@ module.exports = {
 
         const {mainTitle, subTitle, curatorComment, reviewerId, reviewIdList, curationContentId} = body;
 
-        if (curationContentId !== 1 || curationContentId !== 2) {
+        if (curationContentId != 1 && curationContentId != 2) {
             throw new Error("NOT_FOUND_CURATION_CONTENT")
         }
         await curationUtil.addCuration(

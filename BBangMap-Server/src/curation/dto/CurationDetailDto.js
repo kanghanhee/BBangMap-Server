@@ -9,7 +9,7 @@ const curationDetailDto = (review, userId) => {
         isSavedReview : review.SaverReview.map(saver => saver.id).includes(userId),
         reviewerImg : review.User.profileImg,
         reviewer : review.User.nickName,
-        reviewCreatedDate : review.createdAt,
+        reviewCreatedDate : new Date(review.createdAt+"z"),
         content : review.content
     }
 }
