@@ -4,7 +4,7 @@ const aws = require('aws-sdk');
 aws.config.loadFromPath(__dirname + '/../config/s3.json');
 
 const s3 = new aws.S3();
-const bucketUrl = process.env === 'production' ? 'bbang-map' : 'bbang-map-test';
+const bucketUrl = process.env.NODE_ENV === 'production' ? 'bbang-map' : 'bbang-map-test';
 
 const bakeryUpload = bakeryMulter({
   storage: multerS3({
