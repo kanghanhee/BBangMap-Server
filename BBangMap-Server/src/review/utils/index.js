@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const { sequelize } = require('../../../models/index');
 const { Bakery, Review, User, SaveReview, LikeReview, VisitBakery } = require('../../../models');
+const { reviewDelete } = require('../../../modules/multer/reviewMulter');
 
 module.exports = {
   findReviewOfBakery: async bakeryId => {
@@ -263,11 +264,21 @@ module.exports = {
     });
   },
   deleteMyReview: async (userId, reviewId) => {
-    await Review.destroy({
+    return Review.findOne({
       where: {
-        UserId: userId,
+        // UserId: userId,
         id: reviewId,
       },
+    }).then(result => {
+      return Review.destroy({
+        where: {
+          // UserId: userId,
+          id: reviewId,
+        },
+      }).then(u => {
+        console.log(result);
+        return result;
+      });
     });
   },
   findLikeReviewCount: async reviewId => {
@@ -362,8 +373,10 @@ module.exports = {
       ],
     });
   },
+  deleteReviewImages: imageUrls => {
+    reviewDelete(imageUrls);
+  },
 };
-
 const getBakeryStar = reviewList => {
   const starList = reviewList.map(review => review.star);
   const result = starList.reduce((sum, currValue) => {

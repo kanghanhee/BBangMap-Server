@@ -20,7 +20,14 @@ module.exports = {
     // LikeReview
     let likeReview = await reviewUtils.findLikeReview();
     let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
-    let result = reviewOfBakeryListDto(findUser, reviewOfBakeryList, savedReviewList,likedReviewList, visitedBakeryList,likeCountList);
+    let result = reviewOfBakeryListDto(
+      findUser,
+      reviewOfBakeryList,
+      savedReviewList,
+      likedReviewList,
+      visitedBakeryList,
+      likeCountList,
+    );
     // 추천수로 정렬
     if (order === 'best') {
       reviewUtils.getSortByLikeCount(result);
@@ -45,7 +52,7 @@ module.exports = {
     return result;
   },
   getSearchReviewList: async (order, searchWord, isOnline, isVegan, user) => {
-    let reviewList =  await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
+    let reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
     // LikeReview
@@ -150,17 +157,10 @@ module.exports = {
   },
 
   updateReviewV2: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
-    if(purchaseBreadList == null) purchaseBreadList=[];
-    if(reviewImgList == null) reviewImgList=[];
+    if (purchaseBreadList == null) purchaseBreadList = [];
+    if (reviewImgList == null) reviewImgList = [];
 
-    await reviewUtils.updateReviewV2(
-      reviewId,
-      user,
-      purchaseBreadList,
-      star,
-      content,
-      reviewImgList,
-    );
+    await reviewUtils.updateReviewV2(reviewId, user, purchaseBreadList, star, content, reviewImgList);
   },
 
   savedReview: async (reviewId, user) => {
@@ -181,10 +181,11 @@ module.exports = {
   },
   deleteMyReview: async (reviewId, user) => {
     let userId = user.id;
-    await reviewUtils.deleteMyReview(userId, reviewId);
+    const deletedReview = await reviewUtils.deleteMyReview(userId, reviewId);
+    if (deletedReview.reviewImgList != null) reviewUtils.deleteReviewImages(deletedReview.reviewImgList);
   },
-  getUserReview: async(userId) => {
+  getUserReview: async userId => {
     const reviewList = await reviewUtils.findUsersReviewList(userId);
     return reviewListOfUserDto(reviewList);
-  }
+  },
 };

@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const authUtil = require('../../middlewares/authUtil');
-const reviewUpload = require('../../modules/multer/reviewMulter');
+const { reviewUpload } = require('../../modules/multer/reviewMulter');
 const reviewController = require('../../src/review/controller');
 
 const reviewImgUpload = reviewUpload.fields([{ name: 'reviewImgList', maxCount: 10 }]);

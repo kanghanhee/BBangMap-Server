@@ -1,12 +1,13 @@
-const bakeryMulter = require('multer');
+const reviewMulter = require('multer');
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
+
 aws.config.loadFromPath(__dirname + '/../../config/s3.json');
 
 const s3 = new aws.S3();
 const bucketUrl = process.env === 'production' ? 'bbang-map' : 'bbang-map-test';
 
-const reviewUpload = bakeryMulter({
+const reviewUpload = reviewMulter({
   storage: multerS3({
     s3,
     bucket: bucketUrl,
@@ -17,4 +18,21 @@ const reviewUpload = bakeryMulter({
   }),
 });
 
-module.exports = reviewUpload;
+const reviewDelete = imageUrls => {
+  const objects = [];
+  imageUrls.forEach(imageUrl => {
+    const url = imageUrl.split('/');
+    objects.push({ Key: url.slice(3).join('/') });
+  });
+  const params = {
+    Bucket: bucketUrl,
+    Delete: {
+      Objects: objects,
+    },
+  };
+  s3.deleteObjects(params, function (err, data) {
+    if (err) throw err;
+  });
+};
+
+module.exports = { reviewUpload, reviewDelete };
