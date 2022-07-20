@@ -160,7 +160,15 @@ module.exports = {
     if (purchaseBreadList == null) purchaseBreadList = [];
     if (reviewImgList == null) reviewImgList = [];
 
-    await reviewUtils.updateReviewV2(reviewId, user, purchaseBreadList, star, content, reviewImgList);
+    const updatedReview = await reviewUtils.updateReviewV2(
+      reviewId,
+      user,
+      purchaseBreadList,
+      star,
+      content,
+      reviewImgList,
+    );
+    if (updatedReview.reviewImgList != null) reviewUtils.deleteReviewImages(updatedReview.reviewImgList);
   },
 
   savedReview: async (reviewId, user) => {

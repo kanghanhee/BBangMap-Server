@@ -1,7 +1,6 @@
 const reviewUtil = require('../utils');
 
 const reviewDetailDto = async (review, savedReviewList, myReviewList, likedReviewList, likeReviewCount, userId) => {
-  console.log(review.User)
   return {
     reviewId: review.id,
     bakeryId: review.BakeryId,
@@ -13,13 +12,13 @@ const reviewDetailDto = async (review, savedReviewList, myReviewList, likedRevie
     content: review.content,
     reviewImg: review.reviewImgList.length < 1 ? null : review.reviewImgList,
     reviewerName: review.User.nickName,
-    reviewCreatedDate: new Date(review.createdAt+"z"),
-    reviewerImg : review.User.profileImg,
+    reviewCreatedDate: new Date(review.createdAt + 'z'),
+    reviewerImg: review.User.profileImg,
     isSavedReview: await reviewUtil.isSavedReview(review, savedReviewList),
     isMyReview: await reviewUtil.isMyReview(review, myReviewList),
     isLikedReview: await reviewUtil.isLikedReview(review, likedReviewList),
     likeReviewCount: likeReviewCount,
-    isVisitedBakery: review.Bakery.VisiterBakery.map(visiter => visiter.id).includes(userId)
+    isVisitedBakery: review.Bakery.VisiterBakery.map(visiter => visiter.id).includes(userId),
   };
 };
 

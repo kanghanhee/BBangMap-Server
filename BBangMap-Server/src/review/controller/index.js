@@ -227,7 +227,7 @@ module.exports = {
       await reviewService.deleteMyReview(reviewId, user);
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_REVIEW));
     } catch (err) {
-      // slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
