@@ -172,8 +172,9 @@ module.exports = {
       }
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REVIEW));
     } catch (err) {
-      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      if (!err.statusCode) err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+      res.status(err.statusCode).send(util.fail(err.statusCode, err.message));
     }
   },
   saveReview: async (req, res) => {
