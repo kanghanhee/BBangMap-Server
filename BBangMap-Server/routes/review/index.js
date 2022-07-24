@@ -4,6 +4,7 @@ const router = express.Router();
 const authUtil = require('../../middlewares/authUtil');
 const reviewUpload = require('../../modules/multer/reviewMulter');
 const reviewController = require('../../src/review/controller');
+const validationAppVersion = require('../../modules/validationAppVersion')
 
 const reviewImgUpload = reviewUpload.fields([{ name: 'reviewImgList', maxCount: 10 }]);
 
@@ -15,7 +16,7 @@ router.get('/storage', authUtil.checkToken, reviewController.savedReviewFolderLi
 router.get('/storage/:bakeryId', authUtil.checkToken, reviewController.savedReviewOfBakeryList);
 router.get('/my', authUtil.checkToken, reviewController.myReview);
 
-router.post('/my', authUtil.checkToken, reviewImgUpload, reviewController.addReview);
+router.post('/my', authUtil.checkToken, reviewImgUpload, validationAppVersion.getAppVersion,reviewController.addReview);
 router.post('/storage/:reviewId', authUtil.checkToken, reviewController.saveReview);
 router.post('/like/:reviewId', authUtil.checkToken, reviewController.likeReview);
 

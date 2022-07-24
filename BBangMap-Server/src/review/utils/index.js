@@ -146,7 +146,7 @@ module.exports = {
       reviewImgList: reviewImgList,
     });
   },
-  addReviewV2: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
+  addReviewExcludeVeganAndOnline: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
     return await sequelize
       .transaction(async transaction => {
         const review = await Review.create(

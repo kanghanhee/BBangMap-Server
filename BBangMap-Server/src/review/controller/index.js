@@ -95,6 +95,8 @@ module.exports = {
     addReview: async (req, res) => {
         let user = req.header.user;
 
+        const appVersion = req.headers.appVersion;
+
         let files = [];
         if (req.files['reviewImgList']) files = req.files['reviewImgList'];
 
@@ -106,13 +108,13 @@ module.exports = {
         }
         try {
             let result = "";
-            if (req.headers.api_version === api_version.v2) { 
+            if (appVersion != null && appVersion >= 1.3) {
                 let {bakeryId, purchaseBreadList, star, content} = req.body;
-                
-                if(bakeryId == null || star == null || content == null) 
-                    res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
-                
-                result = await reviewService.addReviewV2(
+
+                if(bakeryId == null || star == null || content == null)
+                    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+
+                result = await reviewService.addReviewExcludeVeganAndOnline(
                     user,
                     bakeryId,
                     purchaseBreadList,
@@ -135,10 +137,10 @@ module.exports = {
                 );
                 result = await missionService.checkSucceededMission(user, bakeryId, review.id);
             }
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_REVIEW, result));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_REVIEW, result));
         } catch (err) {
-            slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            // slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     updateReview: async (req, res) => {
@@ -156,10 +158,10 @@ module.exports = {
         }
 
         try {
-            if (req.headers.api_version === api_version.v2) { 
+            if (req.headers.api_version === api_version.v2) {
                 let {purchaseBreadList, star, content} = req.body;
-                
-                if(star == null || content== null) 
+
+                if(star == null || content== null)
                     res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
 
                 await reviewService.updateReviewV2(
