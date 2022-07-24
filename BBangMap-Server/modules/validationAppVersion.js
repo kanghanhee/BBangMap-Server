@@ -12,7 +12,7 @@ module.exports = {
             appVersion = null;
         }
 
-        req.headers.appVersion = appVersion;
+        req.header.appVersion = appVersion;
         next();
     }
 }

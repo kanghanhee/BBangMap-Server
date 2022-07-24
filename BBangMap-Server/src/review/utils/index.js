@@ -209,12 +209,24 @@ module.exports = {
       },
     );
   },
+<<<<<<< HEAD
   updateReviewV2: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
     // eslint-disable-next-line no-return-await
     return await sequelize.transaction(async transaction => {
       return await Review.findOne({
         where: {
           id: reviewId,
+=======
+  updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+    await sequelize.transaction(async transaction => {
+      await Review.update(
+        {
+          UserId: user.id,
+          purchaseBreadList: purchaseBreadList,
+          star: star,
+          content: content,
+          reviewImgList: reviewImgList,
+>>>>>>> cda67a7 (feat : 후기수정하기 app_version 적용)
         },
       }).then(result => {
         return Review.update(

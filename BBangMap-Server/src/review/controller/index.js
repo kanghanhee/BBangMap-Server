@@ -4,7 +4,6 @@ const responseMessage = require('../../../modules/responseMessage');
 const reviewService = require('../service');
 const missionService = require('../../mission/service');
 const slackSender = require('../../../other/slackSender');
-const { api_version } = require('../../../modules/definition');
 
 module.exports = {
     reviewOfBakery: async (req, res) => {
@@ -95,7 +94,7 @@ module.exports = {
     addReview: async (req, res) => {
         let user = req.header.user;
 
-        const appVersion = req.headers.appVersion;
+        const appVersion = req.header.appVersion;
 
         let files = [];
         if (req.files['reviewImgList']) files = req.files['reviewImgList'];
@@ -143,18 +142,136 @@ module.exports = {
             return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
+<<<<<<< HEAD
   updateReview: async (req, res) => {
     let user = req.header.user;
     let { reviewId } = req.params;
+=======
+    updateReview: async (req, res) => {
+        let user = req.header.user;
+        let { reviewId } = req.params;
+        const appVersion = req.header.appVersion;
+>>>>>>> cda67a7 (feat : 후기수정하기 app_version 적용)
 
     let files = [];
     if (req.files['reviewImgList']) files = req.files['reviewImgList'];
 
+<<<<<<< HEAD
     if (Array.isArray(files)) {
       var reviewImgList = new Array();
       for (var i = 0; i < files.length; i++) {
         reviewImgList.push(files[i].location);
       }
+=======
+        if (Array.isArray(files)) {
+            var reviewImgList = new Array();
+            for (var i = 0; i < files.length; i++) {
+                reviewImgList.push(files[i].location);
+            }
+        }
+
+        try {
+            if (appVersion != null && appVersion >= 1.3) {
+                let {purchaseBreadList, star, content} = req.body;
+
+                if(star == null || content== null)
+                    res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+
+                await reviewService.updateReviewExcludeVeganAndOnline(
+                    reviewId,
+                    user,
+                    purchaseBreadList,
+                    star,
+                    content,
+                    reviewImgList,
+        );
+            }
+            else {
+                let { bakeryId, isVegan, isOnline, purchaseBreadList, star, content } = req.body;
+
+                await reviewService.updateReview(
+                    reviewId,
+                    user,
+                    bakeryId,
+                    isVegan,
+                    isOnline,
+                    purchaseBreadList,
+                    star,
+                    content,
+                    reviewImgList,
+                );
+            }
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REVIEW));
+        } catch (err) {
+            // slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    },
+    saveReview: async (req, res) => {
+        try {
+            let {reviewId} = req.params;
+            let user = req.header.user;
+            await reviewService.savedReview(reviewId, user);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_REVIEW));
+        } catch (err) {
+            slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    },
+    likeReview: async (req, res) => {
+        try {
+            let {reviewId} = req.params;
+            let user = req.header.user;
+            await reviewService.likedReview(reviewId, user);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKED_REVIEW));
+        } catch (err) {
+            slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    },
+    unSaveReview: async (req, res) => {
+        try {
+            let {reviewId} = req.params;
+            let user = req.header.user;
+            await reviewService.deleteSavedReview(reviewId, user);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW));
+        } catch (err) {
+            slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    },
+    unLikeReview: async (req, res) => {
+        try {
+            let {reviewId} = req.params;
+            let user = req.header.user;
+            await reviewService.deleteLikedReview(reviewId, user);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKED_REVIEW));
+        } catch (err) {
+            slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    },
+    deleteMyReview: async (req, res) => {
+        try {
+            let {reviewId} = req.params;
+            let user = req.header.user;
+            await reviewService.deleteMyReview(reviewId, user);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_REVIEW));
+        } catch (err) {
+            slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        }
+    },
+    getUserReview: async (req, res) => {
+        try {
+            const {userId} = req.params;
+            const result = await reviewService.getUserReview(userId);
+            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, result));
+        } catch (err) {
+            slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+            return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
+        }
+>>>>>>> cda67a7 (feat : 후기수정하기 app_version 적용)
     }
 
     try {
