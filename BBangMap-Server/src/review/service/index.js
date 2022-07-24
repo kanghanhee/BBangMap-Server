@@ -150,11 +150,11 @@ module.exports = {
     );
   },
 
-  updateReviewV2: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+  updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
     if(purchaseBreadList == null) purchaseBreadList=[];
     if(reviewImgList == null) reviewImgList=[];
 
-    await reviewUtils.updateReviewV2(
+    await reviewUtils.updateReviewExcludeVeganAndOnline(
       reviewId,
       user,
       purchaseBreadList,

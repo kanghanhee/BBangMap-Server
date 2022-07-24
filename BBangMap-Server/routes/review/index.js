@@ -20,7 +20,7 @@ router.post('/my', authUtil.checkToken, reviewImgUpload, validationAppVersion.ge
 router.post('/storage/:reviewId', authUtil.checkToken, reviewController.saveReview);
 router.post('/like/:reviewId', authUtil.checkToken, reviewController.likeReview);
 
-router.put('/my/:reviewId', authUtil.checkToken, reviewImgUpload, reviewController.updateReview);
+router.put('/my/:reviewId', authUtil.checkToken, reviewImgUpload, validationAppVersion.getAppVersion, reviewController.updateReview);
 
 router.delete('/my/:reviewId', authUtil.checkToken, reviewController.deleteMyReview);
 router.delete('/storage/:reviewId', authUtil.checkToken, reviewController.unSaveReview);

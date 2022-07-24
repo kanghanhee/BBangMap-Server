@@ -206,7 +206,7 @@ module.exports = {
       },
     );
   },
-  updateReviewV2: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+  updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
     await sequelize.transaction(async transaction => {
       await Review.update(
         {
