@@ -11,23 +11,24 @@ module.exports = {
             let {bakeryId, order} = req.query;
             let user = req.header.user;
             let reviewOfBakeryListDto = await reviewService.getReviewOfBakery(order, bakeryId, user);
-            res
+            return res
                 .status(statusCode.OK)
                 .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewOfBakeryListDto));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     reviewAll: async (req, res) => {
         try {
             let {order, page, pageSize} = req.query;
             let user = req.header.user;
+
             let reivewAllListDto = await reviewService.getReviewAll(order, user, page, pageSize);
             res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     reviewSearch: async (req, res) => {
@@ -35,12 +36,12 @@ module.exports = {
             let {searchWord, isOnline, isVegan, order} = req.query;
             let user = req.header.user;
             let reviewSearchListDto = await reviewService.getSearchReviewList(order, searchWord, isOnline, isVegan, user);
-            res
+            return res
                 .status(statusCode.OK)
                 .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewSearchListDto));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     reviewDetail: async (req, res) => {
@@ -54,19 +55,19 @@ module.exports = {
                 return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
             }
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     savedReviewFolderList: async (req, res) => {
         try {
             let user = req.header.user;
             let savedReviewFolderListDto = await reviewService.getSavedReviewFolderList(user);
-            res
+            return res
                 .status(statusCode.OK)
                 .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewFolderListDto));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     savedReviewOfBakeryList: async (req, res) => {
@@ -76,22 +77,22 @@ module.exports = {
             let savedReviewListDto = await reviewService.getSavedReviewOfBakeryList(bakeryId, user);
             if (savedReviewListDto === null)
                 return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.NO_SAVED_REIVEW));
-            res
+            return res
                 .status(statusCode.OK)
                 .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, savedReviewListDto));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     myReview: async (req, res) => {
         try {
             let user = req.header.user;
             let myReviewListDto = await reviewService.getMyReviewList(user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, myReviewListDto));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, myReviewListDto));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     addReview: async (req, res) => {
@@ -189,10 +190,10 @@ module.exports = {
                     reviewImgList,
                 );
             }
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REVIEW));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REVIEW));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     saveReview: async (req, res) => {
@@ -200,10 +201,10 @@ module.exports = {
             let {reviewId} = req.params;
             let user = req.header.user;
             await reviewService.savedReview(reviewId, user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_REVIEW));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_REVIEW));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     likeReview: async (req, res) => {
@@ -211,10 +212,10 @@ module.exports = {
             let {reviewId} = req.params;
             let user = req.header.user;
             await reviewService.likedReview(reviewId, user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKED_REVIEW));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKED_REVIEW));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     unSaveReview: async (req, res) => {
@@ -222,10 +223,10 @@ module.exports = {
             let {reviewId} = req.params;
             let user = req.header.user;
             await reviewService.deleteSavedReview(reviewId, user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNSAVED_REVIEW));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     unLikeReview: async (req, res) => {
@@ -233,10 +234,10 @@ module.exports = {
             let {reviewId} = req.params;
             let user = req.header.user;
             await reviewService.deleteLikedReview(reviewId, user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKED_REVIEW));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKED_REVIEW));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     deleteMyReview: async (req, res) => {
@@ -244,17 +245,17 @@ module.exports = {
             let {reviewId} = req.params;
             let user = req.header.user;
             await reviewService.deleteMyReview(reviewId, user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_REVIEW));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_REVIEW));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
         }
     },
     getUserReview: async (req, res) => {
         try {
             const {userId} = req.params;
             const result = await reviewService.getUserReview(userId);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, result));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, result));
         } catch (err) {
             slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
