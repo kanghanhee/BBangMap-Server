@@ -11,7 +11,7 @@ module.exports = {
         try {
             const {uuid, nickname} = req.body;
             await userService.signUp(uuid, nickname);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SIGN_UP));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SIGN_UP));
         } catch (err) {
             if (err.statusCode == null) {
                 err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
@@ -37,7 +37,7 @@ module.exports = {
             if (req.body.isBackgroundImageDefault) bgImgName = 'default';
 
             const result = await userService.updateUser(user, profileImgName, bgImgName, nickname);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_USER, result));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_USER, result));
         } catch (err) {
             if (err.statusCode == null) {
                 err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
@@ -52,7 +52,7 @@ module.exports = {
         try {
             const {user} = req.header;
             const result = await userService.deleteUser(user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_USER, result));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_USER, result));
         } catch (err) {
             if (err.statusCode == null) {
                 err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
@@ -67,7 +67,7 @@ module.exports = {
         try {
             const {nickname} = req.body;
             const result = await userService.checkNickname(nickname);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_VERIFY_NICKNAME, result));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_VERIFY_NICKNAME, result));
         } catch (err) {
             if (err.statusCode == null) {
                 err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
@@ -82,7 +82,7 @@ module.exports = {
         try {
             const {user} = req.header;
             const result = await userService.createRandomNickname(user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_NICKNAME, result));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_NICKNAME, result));
         } catch (err) {
             if (err.statusCode == null) {
                 err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
@@ -97,7 +97,7 @@ module.exports = {
         try {
             const {user} = req.header;
             const result = await userService.readMyPage(user);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MY_PAGE, result));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MY_PAGE, result));
         } catch (err) {
             if (err.statusCode == null) {
                 err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
@@ -111,7 +111,7 @@ module.exports = {
         try{
             const {nickname} = req.query;
             const result = await userService.getUserInfo(nickname);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_USER_INFO, result));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_USER_INFO, result));
         }catch(err){
             slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
