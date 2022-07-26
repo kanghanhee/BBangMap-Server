@@ -18,7 +18,6 @@ module.exports = {
     });
   },
   findReviewAll: async (offset, limit) => {
-    console.log('여기' + offset, limit);
     return Review.findAll({
       include: [
         {
