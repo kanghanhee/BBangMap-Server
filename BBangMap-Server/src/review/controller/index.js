@@ -25,7 +25,7 @@ module.exports = {
             let user = req.header.user;
 
             let reivewAllListDto = await reviewService.getReviewAll(order, user, page, pageSize);
-            res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reivewAllListDto));
         } catch (err) {
             slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
@@ -264,5 +264,5 @@ module.exports = {
             slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
         }
-    },
+    }
 };

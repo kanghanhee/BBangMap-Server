@@ -387,6 +387,7 @@ module.exports = {
     reviewDelete(imageUrls);
   },
 };
+
 const getBakeryStar = reviewList => {
   const starList = reviewList.map(review => review.star);
   const result = starList.reduce((sum, currValue) => {
