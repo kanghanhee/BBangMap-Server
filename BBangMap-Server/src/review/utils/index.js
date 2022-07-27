@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const { sequelize } = require('../../../models/index');
 const { Bakery, Review, User, SaveReview, LikeReview, VisitBakery } = require('../../../models');
+const { reviewDelete } = require('../../../modules/multer/reviewMulter');
 
 module.exports = {
   findReviewOfBakery: async bakeryId => {
@@ -178,7 +179,6 @@ module.exports = {
         return result.dataValues;
       })
       .catch(function (err) {
-        console.log(err);
         throw err;
       });
   },
@@ -210,20 +210,29 @@ module.exports = {
     );
   },
   updateReviewV2: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
-    await sequelize.transaction(async transaction => {
-      await Review.update(
-        {
-          UserId: user.id,
-          purchaseBreadList: purchaseBreadList,
-          star: star,
-          content: content,
-          reviewImgList: reviewImgList,
+    // eslint-disable-next-line no-return-await
+    return await sequelize.transaction(async transaction => {
+      return await Review.findOne({
+        where: {
+          id: reviewId,
         },
-        {
-          where: { id: reviewId },
-        },
-        { transaction },
-      );
+      }).then(result => {
+        return Review.update(
+          {
+            UserId: user.id,
+            purchaseBreadList,
+            star,
+            content,
+            reviewImgList,
+          },
+          {
+            where: { id: reviewId },
+          },
+          { transaction },
+        ).then(() => {
+          return result;
+        });
+      });
     });
   },
   isMyReview: async (review, myReviewList) => {
@@ -266,11 +275,20 @@ module.exports = {
     });
   },
   deleteMyReview: async (userId, reviewId) => {
-    await Review.destroy({
+    return Review.findOne({
       where: {
         UserId: userId,
         id: reviewId,
       },
+    }).then(result => {
+      return Review.destroy({
+        where: {
+          UserId: userId,
+          id: reviewId,
+        },
+      }).then(() => {
+        return result;
+      });
     });
   },
   findLikeReviewCount: async reviewId => {
@@ -365,8 +383,10 @@ module.exports = {
       ],
     });
   },
+  deleteReviewImages: imageUrls => {
+    reviewDelete(imageUrls);
+  },
 };
-
 const getBakeryStar = reviewList => {
   const starList = reviewList.map(review => review.star);
   const result = starList.reduce((sum, currValue) => {

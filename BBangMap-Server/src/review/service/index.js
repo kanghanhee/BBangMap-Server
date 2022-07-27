@@ -170,7 +170,20 @@ module.exports = {
     if (purchaseBreadList == null) purchaseBreadList = [];
     if (reviewImgList == null) reviewImgList = [];
 
-    await reviewUtils.updateReviewV2(reviewId, user, purchaseBreadList, star, content, reviewImgList);
+    const preUpdatedReview = await reviewUtils.updateReviewV2(
+      reviewId,
+      user,
+      purchaseBreadList,
+      star,
+      content,
+      reviewImgList,
+    );
+    if (preUpdatedReview == null) {
+      const error = new Error('NO_EXIST_REVIEW');
+      error.statusCode = 400;
+      throw error;
+    }
+    if (preUpdatedReview.reviewImgList != null) reviewUtils.deleteReviewImages(preUpdatedReview.reviewImgList);
   },
 
   savedReview: async (reviewId, user) => {
@@ -191,7 +204,8 @@ module.exports = {
   },
   deleteMyReview: async (reviewId, user) => {
     let userId = user.id;
-    await reviewUtils.deleteMyReview(userId, reviewId);
+    const deletedReview = await reviewUtils.deleteMyReview(userId, reviewId);
+    if (deletedReview.reviewImgList != null) reviewUtils.deleteReviewImages(deletedReview.reviewImgList);
   },
   getUserReview: async userId => {
     const reviewList = await reviewUtils.findUsersReviewList(userId);
