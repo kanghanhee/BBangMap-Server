@@ -9,6 +9,7 @@ const reviewOfBakeryListDto = require('../dto/reviewOfBakeryListDto');
 const myReviewListDto = require('../dto/myReviewListDto');
 const reviewListOfUserDto = require('../dto/reviewListOfUserDto');
 const reviewDto = require('../dto/reviewDto');
+const calculateOffsetAndLimit = require('../../../modules/pagination/paging');
 
 module.exports = {
   getReviewOfBakery: async (order, bakeryId, user) => {
@@ -35,8 +36,17 @@ module.exports = {
 
     return result;
   },
-  getReviewAll: async (order, user) => {
-    let reviewList = await reviewUtils.findReviewAll();
+  getReviewAll: async (order, user, page, pageSize) => {
+    let reviewList;
+
+    if (!page || !pageSize) {
+      reviewList = await reviewUtils.findReviewAll();
+    } else {
+      // 페이지네이션 적용할 때
+      const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
+      reviewList = await reviewUtils.findReviewAll(offset, limit);
+    }
+
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
     // LikeReview

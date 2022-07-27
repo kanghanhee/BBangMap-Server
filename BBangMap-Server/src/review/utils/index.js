@@ -18,7 +18,7 @@ module.exports = {
       order: [['createdAt', 'DESC']],
     });
   },
-  findReviewAll: async () => {
+  findReviewAll: async (offset, limit) => {
     return Review.findAll({
       include: [
         {
@@ -45,6 +45,9 @@ module.exports = {
         },
       ],
       order: [['createdAt', 'DESC']],
+      // pagination
+      offset: offset,
+      limit: limit,
     });
   },
   findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
