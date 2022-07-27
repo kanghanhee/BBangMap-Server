@@ -75,4 +75,7 @@ module.exports = {
     SUCCESS_GET_CURATION_CONTENT: '큐레이션 컨텐츠 불러오기 성공',
     SUCCESS_PUT_CURATION: '큐레이션 수정하기 성공',
     SUCCESS_PUT_CURATION_PRIORITY: '큐레이션 우선순위 수정 성공',
+
+  /*APP VERSION*/
+  INVALID_APP_VERSION: '유효하지않은 APP_VERSION 입니다.'
 };
