@@ -150,7 +150,7 @@ module.exports = {
       reviewImgList: reviewImgList,
     });
   },
-  addReviewV2: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
+  addReviewExcludeVeganAndOnline: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
     return await sequelize
       .transaction(async transaction => {
         const review = await Review.create(
@@ -209,7 +209,7 @@ module.exports = {
       },
     );
   },
-  updateReviewV2: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+    updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
     // eslint-disable-next-line no-return-await
     return await sequelize.transaction(async transaction => {
       return await Review.findOne({
@@ -387,6 +387,7 @@ module.exports = {
     reviewDelete(imageUrls);
   },
 };
+
 const getBakeryStar = reviewList => {
   const starList = reviewList.map(review => review.star);
   const result = starList.reduce((sum, currValue) => {

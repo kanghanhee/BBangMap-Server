@@ -9,7 +9,7 @@ module.exports = {
     try {
       const { keyword } = req.query;
       const result = await bakeryService.getSearchRequestedBakeryList(keyword);
-      res
+      return res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_SEARCH_REQUEST_BAKERY, result));
     } catch (err) {
@@ -31,7 +31,7 @@ module.exports = {
         responseMessage : responseMessage.NULL_VALUE};
 
       await bakeryService.saveRequestedBakery(user, bakeryId, bakeryName, reason);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_REQUEST_BAKERY, null));
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_REQUEST_BAKERY, null));
     } catch (err) {
       if (err.statusCode == null) {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
@@ -45,7 +45,7 @@ module.exports = {
     try {
       const { user } = req.header;
       const result = await bakeryService.getRequestedBakeryList(user);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REQUEST_BAKERY, result));
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REQUEST_BAKERY, result));
     } catch (err) {
       if (err.statusCode == null) {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
@@ -59,7 +59,7 @@ module.exports = {
     try {
       const { bakeryId, isAccept } = req.body;
       const result = await bakeryService.changeRequestBakeryStatus(bakeryId, isAccept);
-      res
+      return res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REQUEST_BAKERY_STATUS, result));
     } catch (err) {

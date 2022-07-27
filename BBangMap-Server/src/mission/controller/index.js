@@ -11,10 +11,10 @@ module.exports = {
       const { missionTitle, missionContent, missionDate, badgeImg } = req.body;
       const { bakeryList } = req.body;
       const result = await missionService.postMission(missionTitle, missionContent, missionDate, badgeImg, bakeryList);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_MISSION, result));
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CREATE_MISSION, result));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      res
+      return res
         .status(statusCode.INTERNAL_SERVER_ERROR)
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
     }
@@ -23,7 +23,7 @@ module.exports = {
     try {
       const { user } = req.header;
       const result = await missionService.getMissionMain(user);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MONTHLY_MISSION, result));
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MONTHLY_MISSION, result));
     } catch (err) {
       if (err.statusCode == null) {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
@@ -38,7 +38,7 @@ module.exports = {
       const { user } = req.header;
       const { missionId } = req.params;
       const result = await missionService.getUserSucceededMission(user, missionId);
-      res
+      return res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_SUCCEEDED_MISSION, result));
     } catch (err) {
@@ -54,10 +54,10 @@ module.exports = {
     try {
       const { user } = req.header;
       const result = await missionService.getUserRank(user);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_USER_RANK, result));
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_USER_RANK, result));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      res
+      return res
         .status(statusCode.INTERNAL_SERVER_ERROR)
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
     }
@@ -68,10 +68,10 @@ module.exports = {
       const { bakeryId } = req.params;
       const { reviewId } = req.body;
       const result = await missionService.checkSucceededMission(user, bakeryId, reviewId);
-      res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_USER_RANK, result));
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_USER_RANK, result));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      res
+      return res
         .status(statusCode.INTERNAL_SERVER_ERROR)
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
     }

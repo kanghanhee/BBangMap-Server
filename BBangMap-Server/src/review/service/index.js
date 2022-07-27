@@ -78,6 +78,7 @@ module.exports = {
   },
   getReviewDetail: async (reviewId, user) => {
     let review = await reviewUtils.findReviewById(reviewId);
+    if(review == null) throw new Error("NOT FOUND REVIEW");
     let savedReviewList = await reviewUtils.findUsersSavedReviewList(user);
     let myReviewList = await reviewUtils.findMyReviewList(user);
     let likedReviewList = await reviewUtils.findUsersLikedReviewList(user);
@@ -137,10 +138,10 @@ module.exports = {
     await reviewUtils.checkVisitBakery(user, bakeryId);
     return addReview;
   },
-  addReviewV2: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
+  addReviewExcludeVeganAndOnline: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
     if (purchaseBreadList == null) purchaseBreadList = [];
-    const newReview = await reviewUtils.addReviewV2(user, bakeryId, purchaseBreadList, star, content, reviewImgList);
-    return reviewDto.v2Dto(newReview);
+    const newReview = await reviewUtils.addReviewExcludeVeganAndOnline(user, bakeryId, purchaseBreadList, star, content, reviewImgList);
+    return reviewDto.summaryDto(newReview);
   },
   updateReview: async (
     reviewId,
@@ -165,12 +166,11 @@ module.exports = {
       reviewImgList,
     );
   },
-
-  updateReviewV2: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+    updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
     if (purchaseBreadList == null) purchaseBreadList = [];
     if (reviewImgList == null) reviewImgList = [];
 
-    const preUpdatedReview = await reviewUtils.updateReviewV2(
+    const preUpdatedReview = await reviewUtils.updateReviewExcludeVeganAndOnline(
       reviewId,
       user,
       purchaseBreadList,

@@ -1,7 +1,7 @@
 const reviewUtils = require('../utils');
 const {defaultBgImg} = require("../../../modules/definition");
 
-const v1Dto = (review, likedReviewList, likeCountList, userId) => {
+const detailDto = (review, likedReviewList, likeCountList, userId) => {
   return {
     reviewId: review.id,
     bakeryName: review.Bakery.bakeryName,
@@ -19,7 +19,7 @@ const v1Dto = (review, likedReviewList, likeCountList, userId) => {
   };
 };
 
-const v2Dto = review => {
+const summaryDto = review => {
   return {
     reviewId: review.id,
     userId: review.UserId,
@@ -31,4 +31,4 @@ const v2Dto = review => {
   };
 };
 
-module.exports = { v1Dto, v2Dto };
+module.exports = { detailDto, summaryDto };
