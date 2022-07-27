@@ -166,20 +166,11 @@ module.exports = {
       reviewImgList,
     );
   },
-
-<<<<<<< HEAD
-  updateReviewV2: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+    updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
     if (purchaseBreadList == null) purchaseBreadList = [];
     if (reviewImgList == null) reviewImgList = [];
 
-    const preUpdatedReview = await reviewUtils.updateReviewV2(
-=======
-  updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
-    if(purchaseBreadList == null) purchaseBreadList=[];
-    if(reviewImgList == null) reviewImgList=[];
-
-    await reviewUtils.updateReviewExcludeVeganAndOnline(
->>>>>>> cda67a7 (feat : 후기수정하기 app_version 적용)
+    const preUpdatedReview = await reviewUtils.updateReviewExcludeVeganAndOnline(
       reviewId,
       user,
       purchaseBreadList,
