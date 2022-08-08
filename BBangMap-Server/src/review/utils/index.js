@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 const { sequelize } = require('../../../models/index');
 const { Bakery, Review, User, SaveReview, LikeReview, VisitBakery } = require('../../../models');
 const { reviewDelete } = require('../../../modules/multer/reviewMulter');
@@ -18,8 +18,20 @@ module.exports = {
       order: [['createdAt', 'DESC']],
     });
   },
-  findReviewAll: async (offset, limit) => {
+  findReviewAll: async order => {
     return Review.findAll({
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(`(
+            SELECT COUNT(lr.ReviewId)
+            FROM likereview AS lr
+            WHERE review.id=lr.ReviewId
+          )`),
+            'likeReviewCount',
+          ],
+        ],
+      },
       include: [
         {
           model: Bakery,
@@ -37,17 +49,56 @@ module.exports = {
         },
         {
           model: User,
-          attributes: {},
         },
         {
           model: User,
           as: 'SaverReview',
         },
       ],
-      order: [['createdAt', 'DESC']],
+      order: [[Sequelize.literal(order), 'DESC']],
+    });
+  },
+  findReviewAllWithLimit: async (offset, limit, order) => {
+    return Review.findAll({
       // pagination
       offset: offset,
       limit: limit,
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(`(
+            SELECT COUNT(lr.ReviewId)
+            FROM likereview AS lr
+            WHERE review.id=lr.ReviewId
+          )`),
+            'likeReviewCount',
+          ],
+        ],
+      },
+      include: [
+        {
+          model: Bakery,
+          attributes: ['bakeryName'],
+          include: [
+            {
+              model: User,
+              as: 'SaverBakery',
+            },
+            {
+              model: User,
+              as: 'VisiterBakery',
+            },
+          ],
+        },
+        {
+          model: User,
+        },
+        {
+          model: User,
+          as: 'SaverReview',
+        },
+      ],
+      order: [[Sequelize.literal(order), 'DESC']],
     });
   },
   findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
@@ -209,7 +260,7 @@ module.exports = {
       },
     );
   },
-    updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+  updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
     // eslint-disable-next-line no-return-await
     return await sequelize.transaction(async transaction => {
       return await Review.findOne({
