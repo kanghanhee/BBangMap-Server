@@ -11,6 +11,8 @@ const reviewListOfUserDto = require('../dto/reviewListOfUserDto');
 const reviewDto = require('../dto/reviewDto');
 const calculateOffsetAndLimit = require('../../../modules/pagination/paging');
 
+const orderHash = { latest: 'createdAt', best: 'likeReviewCount', undefined: 'createdAt', '': 'createdAt' };
+
 module.exports = {
   getReviewOfBakery: async (order, bakeryId, user) => {
     let reviewOfBakeryList = await reviewUtils.findReviewOfBakery(bakeryId);
@@ -37,48 +39,42 @@ module.exports = {
     return result;
   },
   getReviewAll: async (order, user, page, pageSize) => {
-    let reviewList;
+    if (!page || !pageSize) (page = 1), (pageSize = 500);
 
-    if (!page || !pageSize) {
-      reviewList = await reviewUtils.findReviewAll();
-    } else {
-      // 페이지네이션 적용할 때
-      const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
-      reviewList = await reviewUtils.findReviewAll(offset, limit);
-    }
+    const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
+    const reviewList = await reviewUtils.findReviewAll(offset, limit, orderHash[order]);
 
-    let findUser = await userUtils.findUserIncludeLikedReview(user);
-    let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
-    // LikeReview
-    let likeReview = await reviewUtils.findLikeReview();
-    let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
+    // 사용자가 좋아요 누른 후기 리스트 불러오기
+    const findUser = await userUtils.findUserIncludeLikedReview(user);
+    const likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
 
-    let result = reviewListDto(reviewList, likedReviewList, likeCountList, user.id);
-    // 추천수로 정렬
-    if (order === 'best') {
-      reviewUtils.getSortByLikeCount(result);
-    }
+    const result = reviewListDto(reviewList, likedReviewList, user.id);
 
     return result;
   },
-  getSearchReviewList: async (order, searchWord, isOnline, isVegan, user) => {
-    let reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
-    let findUser = await userUtils.findUserIncludeLikedReview(user);
-    let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
-    // LikeReview
-    let likeReview = await reviewUtils.findLikeReview();
-    let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
-    let result = reviewListDto(reviewList, likedReviewList, likeCountList, user.id);
-    // 추천수로 정렬
-    if (order === 'best') {
-      reviewUtils.getSortByLikeCount(result);
-    }
+  getSearchReviewList: async (order, searchWord, isOnline, isVegan, user, page, pageSize) => {
+    if (!page || !pageSize) (page = 1), (pageSize = 500);
+
+    const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
+    const reviewList = await reviewUtils.findReviewSearch(
+      searchWord,
+      isOnline,
+      isVegan,
+      offset,
+      limit,
+      orderHash[order],
+    );
+
+    const findUser = await userUtils.findUserIncludeLikedReview(user);
+    const likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
+
+    const result = reviewListDto(reviewList, likedReviewList, user.id);
 
     return result;
   },
   getReviewDetail: async (reviewId, user) => {
     let review = await reviewUtils.findReviewById(reviewId);
-    if(review == null) throw new Error("NOT FOUND REVIEW");
+    if (review == null) throw new Error('NOT FOUND REVIEW');
     let savedReviewList = await reviewUtils.findUsersSavedReviewList(user);
     let myReviewList = await reviewUtils.findMyReviewList(user);
     let likedReviewList = await reviewUtils.findUsersLikedReviewList(user);
@@ -140,7 +136,14 @@ module.exports = {
   },
   addReviewExcludeVeganAndOnline: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
     if (purchaseBreadList == null) purchaseBreadList = [];
-    const newReview = await reviewUtils.addReviewExcludeVeganAndOnline(user, bakeryId, purchaseBreadList, star, content, reviewImgList);
+    const newReview = await reviewUtils.addReviewExcludeVeganAndOnline(
+      user,
+      bakeryId,
+      purchaseBreadList,
+      star,
+      content,
+      reviewImgList,
+    );
     return reviewDto.summaryDto(newReview);
   },
   updateReview: async (
@@ -166,7 +169,7 @@ module.exports = {
       reviewImgList,
     );
   },
-    updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+  updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
     if (purchaseBreadList == null) purchaseBreadList = [];
     if (reviewImgList == null) reviewImgList = [];
 
