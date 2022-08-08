@@ -101,7 +101,7 @@ module.exports = {
       order: [[Sequelize.literal(order), 'DESC']],
     });
   },
-  findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
+  findReviewListBySearchWord: async (searchWord, isOnline, isVegan, order) => {
     let whereClause = {
       [Op.and]: {},
     };
@@ -114,6 +114,18 @@ module.exports = {
     if (isVegan) whereClause[Op.and][`$Bakery.isVegan$`] = isVegan;
 
     return Review.findAll({
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(`(
+            SELECT COUNT(lr.ReviewId)
+            FROM likereview AS lr
+            WHERE review.id=lr.ReviewId
+          )`),
+            'likeReviewCount',
+          ],
+        ],
+      },
       include: [
         {
           model: Bakery,
@@ -140,7 +152,65 @@ module.exports = {
         },
       ],
       where: whereClause,
-      order: [['createdAt', 'DESC']],
+      order: [[Sequelize.literal(order), 'DESC']],
+    });
+  },
+  findReviewSearchWithLimit: async (searchWord, isOnline, isVegan, offset, limit, order) => {
+    let whereClause = {
+      [Op.and]: {},
+    };
+    if (searchWord.length > 0) {
+      whereClause[Op.and] = { [Op.or]: {} };
+      whereClause[Op.and][Op.or][`$Bakery.bakeryName$`] = { [Op.like]: `%${searchWord}%` };
+      whereClause[Op.and][Op.or]['purchaseBreadList'] = { [Op.like]: `%${searchWord}%` };
+    }
+    if (isOnline) whereClause[Op.and][`$Bakery.isOnline$`] = isOnline;
+    if (isVegan) whereClause[Op.and][`$Bakery.isVegan$`] = isVegan;
+
+    return Review.findAll({
+      /** 에러 지점
+      offset: offset,
+      limit: limit,
+      */
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(`(
+            SELECT COUNT(lr.ReviewId)
+            FROM likereview AS lr
+            WHERE review.id=lr.ReviewId
+          )`),
+            'likeReviewCount',
+          ],
+        ],
+      },
+      include: [
+        {
+          model: Bakery,
+          as: 'Bakery',
+          attributes: ['bakeryName', 'isOnline', 'isVegan'],
+          include: [
+            {
+              model: User,
+              as: 'SaverBakery',
+            },
+            {
+              model: User,
+              as: 'VisiterBakery',
+            },
+          ],
+        },
+        {
+          model: User,
+          attributes: {},
+        },
+        {
+          model: User,
+          as: 'SaverReview',
+        },
+      ],
+      where: whereClause,
+      order: [[Sequelize.literal(order), 'DESC']],
     });
   },
   findReviewById: async reviewId => {

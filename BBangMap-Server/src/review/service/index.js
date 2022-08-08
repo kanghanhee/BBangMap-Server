@@ -62,18 +62,31 @@ module.exports = {
 
     return result;
   },
-  getSearchReviewList: async (order, searchWord, isOnline, isVegan, user) => {
-    let reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan);
+  getSearchReviewList: async (order, searchWord, isOnline, isVegan, user, page, pageSize) => {
+    let reviewList;
+    if (!page || !pageSize) {
+      // 페이지네이션 미적용할 때
+      reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan, orderHash[order]);
+    } else {
+      // 페이지네이션 적용할 때 (구현 완료되면 합치기)
+      const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
+      console.log(offset, limit);
+      reviewList = await reviewUtils.findReviewSearchWithLimit(
+        searchWord,
+        isOnline,
+        isVegan,
+        offset,
+        limit,
+        orderHash[order],
+      );
+    }
     let findUser = await userUtils.findUserIncludeLikedReview(user);
     let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
-    // LikeReview
-    let likeReview = await reviewUtils.findLikeReview();
-    let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
-    let result = reviewListDto(reviewList, likedReviewList, likeCountList, user.id);
-    // 추천수로 정렬
-    if (order === 'best') {
-      reviewUtils.getSortByLikeCount(result);
-    }
+    //// LikeReview
+    //let likeReview = await reviewUtils.findLikeReview();
+    //let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
+
+    let result = reviewListDto(reviewList, likedReviewList, user.id);
 
     return result;
   },
