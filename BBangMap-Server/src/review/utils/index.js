@@ -168,10 +168,6 @@ module.exports = {
     if (isVegan) whereClause[Op.and][`$Bakery.isVegan$`] = isVegan;
 
     return Review.findAll({
-      /** 에러 지점
-      offset: offset,
-      limit: limit,
-      */
       attributes: {
         include: [
           [
@@ -210,6 +206,9 @@ module.exports = {
         },
       ],
       where: whereClause,
+      offset,
+      limit,
+      subQuery: false,
       order: [[Sequelize.literal(order), 'DESC']],
     });
   },
