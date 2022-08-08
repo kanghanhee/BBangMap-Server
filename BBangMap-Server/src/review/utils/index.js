@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 const { sequelize } = require('../../../models/index');
 const { Bakery, Review, User, SaveReview, LikeReview, VisitBakery } = require('../../../models');
 const { reviewDelete } = require('../../../modules/multer/reviewMulter');
@@ -18,8 +18,23 @@ module.exports = {
       order: [['createdAt', 'DESC']],
     });
   },
-  findReviewAll: async (offset, limit) => {
+  findReviewAll: async (offset, limit, order) => {
     return Review.findAll({
+      // pagination
+      offset,
+      limit,
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(`(
+              SELECT COUNT(lr.ReviewId)
+              FROM LikeReview AS lr
+              WHERE lr.ReviewId = Review.id
+          )`),
+            'likeReviewCount',
+          ],
+        ],
+      },
       include: [
         {
           model: Bakery,
@@ -37,20 +52,16 @@ module.exports = {
         },
         {
           model: User,
-          attributes: {},
         },
         {
           model: User,
           as: 'SaverReview',
         },
       ],
-      order: [['createdAt', 'DESC']],
-      // pagination
-      offset: offset,
-      limit: limit,
+      order: [[Sequelize.literal(order), 'DESC']],
     });
   },
-  findReviewListBySearchWord: async (searchWord, isOnline, isVegan) => {
+  findReviewSearch: async (searchWord, isOnline, isVegan, offset, limit, order) => {
     let whereClause = {
       [Op.and]: {},
     };
@@ -63,6 +74,18 @@ module.exports = {
     if (isVegan) whereClause[Op.and][`$Bakery.isVegan$`] = isVegan;
 
     return Review.findAll({
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`(
+            SELECT COUNT(lr.ReviewId)
+            FROM LikeReview AS lr
+            WHERE lr.ReviewId = Review.id
+          )`),
+            'likeReviewCount',
+          ],
+        ],
+      },
       include: [
         {
           model: Bakery,
@@ -89,7 +112,10 @@ module.exports = {
         },
       ],
       where: whereClause,
-      order: [['createdAt', 'DESC']],
+      offset,
+      limit,
+      subQuery: false,
+      order: [[Sequelize.literal(order), 'DESC']],
     });
   },
   findReviewById: async reviewId => {
@@ -209,7 +235,7 @@ module.exports = {
       },
     );
   },
-    updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
+  updateReviewExcludeVeganAndOnline: async (reviewId, user, purchaseBreadList, star, content, reviewImgList) => {
     // eslint-disable-next-line no-return-await
     return await sequelize.transaction(async transaction => {
       return await Review.findOne({
