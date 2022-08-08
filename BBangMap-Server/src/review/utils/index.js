@@ -27,9 +27,9 @@ module.exports = {
         include: [
           [
             Sequelize.literal(`(
-            SELECT COUNT(lr.ReviewId)
-            FROM likereview AS lr
-            WHERE review.id=lr.ReviewId
+              SELECT COUNT(lr.ReviewId)
+              FROM LikeReview AS lr
+              WHERE lr.ReviewId = Review.id
           )`),
             'likeReviewCount',
           ],
@@ -77,10 +77,10 @@ module.exports = {
       attributes: {
         include: [
           [
-            Sequelize.literal(`(
+            sequelize.literal(`(
             SELECT COUNT(lr.ReviewId)
-            FROM likereview AS lr
-            WHERE review.id=lr.ReviewId
+            FROM LikeReview AS lr
+            WHERE lr.ReviewId = Review.id
           )`),
             'likeReviewCount',
           ],

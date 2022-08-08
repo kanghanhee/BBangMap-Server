@@ -53,7 +53,10 @@ module.exports = {
     return result;
   },
   getSearchReviewList: async (order, searchWord, isOnline, isVegan, user, page, pageSize) => {
-    if (!page || !pageSize) (page = 1), (pageSize = 500);
+    if (!page || !pageSize) {
+      page = 1;
+      pageSize = 500;
+    }
 
     const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
     const reviewList = await reviewUtils.findReviewSearch(
@@ -64,7 +67,6 @@ module.exports = {
       limit,
       orderHash[order],
     );
-
     const findUser = await userUtils.findUserIncludeLikedReview(user);
     const likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
 
@@ -100,12 +102,8 @@ module.exports = {
       let totalCount = await reviewUtils.getSavedReviewOfBakery(user, bakeryId);
 
       return savedReviewOfBakeryListDto(savedReviewOfBakeryList, totalCount.count);
-    } else return findUser;
-
-    let savedReviewOfBakeryList = findUser.SavedReview;
-    let totalCount = await reviewUtils.getSavedReviewOfBakery(user, bakeryId);
-
-    return savedReviewOfBakeryListDto(savedReviewOfBakeryList, totalCount.count);
+    }
+    return findUser;
   },
   getMyReviewList: async user => {
     let myReviewList = await reviewUtils.findMyReviewList(user);
