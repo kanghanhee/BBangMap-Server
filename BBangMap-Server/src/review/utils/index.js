@@ -115,6 +115,7 @@ module.exports = {
       offset,
       limit,
       subQuery: false,
+      distinct: true,
       order: [[Sequelize.literal(order), 'DESC']],
     });
   },
