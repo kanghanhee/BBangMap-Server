@@ -1,4 +1,3 @@
-const reviewUtils = require('../utils');
 const { defaultBgImg } = require('../../../modules/definition');
 
 const detailDto = (review, likedReviewList, userId) => {
@@ -13,7 +12,6 @@ const detailDto = (review, likedReviewList, userId) => {
     isOnline: review.Bakery.isOnline,
     isVegan: review.Bakery.isVegan,
     isLikedReview: !!likedReviewList.includes(review.id),
-    //likeReviewCount: reviewUtils.getCount(review.id, likeCountList),
     likeReviewCount: review.dataValues.likeReviewCount,
     isSaveReview: review.SaverReview.map(saver => saver.id).includes(userId),
     isVisitedBakery: review.Bakery.VisiterBakery.map(visiter => visiter.id).includes(userId),

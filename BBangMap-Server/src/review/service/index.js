@@ -39,54 +39,36 @@ module.exports = {
     return result;
   },
   getReviewAll: async (order, user, page, pageSize) => {
-    let reviewList;
+    if (!page || !pageSize) (page = 1), (pageSize = 500);
 
-    if (!page || !pageSize) {
-      // 페이지네이션 미적용할 때
-      reviewList = await reviewUtils.findReviewAll(orderHash[order]);
-    } else {
-      // 페이지네이션 적용할 때 (구현 완료되면 합치기)
-      const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
-      reviewList = await reviewUtils.findReviewAllWithLimit(offset, limit, orderHash[order]);
-    }
+    const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
+    const reviewList = await reviewUtils.findReviewAll(offset, limit, orderHash[order]);
 
     // 사용자가 좋아요 누른 후기 리스트 불러오기
-    let findUser = await userUtils.findUserIncludeLikedReview(user);
-    let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
+    const findUser = await userUtils.findUserIncludeLikedReview(user);
+    const likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
 
-    // // LikeReview
-    // let likeReview = await reviewUtils.findLikeReview();
-    // let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
-
-    let result = reviewListDto(reviewList, likedReviewList, user.id);
+    const result = reviewListDto(reviewList, likedReviewList, user.id);
 
     return result;
   },
   getSearchReviewList: async (order, searchWord, isOnline, isVegan, user, page, pageSize) => {
-    let reviewList;
-    if (!page || !pageSize) {
-      // 페이지네이션 미적용할 때
-      reviewList = await reviewUtils.findReviewListBySearchWord(searchWord, isOnline, isVegan, orderHash[order]);
-    } else {
-      // 페이지네이션 적용할 때 (구현 완료되면 합치기)
-      const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
-      console.log(offset, limit);
-      reviewList = await reviewUtils.findReviewSearchWithLimit(
-        searchWord,
-        isOnline,
-        isVegan,
-        offset,
-        limit,
-        orderHash[order],
-      );
-    }
-    let findUser = await userUtils.findUserIncludeLikedReview(user);
-    let likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
-    //// LikeReview
-    //let likeReview = await reviewUtils.findLikeReview();
-    //let likeCountList = likeReview.map(likeReview => likeReview.ReviewId);
+    if (!page || !pageSize) (page = 1), (pageSize = 500);
 
-    let result = reviewListDto(reviewList, likedReviewList, user.id);
+    const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
+    const reviewList = await reviewUtils.findReviewSearch(
+      searchWord,
+      isOnline,
+      isVegan,
+      offset,
+      limit,
+      orderHash[order],
+    );
+
+    const findUser = await userUtils.findUserIncludeLikedReview(user);
+    const likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
+
+    const result = reviewListDto(reviewList, likedReviewList, user.id);
 
     return result;
   },

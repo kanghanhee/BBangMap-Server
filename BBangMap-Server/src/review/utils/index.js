@@ -18,51 +18,11 @@ module.exports = {
       order: [['createdAt', 'DESC']],
     });
   },
-  findReviewAll: async order => {
-    return Review.findAll({
-      attributes: {
-        include: [
-          [
-            Sequelize.literal(`(
-            SELECT COUNT(lr.ReviewId)
-            FROM likereview AS lr
-            WHERE review.id=lr.ReviewId
-          )`),
-            'likeReviewCount',
-          ],
-        ],
-      },
-      include: [
-        {
-          model: Bakery,
-          attributes: ['bakeryName'],
-          include: [
-            {
-              model: User,
-              as: 'SaverBakery',
-            },
-            {
-              model: User,
-              as: 'VisiterBakery',
-            },
-          ],
-        },
-        {
-          model: User,
-        },
-        {
-          model: User,
-          as: 'SaverReview',
-        },
-      ],
-      order: [[Sequelize.literal(order), 'DESC']],
-    });
-  },
-  findReviewAllWithLimit: async (offset, limit, order) => {
+  findReviewAll: async (offset, limit, order) => {
     return Review.findAll({
       // pagination
-      offset: offset,
-      limit: limit,
+      offset,
+      limit,
       attributes: {
         include: [
           [
@@ -101,61 +61,7 @@ module.exports = {
       order: [[Sequelize.literal(order), 'DESC']],
     });
   },
-  findReviewListBySearchWord: async (searchWord, isOnline, isVegan, order) => {
-    let whereClause = {
-      [Op.and]: {},
-    };
-    if (searchWord.length > 0) {
-      whereClause[Op.and] = { [Op.or]: {} };
-      whereClause[Op.and][Op.or][`$Bakery.bakeryName$`] = { [Op.like]: `%${searchWord}%` };
-      whereClause[Op.and][Op.or]['purchaseBreadList'] = { [Op.like]: `%${searchWord}%` };
-    }
-    if (isOnline) whereClause[Op.and][`$Bakery.isOnline$`] = isOnline;
-    if (isVegan) whereClause[Op.and][`$Bakery.isVegan$`] = isVegan;
-
-    return Review.findAll({
-      attributes: {
-        include: [
-          [
-            Sequelize.literal(`(
-            SELECT COUNT(lr.ReviewId)
-            FROM likereview AS lr
-            WHERE review.id=lr.ReviewId
-          )`),
-            'likeReviewCount',
-          ],
-        ],
-      },
-      include: [
-        {
-          model: Bakery,
-          as: 'Bakery',
-          attributes: ['bakeryName', 'isOnline', 'isVegan'],
-          include: [
-            {
-              model: User,
-              as: 'SaverBakery',
-            },
-            {
-              model: User,
-              as: 'VisiterBakery',
-            },
-          ],
-        },
-        {
-          model: User,
-          attributes: {},
-        },
-        {
-          model: User,
-          as: 'SaverReview',
-        },
-      ],
-      where: whereClause,
-      order: [[Sequelize.literal(order), 'DESC']],
-    });
-  },
-  findReviewSearchWithLimit: async (searchWord, isOnline, isVegan, offset, limit, order) => {
+  findReviewSearch: async (searchWord, isOnline, isVegan, offset, limit, order) => {
     let whereClause = {
       [Op.and]: {},
     };
