@@ -29,10 +29,8 @@ module.exports = {
   saveRequestedBakery: async (user, id, name, reason) => {
     if (id && name) {
       const kakaoBakeryList = await requestedBakeryUtils.getKakaoBakeryList(name);
-      const targetBakery = kakaoBakeryList.map(bakery => {
-        if (id === bakery.id) return bakery;
-      });
-
+      const targetBakery = kakaoBakeryList.filter(bakery => id === bakery.id);
+      console.log(targetBakery);
       if (targetBakery[0] == null)
         throw {
           statusCode: statusCode.BAD_REQUEST,
