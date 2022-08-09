@@ -30,7 +30,7 @@ module.exports = {
     if (id && name) {
       const kakaoBakeryList = await requestedBakeryUtils.getKakaoBakeryList(name);
       const targetBakery = kakaoBakeryList.filter(bakery => id === bakery.id);
-      console.log(targetBakery);
+
       if (targetBakery[0] == null)
         throw {
           statusCode: statusCode.BAD_REQUEST,
