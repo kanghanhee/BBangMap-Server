@@ -68,7 +68,7 @@ module.exports = {
     if (searchWord.length > 0) {
       whereClause[Op.and] = { [Op.or]: {} };
       whereClause[Op.and][Op.or][`$Bakery.bakeryName$`] = { [Op.like]: `%${searchWord}%` };
-      whereClause[Op.and][Op.or]['&Review.purchaseBreadList$'] = { [Op.like]: `%${searchWord}%` };
+      whereClause[Op.and][Op.or]['$Review.purchaseBreadList$'] = { [Op.like]: `%${searchWord}%` };
     }
     if (isOnline) whereClause[Op.and][`$Bakery.isOnline$`] = isOnline;
     if (isVegan) whereClause[Op.and][`$Bakery.isVegan$`] = isVegan;
