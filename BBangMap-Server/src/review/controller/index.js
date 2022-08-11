@@ -62,9 +62,16 @@ module.exports = {
   },
   reviewDetail: async (req, res) => {
     try {
-      let { reviewId } = req.query;
-      let user = req.header.user;
-      let reviewDetailDto = await reviewService.getReviewDetail(reviewId, user);
+      const { reviewId } = req.query;
+      const { user } = req.header;
+      const { appVersion } = req.header;
+
+      let reviewDetailDto = '';
+      if (appVersion != null && appVersion >= 1.3) {
+        reviewDetailDto = await reviewService.getReviewDetailWithAddress(reviewId, user);
+      } else {
+        reviewDetailDto = await reviewService.getReviewDetail(reviewId, user);
+      }
       return res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, reviewDetailDto));

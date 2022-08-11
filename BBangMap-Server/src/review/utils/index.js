@@ -141,6 +141,30 @@ module.exports = {
       order: [['createdAt', 'DESC']],
     });
   },
+  findReviewBakeryById: async reviewId => {
+    return Review.findOne({
+      where: {
+        id: reviewId,
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['nickName', 'profileImg'],
+        },
+        {
+          model: Bakery,
+          attributes: ['bakeryName', 'address', 'latitude', 'longitude'],
+          include: [
+            {
+              model: User,
+              as: 'VisiterBakery',
+            },
+          ],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+  },
   findUsersSavedReviewList: async user => {
     return SaveReview.findAll({
       where: { UserId: user.id },
@@ -317,11 +341,13 @@ module.exports = {
     });
   },
   findLikeReviewCount: async reviewId => {
-    return await LikeReview.findAndCountAll({
+    const result = await LikeReview.findAndCountAll({
+      raw: true,
       where: {
         ReviewId: reviewId,
       },
     });
+    return { count: result.count, review: result.rows[0] };
   },
   findLikeReview: async () => {
     return await LikeReview.findAll({});
