@@ -39,7 +39,10 @@ module.exports = {
     return result;
   },
   getReviewAll: async (order, user, page, pageSize) => {
-    if (!page || !pageSize) (page = 1), (pageSize = 500);
+    if (!page || !pageSize) {
+      page = 1;
+      pageSize = 500;
+    }
 
     const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
     const reviewList = await reviewUtils.findReviewAll(offset, limit, orderHash[order]);
