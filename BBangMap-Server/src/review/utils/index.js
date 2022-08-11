@@ -68,7 +68,7 @@ module.exports = {
     if (searchWord.length > 0) {
       whereClause[Op.and] = { [Op.or]: {} };
       whereClause[Op.and][Op.or][`$Bakery.bakeryName$`] = { [Op.like]: `%${searchWord}%` };
-      whereClause[Op.and][Op.or]['purchaseBreadList'] = { [Op.like]: `%${searchWord}%` };
+      whereClause[Op.and][Op.or]['&Review.purchaseBreadList$'] = { [Op.like]: `%${searchWord}%` };
     }
     if (isOnline) whereClause[Op.and][`$Bakery.isOnline$`] = isOnline;
     if (isVegan) whereClause[Op.and][`$Bakery.isVegan$`] = isVegan;
@@ -101,6 +101,7 @@ module.exports = {
               as: 'VisiterBakery',
             },
           ],
+          where: whereClause,
         },
         {
           model: User,
@@ -111,11 +112,8 @@ module.exports = {
           as: 'SaverReview',
         },
       ],
-      where: whereClause,
       offset,
       limit,
-      subQuery: false,
-      distinct: true,
       order: [[Sequelize.literal(order), 'DESC']],
     });
   },
@@ -132,6 +130,30 @@ module.exports = {
         {
           model: Bakery,
           attributes: ['bakeryName'],
+          include: [
+            {
+              model: User,
+              as: 'VisiterBakery',
+            },
+          ],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+  },
+  findReviewBakeryById: async reviewId => {
+    return Review.findOne({
+      where: {
+        id: reviewId,
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['nickName', 'profileImg'],
+        },
+        {
+          model: Bakery,
+          attributes: ['bakeryName', 'address', 'latitude', 'longitude'],
           include: [
             {
               model: User,
@@ -319,11 +341,13 @@ module.exports = {
     });
   },
   findLikeReviewCount: async reviewId => {
-    return await LikeReview.findAndCountAll({
+    const result = await LikeReview.findAndCountAll({
+      raw: true,
       where: {
         ReviewId: reviewId,
       },
     });
+    return { count: result.count, review: result.rows[0] };
   },
   findLikeReview: async () => {
     return await LikeReview.findAll({});

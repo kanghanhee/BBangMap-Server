@@ -25,10 +25,11 @@ module.exports = {
     try {
       const { user } = req.header;
       const { bakeryId, bakeryName, reason } = req.body;
-      if(reason == null) 
-      throw {
-        statusCode : statusCode.BAD_REQUEST,
-        responseMessage : responseMessage.NULL_VALUE};
+      if (reason == null)
+        throw {
+          statusCode: statusCode.BAD_REQUEST,
+          responseMessage: responseMessage.NULL_VALUE,
+        };
 
       await bakeryService.saveRequestedBakery(user, bakeryId, bakeryName, reason);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_REQUEST_BAKERY, null));
@@ -45,7 +46,9 @@ module.exports = {
     try {
       const { user } = req.header;
       const result = await bakeryService.getRequestedBakeryList(user);
-      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REQUEST_BAKERY, result));
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REQUEST_BAKERY, result));
     } catch (err) {
       if (err.statusCode == null) {
         err.statusCode = statusCode.INTERNAL_SERVER_ERROR;

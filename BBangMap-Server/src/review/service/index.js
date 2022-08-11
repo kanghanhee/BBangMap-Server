@@ -3,6 +3,7 @@ const userUtils = require('../../user/utils');
 
 const reviewListDto = require('../dto/reviewListDto');
 const reviewDetailDto = require('../dto/reviewDetailDto');
+const reviewDetailWithAddressDto = require('../dto/reviewDetailWithAddressDto');
 const savedReviewOfBakeryListDto = require('../dto/savedReviewOfBakeryListDto');
 const savedReviewFolderListDto = require('../dto/savedReviewFolderListDto');
 const reviewOfBakeryListDto = require('../dto/reviewOfBakeryListDto');
@@ -39,7 +40,10 @@ module.exports = {
     return result;
   },
   getReviewAll: async (order, user, page, pageSize) => {
-    if (!page || !pageSize) (page = 1), (pageSize = 500);
+    if (!page || !pageSize) {
+      page = 1;
+      pageSize = 500;
+    }
 
     const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
     const reviewList = await reviewUtils.findReviewAll(offset, limit, orderHash[order]);
@@ -53,10 +57,7 @@ module.exports = {
     return result;
   },
   getSearchReviewList: async (order, searchWord, isOnline, isVegan, user, page, pageSize) => {
-    if (!page || !pageSize) {
-      page = 1;
-      pageSize = 500;
-    }
+    if (!page || !pageSize) (page = 1), (pageSize = 500);
 
     const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
     const reviewList = await reviewUtils.findReviewSearch(
@@ -67,6 +68,7 @@ module.exports = {
       limit,
       orderHash[order],
     );
+
     const findUser = await userUtils.findUserIncludeLikedReview(user);
     const likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
 
@@ -83,6 +85,14 @@ module.exports = {
     let likeReviewCount = await reviewUtils.findLikeReviewCount(reviewId);
 
     return reviewDetailDto(review, savedReviewList, myReviewList, likedReviewList, likeReviewCount.count, user.id);
+  },
+  getReviewDetailWithAddress: async (reviewId, user) => {
+    const review = await reviewUtils.findReviewBakeryById(reviewId);
+    if (review == null) throw new Error('NOT FOUND REVIEW');
+    const savedReviewList = await reviewUtils.findUsersSavedReviewList(user);
+    const likeReviewCount = await reviewUtils.findLikeReviewCount(reviewId);
+
+    return reviewDetailWithAddressDto(review, savedReviewList, likeReviewCount, user.id);
   },
   getSavedReviewFolderList: async user => {
     let findUser = await userUtils.findUserIncludeSavedReview(user);

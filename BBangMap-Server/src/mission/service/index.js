@@ -12,6 +12,8 @@ const badgeListDto = require('../dto/badgeListDto');
 const userSucceededMissionDto = require('../dto/userSucceededMissionDto');
 const monthlyMissionDto = require('../dto/monthlyMissionDto');
 
+const dummyBadgeImg = 'https://bbang-map.s3.ap-northeast-2.amazonaws.com/images/mission/badge/badge_bread.png';
+
 // 미션 추가
 module.exports = {
   postMission: async (
@@ -121,8 +123,8 @@ module.exports = {
       //미션 없을 경우
       if (!mission) {
         mission = {
-          badgeName: null,
-          badgeImg: null,
+          badgeName: '폰식빵',
+          badgeImg: dummyBadgeImg,
         };
       } else {
         isMissionBakery = await missionUtil.isMissionBakery(mission, bakeryId);
