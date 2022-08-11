@@ -17,7 +17,7 @@ const reviewDetailWithAddressDto = async (review, savedReviewList, likeReviewCou
     reviewerImg: review.User.profileImg,
     isSavedReview: await reviewUtil.isSavedReview(review, savedReviewList),
     isMyReview: userId === review.UserId,
-    isLikedReview: likeReviewCount.review.UserId === userId,
+    isLikedReview: likeReviewCount.count !== 0 ? likeReviewCount.review.UserId === userId : false,
     likeReviewCount: likeReviewCount.count,
     isVisitedBakery: review.Bakery.VisiterBakery.map(visiter => visiter.id).includes(userId),
   };
