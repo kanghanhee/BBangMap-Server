@@ -194,7 +194,7 @@ module.exports = {
       error.statusCode = 400;
       throw error;
     }
-    if (preUpdatedReview.reviewImgList != null) reviewUtils.deleteReviewImages(preUpdatedReview.reviewImgList);
+    reviewUtils.deleteReviewImages(preUpdatedReview.reviewImgList);
   },
 
   savedReview: async (reviewId, user) => {
@@ -216,7 +216,7 @@ module.exports = {
   deleteMyReview: async (reviewId, user) => {
     let userId = user.id;
     const deletedReview = await reviewUtils.deleteMyReview(userId, reviewId);
-    if (deletedReview.reviewImgList != null) reviewUtils.deleteReviewImages(deletedReview.reviewImgList);
+    reviewUtils.deleteReviewImages(deletedReview.reviewImgList);
   },
   getUserReview: async userId => {
     const reviewList = await reviewUtils.findUsersReviewList(userId);
