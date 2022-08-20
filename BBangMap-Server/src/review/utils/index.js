@@ -435,7 +435,7 @@ module.exports = {
     });
   },
   deleteReviewImages: imageUrls => {
-    reviewDelete(imageUrls);
+    if (imageUrls != null && imageUrls.length !== 0) reviewDelete(imageUrls);
   },
 };
 
