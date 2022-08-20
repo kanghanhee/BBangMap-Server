@@ -9,7 +9,6 @@ module.exports = {
     try {
       const data = await slackService.getRequestedBakeryList();
       return res.json(data);
-      //   return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, result));
     } catch (err) {
       return res
         .status(statusCode.INTERNAL_SERVER_ERROR)
