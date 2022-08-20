@@ -7,8 +7,9 @@ const slackSender = require('../../../other/slackSender');
 module.exports = {
   getRequestedBakeryList: async (req, res) => {
     try {
-      const result = await slackService.getRequestedBakeryList();
-      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, result));
+      const data = await slackService.getRequestedBakeryList();
+      return res.json(data);
+      //   return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REVIEW, result));
     } catch (err) {
       return res
         .status(statusCode.INTERNAL_SERVER_ERROR)
