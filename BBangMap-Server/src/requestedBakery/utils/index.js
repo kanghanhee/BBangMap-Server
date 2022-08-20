@@ -99,6 +99,9 @@ module.exports = {
   },
   getRequestedBakeryList: async () => {
     const requestedBakery = await RequestedBakery.findAll({
+      where: {
+        status: 'REQUESTED',
+      },
       raw: true,
     });
     return requestedBakery;
