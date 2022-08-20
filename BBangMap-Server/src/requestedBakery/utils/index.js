@@ -5,7 +5,7 @@ const { response } = require('express');
 const { sequelize } = require('../../../models/index');
 const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
-const {KAKAO_AUTH,KAKAO_URL}= require('../../../config/kakao');
+const { KAKAO_AUTH, KAKAO_URL } = require('../../../config/kakao');
 
 module.exports = {
   getKakaoBakeryList: async keyword => {
@@ -96,5 +96,14 @@ module.exports = {
         { where: { id } },
       );
     }
+  },
+  getRequestedBakeryList: async () => {
+    const requestedBakery = await RequestedBakery.findAll({
+      where: {
+        status: 'REQUESTED',
+      },
+      raw: true,
+    });
+    return requestedBakery;
   },
 };
