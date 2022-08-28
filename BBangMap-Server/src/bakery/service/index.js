@@ -92,43 +92,45 @@ module.exports = {
       throw new Error('ALREADY_CANCEL_BAKERY_VISITED');
     }
   },
-  createBakery: async registerBakery => {
+  createBakery: async registerBakeryList => {
     try {
-      await bakeryUtils.validateDuplicateBakeryInfo(
-        registerBakery.bakeryName,
-        registerBakery.address,
-        registerBakery.latitude,
-        registerBakery.longitude,
-      );
-
       await db.sequelize.transaction(async transaction => {
-        await Bakery.create(
-          {
-            id: registerBakery.id,
-            bakeryName: registerBakery.bakeryName,
-            openTime: registerBakery.openTime,
-            offDay: registerBakery.offDay,
-            seasonMenu: registerBakery.seasonMenu,
-            isOnline: registerBakery.isOnline,
-            isVegan: registerBakery.isVegan,
-            isDrink: registerBakery.isDrink,
-            bestMenu: registerBakery.bestMenu,
-            totalMenu: registerBakery.totalMenu,
-            address: registerBakery.address,
-            latitude: registerBakery.latitude,
-            longitude: registerBakery.longitude,
-            isAllTheTime: registerBakery.isAllTheTime,
-            isIrregularPeriod: registerBakery.isIrregularPeriod,
-            isParkingAvailable: registerBakery.isParkingAvailable,
-            isChildAvailable: registerBakery.isChildAvailable,
-            isReservationAvailable: registerBakery.isReservationAvailable,
-            isPetAvailable: registerBakery.isPetAvailable,
-            blog: registerBakery.blog,
-            instagram: registerBakery.instagram,
-            bakeryImg: [],
-          },
-          { transaction },
-        );
+          for(let i=0;i<registerBakeryList.length;i++){
+              const registerBakery = registerBakeryList[i];
+              await bakeryUtils.validateDuplicateBakeryInfo(
+                  registerBakery.bakeryName,
+                  registerBakery.address,
+                  registerBakery.latitude,
+                  registerBakery.longitude,
+              );
+
+              await Bakery.create(
+                  {
+                      bakeryName: registerBakery.bakeryName,
+                      openTime: registerBakery.openTime,
+                      offDay: registerBakery.offDay,
+                      seasonMenu: registerBakery.seasonMenu,
+                      isOnline: registerBakery.isOnline,
+                      isVegan: registerBakery.isVegan,
+                      isDrink: registerBakery.isDrink,
+                      bestMenu: registerBakery.bestMenu,
+                      totalMenu: registerBakery.totalMenu,
+                      address: registerBakery.address,
+                      latitude: registerBakery.latitude,
+                      longitude: registerBakery.longitude,
+                      isAllTheTime: registerBakery.isAllTheTime,
+                      isIrregularPeriod: registerBakery.isIrregularPeriod,
+                      isParkingAvailable: registerBakery.isParkingAvailable,
+                      isChildAvailable: registerBakery.isChildAvailable,
+                      isReservationAvailable: registerBakery.isReservationAvailable,
+                      isPetAvailable: registerBakery.isPetAvailable,
+                      blog: registerBakery.blog,
+                      instagram: registerBakery.instagram,
+                      bakeryImg: [],
+                  },
+                  { transaction },
+              );
+          }
       });
     } catch (err) {
       throw new Error(err);
