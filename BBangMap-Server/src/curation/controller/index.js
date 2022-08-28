@@ -123,8 +123,9 @@ module.exports = {
     },
     updateCurationPriority: async (req, res) => {
         try{
-            const {curationContents} = req.body;
-            await curationService.updateCurationPriority(curationContents);
+            const curationList = req.body;
+            const {curationContentId} = req.params;
+            await curationService.updateCurationPriority(curationList, curationContentId);
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_PUT_CURATION_PRIORITY));
         }catch(err){
             console.log(err.message)

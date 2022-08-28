@@ -18,7 +18,7 @@ router.get('/reviewer', authUtil.checkToken, authUtil.checkAdminToken, userContr
 router.get('/review/user/:userId',authUtil.checkToken, authUtil.checkAdminToken, reviewController.getUserReview);
 router.get('/curation/content',authUtil.checkToken, authUtil.checkAdminToken, curationController.getCurationContent);
 router.post('/curation',authUtil.checkToken, authUtil.checkAdminToken, imageUpload.single('curationImage'), curationController.addCuration);
-router.put('/curation/priority',authUtil.checkToken, authUtil.checkAdminToken, curationController.updateCurationPriority);
+router.put('/curation/priority/:curationContentId',authUtil.checkToken, authUtil.checkAdminToken, curationController.updateCurationPriority);
 router.put('/curation/:curationId',authUtil.checkToken, authUtil.checkAdminToken, curationController.updateCuration);
 
 module.exports = router;
