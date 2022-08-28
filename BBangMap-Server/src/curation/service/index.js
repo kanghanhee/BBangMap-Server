@@ -2,6 +2,7 @@ const curationUtil = require('../utils')
 const CurationDetailListDto = require('../dto/CurationDetailListDto')
 const BakeryLocationInfoListDto = require('../dto/BakeryLocationInfoListDto')
 const CurationContentList = require('../dto/CurationContentList')
+const CurationListByAdminDto = require('../dto/curationListByAdminDto')
 
 module.exports = {
     addCuration: async (body, image) => {
@@ -24,7 +25,12 @@ module.exports = {
             curationContentId
         );
     },
-    getCurationList: async (user) => {
+    getCurationListByAdmin: async()=>{
+       const result = await curationUtil.findCurationByContentId();
+       // return result;
+       return CurationListByAdminDto(result);
+    },
+    getCurationListWithCurationContent: async (user) => {
         const allContent = await curationUtil.findAllCurationContentWithCuration();
         return CurationContentList(allContent, user);
     },
@@ -75,7 +81,6 @@ module.exports = {
                     throw Error("DUPLICATE_PRIORITY");
                 }
             }
-
             await curationUtil.updateCurationPriority(curationContentId, curationList);
         }catch(err){
             throw new Error(err);
