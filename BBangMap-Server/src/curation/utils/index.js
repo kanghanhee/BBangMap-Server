@@ -9,7 +9,7 @@ const {
     Bakery,
     sequelize
 } = require('../../../models')
-const {Sequelize} = require("sequelize");
+const {Sequelize, Op} = require("sequelize");
 
 module.exports = {
     findCurationContent: async (curationContentsId) => {
@@ -197,6 +197,16 @@ module.exports = {
                     }, {transaction})
                 }
             })
+        } catch (err) {
+            throw err;
+        }
+    },
+    findCurationByContentId: async () => {
+        try {
+            return await sequelize.query(
+                "SELECT * FROM MatchingCurationContents as M INNER  Join CurationContent as CC on CC.id = M.CurationContentId INNER Join Curation as C on C.id = M.CurationId INNER Join User as U on C.UserId = U.id Order By M.CurationContentId ASC, M.priority ASC",
+                {type : sequelize.QueryTypes.SELECT}
+            )
         } catch (err) {
             throw err;
         }
