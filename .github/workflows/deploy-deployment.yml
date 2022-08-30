@@ -13,8 +13,8 @@ jobs:
         with:
           run: |
             sudo git config --global --add safe.directory ~/BBang-map-test
-            sudo git config --global user.username ${{GIT_USERNAME}}
-            sudo git config --global user.password ${{GIT_PASSWORD}}
+            sudo git config --global user.username ${{secrets.GIT_USERNAME}}
+            sudo git config --global user.password ${{secrets.GIT_PASSWORD}}
             cd BBang-map-test
             sudo git pull origin main
             sudo npm install
