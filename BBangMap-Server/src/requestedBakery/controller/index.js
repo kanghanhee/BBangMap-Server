@@ -45,7 +45,23 @@ module.exports = {
   getRequestedBakeryList: async (req, res) => {
     try {
       const { user } = req.header;
-      const result = await bakeryService.getRequestedBakeryList(user);
+      const result = await bakeryService.getRequestedBakeryList();
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REQUEST_BAKERY, result));
+    } catch (err) {
+      if (err.statusCode == null) {
+        err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
+        err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
+      }
+      slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+      return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
+    }
+  },
+  getRequestedBakeryListByUserId: async (req, res) => {
+    try {
+      const { user } = req.header;
+      const result = await bakeryService.getRequestedBakeryListByUserId(user);
       return res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_REQUEST_BAKERY, result));

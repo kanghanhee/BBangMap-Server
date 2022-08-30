@@ -71,7 +71,7 @@ module.exports = {
       };
     }
   },
-  findRequestedBakeryList: async userId => {
+  findRequestedBakeryListByUserId: async userId => {
     const findBakeryList = await RequestedBakery.findAll({
       where: {
         UserId: userId,
