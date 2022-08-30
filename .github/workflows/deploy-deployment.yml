@@ -13,8 +13,8 @@ jobs:
         with:
           script: |
             sudo git config --global --add safe.directory ~/BBang-map-test
-            sudo git config --global user.username ${{github.username}}
-            sudo git config --global user.password ${{github.password}}
+            sudo git config --global user.username ${{GITHUB_USERNAME}}
+            sudo git config --global user.password ${{GITHUB_PASSWORD}}
             cd BBang-map-test
             sudo git checkout .
             sudo git pull origin main
