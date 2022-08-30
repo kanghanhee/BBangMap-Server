@@ -48,11 +48,19 @@ module.exports = {
       );
     }
   },
-  getRequestedBakeryList: async user => {
+  getRequestedBakeryList: async () => {
     const result = [];
-    const requestedBakeryList = await requestedBakeryUtils.findRequestedBakeryList(user.id);
+    const requestedBakeryList = await requestedBakeryUtils.getRequestedBakeryList();
     requestedBakeryList.forEach(bakery => {
-      result.push(requestBakeryDto(bakery.id, bakery.bakeryName, bakery.address, bakery.status));
+      result.push(requestBakeryDto(bakery.id, bakery.bakeryName, bakery.address, bakery.status, bakery.reason));
+    });
+    return result;
+  },
+  getRequestedBakeryListByUserId: async user => {
+    const result = [];
+    const requestedBakeryList = await requestedBakeryUtils.findRequestedBakeryListByUserId(user.id);
+    requestedBakeryList.forEach(bakery => {
+      result.push(requestBakeryDto(bakery.id, bakery.bakeryName, bakery.address, bakery.status, bakery.reason));
     });
     return result;
   },
