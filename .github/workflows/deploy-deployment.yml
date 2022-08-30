@@ -10,8 +10,13 @@ jobs:
     steps:
       - name: Deploy deployment
         uses: actions/checkout@v2
+      - uses: applyboy/ssh-action@master 
         with:
-          run: |
+          host : ${{secrets.TEST_REMOTE_IP}}
+          username: ${{secrets.TEST_REMOTE_SSH_ID}}
+          key: ${{secrets.TEST_REMOTE_SSH_KEY}}
+          port: ${{secrets.TEST_REMOTE_SSH_PORT}}
+          script: |
             sudo git config --global --add safe.directory ~/BBang-map-test
             sudo git config --global user.username ${{secrets.GIT_USERNAME}}
             sudo git config --global user.password ${{secrets.GIT_PASSWORD}}
