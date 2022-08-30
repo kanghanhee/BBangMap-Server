@@ -2,6 +2,7 @@ const curationUtil = require('../utils')
 const CurationDetailListDto = require('../dto/CurationDetailListDto')
 const BakeryLocationInfoListDto = require('../dto/BakeryLocationInfoListDto')
 const CurationContentList = require('../dto/CurationContentList')
+const CurationListByAdminDto = require('../dto/curationListByAdminDto')
 
 module.exports = {
     addCuration: async (body, image) => {
@@ -24,7 +25,12 @@ module.exports = {
             curationContentId
         );
     },
-    getCurationList: async (user) => {
+    getCurationListByAdmin: async()=>{
+       const result = await curationUtil.findCurationByContentId();
+       // return result;
+       return CurationListByAdminDto(result);
+    },
+    getCurationListWithCurationContent: async (user) => {
         const allContent = await curationUtil.findAllCurationContentWithCuration();
         return CurationContentList(allContent, user);
     },
@@ -64,24 +70,18 @@ module.exports = {
 
         await curationUtil.updateCuration(curationId, mainTitle, subTitle, curatorComment)
     },
-    updateCurationPriority: async (curationContentList) => {
+    updateCurationPriority: async (curationList, curationContentId) => {
         try{
-            for(const curationContent of curationContentList){
-                const curationContentId = curationContent.curationContentId;
-                const curationList = curationContent.curationList;
-                const checkDuplicateArr = new Array(curationList.length);
+            const checkDuplicateArr = new Array(curationList.length);
 
-                for(let i=0;i<checkDuplicateArr.length;i++){
-                    if(!checkDuplicateArr.includes(curationList[i].priority)){
-                        checkDuplicateArr[i] = curationList[i].priority
-                    }else{
-                        console.log("custom error")
-                        throw Error("DUPLICATE_PRIORITY");
-                    }
+            for(let i=0;i<checkDuplicateArr.length;i++){
+                if(!checkDuplicateArr.includes(curationList[i].priority)){
+                    checkDuplicateArr[i] = curationList[i].priority
+                }else{
+                    throw Error("DUPLICATE_PRIORITY");
                 }
-
-                await curationUtil.updateCurationPriority(curationContentId, curationList);
             }
+            await curationUtil.updateCurationPriority(curationContentId, curationList);
         }catch(err){
             throw new Error(err);
         }

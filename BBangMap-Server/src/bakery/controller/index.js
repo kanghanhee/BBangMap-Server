@@ -132,11 +132,12 @@ module.exports = {
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_REGISTRATION_BAKERY));
     } catch (err) {
       //UQ or PK 값 중복 이슈 발생시 등록하려는 빵집 id의 중복
-      if (err.message === 'SequelizeUniqueConstraintError: Validation error') {
-        slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, 'NON_MATCHING_BAKERY_ID'));
+      // if (err.message === 'SequelizeUniqueConstraintError: Validation error') {
+      //   // slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      //   // return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, 'NON_MATCHING_BAKERY_ID'));
         //bakeryName, address, latitude, longitude 중복
-      } else if (err.message === 'Error: DUPLICATE_INFO') {
+      // } else if (err.message === 'Error: DUPLICATE_INFO') {
+      if(err.message === 'Error: DUPLICATE_INFO'){
         slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, 'DUPLICATE_INFO'));
       } else {
