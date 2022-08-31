@@ -1,4 +1,4 @@
-name: BbangMap
+name: BbangMap-test
 
 on:
   workflow_dispatch:
