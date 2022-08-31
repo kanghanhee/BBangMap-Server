@@ -21,8 +21,7 @@ jobs:
             sudo git config --global --add safe.directory ~/bbang-map-new
             sudo git config --global user.username ${{secrets.GIT_USERNAME}}
             sudo git config --global user.password ${{secrets.GIT_PASSWORD}}
-            chmod 400 ${{secrets.DEPLOY_REMOTE_SSH_KEY}}
-            cd BBang-map-test
+            cd bbang-map-new
             sudo git checkout .
             sudo git pull origin main
             sudo npm install
