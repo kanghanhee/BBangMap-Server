@@ -15,7 +15,7 @@ jobs:
           username: ${{secrets.TEST_REMOTE_SSH_ID}}
           key: ${{secrets.TEST_REMOTE_SSH_KEY}}
           port: ${{secrets.TEST_REMOTE_SSH_PORT}}
-      - run: |
+          script: 
             cd /home/ubuntu/BBang-map-test
             sudo git pull
             sudo git config --global user.username ${{secrets.GIT_USERNAME}}
