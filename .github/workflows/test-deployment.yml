@@ -15,13 +15,16 @@ jobs:
           key: ${{secrets.TEST_REMOTE_SSH_KEY}}
           port: ${{secrets.TEST_REMOTE_SSH_PORT}}
           script: |
+            sudo git config --global user.username ${{secrets.GIT_USERNAME}}
+            sudo git config --global user.password ${{secrets.GIT_PASSWORD}}
             sudo git config --global --add safe.directory /home/***/BBang-map-test
             sudo git config --global --add safe.directory ~/BBang-map-test
             sudo git config --global --add safe.directory ~/BBang-map-test/BBangMap-Server
-            cd /home/ubuntu/BBang-map-test/BBangMap-Server
+            sudo git config --global --add safe.directory ~/BBang-map-test/BBangMap-Server/src
+            cd /home/ubuntu/BBang-map-test/BBangMap-Server/src
             sudo git checkout .
             sudo git pull
-            sudo git config --global user.username ${{secrets.GIT_USERNAME}}
-            sudo git config --global user.password ${{secrets.GIT_PASSWORD}}
+            sudo ls -al
+
             sudo npm install
             pm2 restart bbang-map-server
