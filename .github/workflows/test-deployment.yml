@@ -17,7 +17,8 @@ jobs:
           script: |
             sudo git config --global --add safe.directory /home/***/BBang-map-test
             sudo git config --global --add safe.directory ~/BBang-map-test
-            cd /home/ubuntu/BBang-map-test
+            sudo git config --global --add safe.directory ~/BBang-map-test/BBangMap-Server
+            cd /home/ubuntu/BBang-map-test/BBangMap-Server
             sudo git checkout .
             sudo git pull
             sudo git config --global user.username ${{secrets.GIT_USERNAME}}
