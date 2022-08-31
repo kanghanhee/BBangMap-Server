@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - uses: actions/checkout@v3
       - uses: appleboy/ssh-action@v0.1.4
         with:
           host : ${{secrets.TEST_REMOTE_IP}}
@@ -16,8 +17,7 @@ jobs:
           port: ${{secrets.TEST_REMOTE_SSH_PORT}}
       - run: |
             cd /home/ubuntu/BBang-map-test
-      - uses: actions/checkout@v3
-      - run: |
+            sudo git pull
             sudo git config --global user.username ${{secrets.GIT_USERNAME}}
             sudo git config --global user.password ${{secrets.GIT_PASSWORD}}
             npm install
