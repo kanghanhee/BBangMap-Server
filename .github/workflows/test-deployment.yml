@@ -8,15 +8,8 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Deploy deployment
+      - name: Checkout and pull
         uses: actions/checkout@v2
-      - run: |
-            sudo git config --global --add safe.directory ~/home/ubuntu/BBang-map-test
-            sudo git config --global --add safe.directory ~/BBang-map-test
-            sudo git config --global user.username ${{secrets.GIT_USERNAME}}
-            sudo git config --global user.password ${{secrets.GIT_PASSWORD}}
-            sudo git pull origin main
-        working-directory: /home/ubuntu/BBang-map-test
       - uses: appleboy/ssh-action@v0.1.4
         with:
           host : ${{secrets.TEST_REMOTE_IP}}
@@ -24,5 +17,7 @@ jobs:
           key: ${{secrets.TEST_REMOTE_SSH_KEY}}
           port: ${{secrets.TEST_REMOTE_SSH_PORT}}
           script: |
-            sudo npm install
+            cd /home/ubuntu/Bbang-map-test
+            git pull origin main
+            npm install
             pm2 restart bbang-map-server
