@@ -14,6 +14,7 @@ jobs:
             sudo git config --global --add safe.directory ~/BBang-map-test
             sudo git config --global user.username ${{secrets.GIT_USERNAME}}
             sudo git config --global user.password ${{secrets.GIT_PASSWORD}}
+            ls -al
             cd BBang-map-test
             sudo git checkout .
       - name: Deploy deployment
