@@ -8,17 +8,15 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Move to dir
-        run: |
+      - name: Deploy deployment
+        uses: actions/checkout@v2
+      - run: |
             sudo git config --global --add safe.directory ~/home/ubuntu/BBang-map-test
             sudo git config --global --add safe.directory ~/BBang-map-test
             sudo git config --global user.username ${{secrets.GIT_USERNAME}}
             sudo git config --global user.password ${{secrets.GIT_PASSWORD}}
-            sudo pwd
-            cd BBang-map-test
-            sudo git checkout .
-      - name: Deploy deployment
-        uses: actions/checkout@v2
+            sudo git pull origin main
+        working-directory: /home/ubuntu/BBang-map-test
       - uses: appleboy/ssh-action@v0.1.4
         with:
           host : ${{secrets.TEST_REMOTE_IP}}
