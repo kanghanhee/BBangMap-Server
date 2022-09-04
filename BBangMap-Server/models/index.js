@@ -28,6 +28,7 @@ db.LikeCuration = require('../src/curation/model/LikeCuration')(sequelize, Seque
 db.CurationContent = require('../src/curation/model/CurationContent')(sequelize, Sequelize);
 db.MatchingCurationContents = require('../src/curation/model/MatchingCurationContents')(sequelize, Sequelize);
 db.RequestedBakery = require('../src/requestedBakery/model')(sequelize, Sequelize);
+db.SearchLocation = require('../src/bakery/model/searchLocation')(sequelize, Sequelize);
 /* 보관한 빵집 리스트 user:bakery(1:N) */
 db.User.belongsToMany(db.Bakery, { through: 'SaveBakery', as: 'SavedBakery' });
 db.Bakery.belongsToMany(db.User, { through: 'SaveBakery', as: 'SaverBakery' });
