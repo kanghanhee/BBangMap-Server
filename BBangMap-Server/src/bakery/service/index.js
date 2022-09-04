@@ -2,6 +2,7 @@ const modelUtil = require('../../../models/modelUtil');
 const userUtils = require('../../user/utils');
 const bakeryUtils = require('../utils');
 const reviewUtils = require('../../review/utils');
+const searchInfoUtils = require('../utils/searchLocation');
 const { Bakery } = require('../../../models');
 const db = require('../../../models');
 
@@ -21,6 +22,8 @@ module.exports = {
     let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
 
     await reviewUtils.findReviewByBakeryList(bakeryList);
+
+    await searchInfoUtils.saveSearchLocation(latitude, longitude, radius);
 
     return await bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
   },
@@ -149,13 +152,6 @@ module.exports = {
   },
   bakeryModify: async (bakeryId, modifyInfo) => {
     try {
-      await bakeryUtils.validateDuplicateBakeryInfo(
-        modifyInfo.bakeryName,
-        modifyInfo.address,
-        modifyInfo.latitude,
-        modifyInfo.longitude,
-      );
-
       const bakery = await Bakery.findByPk(bakeryId);
       if (bakery === null) throw new Error('NOT_EXIST_BAKERY');
       bakery.set({
