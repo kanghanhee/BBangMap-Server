@@ -6,11 +6,14 @@ const CurationListByAdminDto = require('../dto/curationListByAdminDto')
 
 module.exports = {
     addCuration: async (body, image) => {
-        if (image === undefined) {
-            throw new Error("CURATION_IMAGE_REQUIRE")
-        }
+        const {mainTitle, subTitle, curatorComment, reviewerId, reviewIdList, curationContentId, curationImage} = body;
 
-        const {mainTitle, subTitle, curatorComment, reviewerId, reviewIdList, curationContentId} = body;
+        if (image === undefined) {
+            // throw new Error("CURATION_IMAGE_REQUIRE")
+            image = curationImage;
+        }else{
+            image = image.location
+        }
 
         if (curationContentId != 1 && curationContentId != 2) {
             throw new Error("NOT_FOUND_CURATION_CONTENT")
@@ -20,7 +23,7 @@ module.exports = {
             mainTitle,
             subTitle,
             curatorComment,
-            image.location,
+            image,
             reviewIdList,
             curationContentId
         );
