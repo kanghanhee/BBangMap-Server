@@ -149,13 +149,6 @@ module.exports = {
   },
   bakeryModify: async (bakeryId, modifyInfo) => {
     try {
-      await bakeryUtils.validateDuplicateBakeryInfo(
-        modifyInfo.bakeryName,
-        modifyInfo.address,
-        modifyInfo.latitude,
-        modifyInfo.longitude,
-      );
-
       const bakery = await Bakery.findByPk(bakeryId);
       if (bakery === null) throw new Error('NOT_EXIST_BAKERY');
       bakery.set({
