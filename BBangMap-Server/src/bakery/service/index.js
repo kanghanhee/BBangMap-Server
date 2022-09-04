@@ -2,6 +2,7 @@ const modelUtil = require('../../../models/modelUtil');
 const userUtils = require('../../user/utils');
 const bakeryUtils = require('../utils');
 const reviewUtils = require('../../review/utils');
+const searchInfoUtils = require('../utils/searchLocation');
 const { Bakery } = require('../../../models');
 const db = require('../../../models');
 
@@ -21,6 +22,8 @@ module.exports = {
     let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
 
     await reviewUtils.findReviewByBakeryList(bakeryList);
+
+    await searchInfoUtils.saveSearchLocation(latitude, longitude, radius);
 
     return await bakeryMapListDto(bakeryList, savedBakeryList, visitedBakeryList);
   },
