@@ -90,9 +90,10 @@ module.exports = {
     const review = await reviewUtils.findReviewBakeryById(reviewId);
     if (review == null) throw new Error('NOT FOUND REVIEW');
     const savedReviewList = await reviewUtils.findUsersSavedReviewList(user);
+    const likedReviewList = await reviewUtils.findUsersLikedReviewList(user);
     const likeReviewCount = await reviewUtils.findLikeReviewCount(reviewId);
 
-    return reviewDetailWithAddressDto(review, savedReviewList, likeReviewCount, user.id);
+    return reviewDetailWithAddressDto(review, savedReviewList, likedReviewList, likeReviewCount, user.id);
   },
   getSavedReviewFolderList: async user => {
     let findUser = await userUtils.findUserIncludeSavedReview(user);
