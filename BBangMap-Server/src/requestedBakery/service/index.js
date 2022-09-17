@@ -4,7 +4,7 @@ const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const requestBakerySearchDto = require('../dto/requestBakerySearchDto');
 const requestBakeryDto = require('../dto/requestBakeryDto');
-const responseBakeryDto = require('../dto/responseBakeryDto');
+const requestBakeryDetailDto = require('../dto/requestBakeryDetailDto');
 
 module.exports = {
   getSearchRequestedBakeryList: async keyword => {
@@ -52,7 +52,18 @@ module.exports = {
     const result = [];
     const requestedBakeryList = await requestedBakeryUtils.getRequestedBakeryList();
     requestedBakeryList.forEach(bakery => {
-      result.push(requestBakeryDto(bakery.id, bakery.bakeryName, bakery.address, bakery.status, bakery.reason));
+      result.push(
+        requestBakeryDetailDto(
+          bakery.id,
+          bakery.placeId,
+          bakery.bakeryName,
+          bakery.address,
+          bakery.latitude,
+          bakery.longitude,
+          bakery.status,
+          bakery.reason,
+        ),
+      );
     });
     return result;
   },
@@ -60,7 +71,7 @@ module.exports = {
     const result = [];
     const requestedBakeryList = await requestedBakeryUtils.findRequestedBakeryListByUserId(user.id);
     requestedBakeryList.forEach(bakery => {
-      result.push(requestBakeryDto(bakery.id, bakery.bakeryName, bakery.address, bakery.status, bakery.reason));
+      result.push(requestBakeryDetailDto(bakery.id, bakery.bakeryName, bakery.address, bakery.status, bakery.reason));
     });
     return result;
   },
