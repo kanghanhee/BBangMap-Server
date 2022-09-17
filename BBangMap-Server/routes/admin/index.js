@@ -10,7 +10,12 @@ const requestBakeryController = require('../../src/requestedBakery/controller');
 
 router.post('/bakery', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.registerBakery);
 router.get('/bakery', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.bakeryListByAdmin);
-router.get('/bakery/request', requestBakeryController.getRequestedBakeryList);
+router.get(
+  '/bakery/request',
+  authUtil.checkToken,
+  authUtil.checkAdminToken,
+  requestBakeryController.getRequestedBakeryList,
+);
 router.get('/bakery/:bakeryId', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.bakeryDetailByAdmin);
 router.put('/bakery/:bakeryId', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.bakeryModifyByAdmin);
 router.delete('/bakery/:bakeryId', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.bakeryDelete);
