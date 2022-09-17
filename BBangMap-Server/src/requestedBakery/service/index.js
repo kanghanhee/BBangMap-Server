@@ -56,6 +56,7 @@ module.exports = {
         requestBakeryDetailDto(
           bakery.id,
           bakery.placeId,
+          bakery.UserId,
           bakery.bakeryName,
           bakery.address,
           bakery.latitude,

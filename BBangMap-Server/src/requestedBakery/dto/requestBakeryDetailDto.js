@@ -2,6 +2,7 @@ const requestBakeryDetailDto = (id, placeId, userId, name, address, latitude, lo
   return {
     id,
     placeId,
+    userId,
     name,
     address,
     latitude,
