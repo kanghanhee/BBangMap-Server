@@ -39,10 +39,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         define: 0,
       },
-        isCertificated:{
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
-        }
+      isCertificated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      deviceToken: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
     },
     {
       freezeTableName: true,

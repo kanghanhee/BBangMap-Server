@@ -4,7 +4,7 @@ const fs = require('fs');
 const { sequelize } = require('../../../models');
 const { User, Review, SaveBakery, SaveReview } = require('../../../models');
 const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
-const {Op} = require("sequelize");
+const { Op } = require('sequelize');
 
 module.exports = {
   findUserById: async id => {
@@ -35,7 +35,7 @@ module.exports = {
     return true;
   },
   // 회원 등록(role:1-> admin, 2: user)
-  createUser: async (identifyToken, nickname) => {
+  createUser: async (identifyToken, nickname, deviceToken) => {
     return await User.create({
       nickName: nickname,
       identifyToken,
@@ -43,6 +43,7 @@ module.exports = {
       role: 2,
       profileImg: defaultProfileImg,
       backgroundImg: defaultBgImg,
+      deviceToken,
     });
   },
   // 파일 읽기
@@ -151,11 +152,23 @@ module.exports = {
       where: { id },
     });
   },
-  findUserByNickName: async(nickname)=>{
+  findUserByNickName: async nickname => {
     return await User.findAll({
       where: {
-        nickname: {[Op.like]: `%${nickname}%`}
-      }
-    })
-  }
+        nickname: { [Op.like]: `%${nickname}%` },
+      },
+    });
+  },
+  setUserDeviceToken: async (user, deviceToken) => {
+    await User.update(
+      {
+        deviceToken,
+      },
+      {
+        where: {
+          id: user.id,
+        },
+      },
+    );
+  },
 };
