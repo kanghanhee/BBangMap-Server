@@ -47,6 +47,7 @@ module.exports = {
       if (findUser == null) throw new Error('InvalidAccessToken');
       const newAccessToken = await jwt.sign(findUser);
       await userUtil.setUserToken(findUser, newAccessToken);
+      // fcm token 재설정 해주기
       await userUtil.setUserDeviceToken(findUser, deviceToken);
 
       return loginDto(newAccessToken, findUser.provider, findUser.nickName, true);
