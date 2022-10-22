@@ -1,10 +1,11 @@
-const loginDto = (accessToken, provider, nickname, isLogin) => {
-    return {
-        accessToken : accessToken,
-        provider,
-        nickname,
-        isLogin
-    }
-}
+const loginDto = (accessToken, provider, nickname, isLogin, deviceToken) => {
+  return {
+    accessToken,
+    provider,
+    nickname,
+    isLogin,
+    deviceToken,
+  };
+};
 
 module.exports = loginDto;
