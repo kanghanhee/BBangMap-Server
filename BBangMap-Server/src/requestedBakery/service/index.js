@@ -72,7 +72,19 @@ module.exports = {
     const result = [];
     const requestedBakeryList = await requestedBakeryUtils.findRequestedBakeryListByUserId(user.id);
     requestedBakeryList.forEach(bakery => {
-      result.push(requestBakeryDetailDto(bakery.id, bakery.bakeryName, bakery.address, bakery.status, bakery.reason));
+      result.push(
+        requestBakeryDetailDto(
+          bakery.id,
+          bakery.placeId,
+          bakery.UserId,
+          bakery.bakeryName,
+          bakery.address,
+          bakery.latitude,
+          bakery.longitude,
+          bakery.status,
+          bakery.reason,
+        ),
+      );
     });
     return result;
   },
