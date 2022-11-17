@@ -13,7 +13,7 @@ const adminImageUpload = curationMulter({
         acl: 'public-read',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         key: function (req, file, cb) {
-            cb(null, `images/common/` + Date.now() + '.' + file.originalname.split('.').pop());
+            cb(null, `images/${req.headers.path}/` + Date.now() + '.' + file.originalname.split('.').pop());
         },
     }),
 });
