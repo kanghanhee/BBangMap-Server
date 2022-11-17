@@ -76,6 +76,9 @@ module.exports = {
     SUCCESS_PUT_CURATION: '큐레이션 수정하기 성공',
     SUCCESS_PUT_CURATION_PRIORITY: '큐레이션 우선순위 수정 성공',
 
+  /*공통*/
+  SUCCESS_GET_IMAGE: '이미지 불러오기 성공',
+
   /*APP VERSION*/
   INVALID_APP_VERSION: '유효하지않은 APP_VERSION 입니다.'
 };
