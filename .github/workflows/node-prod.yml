@@ -43,6 +43,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
           application_name: BBangmap-node-prod2
           environment_name: Bbangmapnodeprod2-env
-          region: ${{ secrets.AWS_REGION }}
+          region: ${{ env.AWS_REGION }}
           version_label: ${{github.sha}}
           deployment_package: ${{ steps.build-image.outputs.image }}
