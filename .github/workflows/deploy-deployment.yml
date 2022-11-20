@@ -1,0 +1,25 @@
+name: BbangMap-deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: appleboy/ssh-action@master
+        with:
+          host : ${{secrets.DEPLOY_REMOTE_IP}}
+          username: ${{secrets.DEPLOY_REMOTE_SSH_ID}}
+          key: ${{secrets.DEPLOY_REMOTE_SSH_KEY}}
+          port: ${{secrets.DEPLOY_REMOTE_SSH_PORT}}
+          script: |
+            sudo git config --global --add safe.directory /home/***/bbang-map-new
+            sudo git config --global --add safe.directory ~/bbang-map-new
+            sudo git config --global --add safe.directory ~/bbang-map-new/BBangMap-Server
+            sudo git config --global --add safe.directory ~/bbang-map-new/BBangMap-Server/src
+            cd /home/ubuntu/bbang-map-new/BBangMap-Server/src
+            git pull https://${{secrets.GIT_USERNAME}}:${{secrets.GIT_PASSWORD}}@github.com/bbangmap/BBangMap-Server.git
+            sudo npm install
+            pm2 restart bbang-map-server
