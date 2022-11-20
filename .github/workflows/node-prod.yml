@@ -39,8 +39,8 @@ jobs:
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v14
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
           application_name: BBangmap-node-prod2
           environment_name: Bbangmapnodeprod2-env
           region: ${{ env.AWS_REGION }}
