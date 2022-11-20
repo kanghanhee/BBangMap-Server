@@ -16,5 +16,5 @@ jobs:
           ECR_REGISTRY: soleu
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/soleu:$IMAGE_TAG .
+          cd BBangMap-Server && docker build -t $ECR_REGISTRY/soleu:$IMAGE_TAG .
           echo "::set-output name=image::$ECR_REGISTRY/soleu:$IMAGE_TAG"
