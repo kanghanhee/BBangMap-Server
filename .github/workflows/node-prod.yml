@@ -1,49 +1,88 @@
-name : Bbangmap Node Product Deploy
+name: Deploy to EB
 
 on:
   workflow_dispatch:
 
-env:
-  AWS_REGION: ap-northeast-2                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: bbangmap-node-prod  
-  
 jobs:
-  docker-build:
-    runs-on: ubuntu-latest
-    
+  buildAndTest:
+    name: CI Pipeline
+    runs-on: ubuntu-18.04
+    strategy:
+    # Node version은 12 버전을 이용한다.
+      matrix:
+        node-version: ['12.x']
+	
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@v2
+	
+      # Initialize Node.js
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Install project dependencies, test and build
+      - name: Install dependencies
+        run: npm install
+      - name: Run build
+        run: npm run build
+
+  deploy:
+    name: CD Pipeline
+    runs-on: ubuntu-18.04
+
+    strategy:
+      matrix:
+        node-version: ['12.x']
+
+    needs: buildAndTest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create env file
+        run: |
+          touch .env
+          echo PORT=8081 >> .env
+          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+          cat .env
+      # Initialize Node.js
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Install project dependencies and build
+      - name: Install dependencies
+        run: npm install
+
+      # Install AWS CLI 2
+      - name: Install AWS CLI 2
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          which aws
+          sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+      # Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
-          aws-region: ${{ env.AWS_REGION }}
-          mask-aws-account-id: 'no'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          cd BBangMap-Server && docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker push a/a:a
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*' './aws/*' awscliv2.zip
 
+      # Deploy to Elastic Beanstalk
+      # application_name과 environment_name을 꼭 확인하자!
+      # 해당 부분은 꼭 같아야 한다!!
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v14
         with:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
-          application_name: BBangmap-node-prod2
-          environment_name: Bbangmapnodeprod2-env
-          region: ${{ env.AWS_REGION }}
-          version_label: ${{github.sha}}
-          deployment_package: ${{ steps.build-image.outputs.image }}
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: test-server
+          environment_name: Testserver-env
+          region: ${{ secrets.AWS_REGION }}
+          version_label: ${{github.SHA}}
+          deployment_package: deploy.zip
