@@ -14,10 +14,8 @@ jobs:
     # Node version은 12 버전을 이용한다.
       matrix:
         node-version: ['12.x']
-	
     steps:
       - uses: actions/checkout@v2
-	
       # Initialize Node.js
       - name: Install Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
