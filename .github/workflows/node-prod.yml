@@ -1,4 +1,4 @@
-name: Deploy to EB
+name: Bbangmap-node-prod
 
 on:
   workflow_dispatch:
@@ -14,8 +14,10 @@ jobs:
     # Node version은 12 버전을 이용한다.
       matrix:
         node-version: ['12.x']
+        
     steps:
       - uses: actions/checkout@v2
+      
       # Initialize Node.js
       - name: Install Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -25,8 +27,6 @@ jobs:
       # Install project dependencies, test and build
       - name: Install dependencies
         run: npm install
-      - name: Run build
-        run: npm run build
 
   deploy:
     name: CD Pipeline
