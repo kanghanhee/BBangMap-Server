@@ -26,7 +26,7 @@ jobs:
 
       # Install project dependencies, test and build
       - name: Install dependencies
-        run: npm install
+        run:  cd BBangMap-Server && npm install
 
   deploy:
     name: CD Pipeline
@@ -54,7 +54,7 @@ jobs:
 
       # Install project dependencies and build
       - name: Install dependencies
-        run: npm install
+        run: cd BBangMap-Server && npm install
 
       # Install AWS CLI 2
       - name: Install AWS CLI 2
