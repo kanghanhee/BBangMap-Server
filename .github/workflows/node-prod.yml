@@ -11,9 +11,9 @@ jobs:
     name: CI Pipeline
     runs-on: ubuntu-18.04
     strategy:
-    # Node version은 12 버전을 이용한다.
+
       matrix:
-        node-version: ['12.x']
+        node-version: ['16.x']
         
     steps:
       - uses: actions/checkout@v2
@@ -34,7 +34,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['12.x']
+        node-version: ['16.x']
 
     needs: buildAndTest
     steps:
