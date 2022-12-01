@@ -48,6 +48,6 @@ router.put(
 );
 router.put('/curation/:curationId', authUtil.checkToken, authUtil.checkAdminToken, curationController.updateCuration);
 
-router.get('/image/change',authUtil.checkToken, authUtil.checkAdminToken, adminImageUpdate.array('adminImage',10),adminController.changeImageUrl);
+router.post('/image/change',authUtil.checkToken, authUtil.checkAdminToken, adminImageUpdate.array('adminImage',10),adminController.changeImageUrl);
 
 module.exports = router;
