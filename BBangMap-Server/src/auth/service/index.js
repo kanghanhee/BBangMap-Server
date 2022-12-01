@@ -18,7 +18,7 @@ module.exports = {
 
         return loginDto(accessToken, provider, findUser.nickName, false, deviceToken);
       }
-      if (findUser.accessToken == null) {
+      if (findUser.accessToken == null || findUser.accessToken === "" || !jwt.isValid(findUser.accessToken)) {
         accessToken = await jwt.sign(findUser);
         await userUtil.setUserToken(findUser, accessToken);
       } else {

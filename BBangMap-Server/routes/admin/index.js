@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const imageUpload = require('../../modules/multer/curationMulter');
+const adminImageUpdate = require('../../modules/multer/adminMulter')
 const authUtil = require('../../middlewares/authUtil');
 const bakeryController = require('../../src/bakery/controller');
 const userController = require('../../src/user/controller');
 const reviewController = require('../../src/review/controller');
 const curationController = require('../../src/curation/controller');
 const requestBakeryController = require('../../src/requestedBakery/controller');
+const adminController = require('../../src/admin/controller');
 
 router.post('/bakery', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.registerBakery);
 router.get('/bakery', authUtil.checkToken, authUtil.checkAdminToken, bakeryController.bakeryListByAdmin);
@@ -45,5 +47,7 @@ router.put(
   curationController.updateCurationPriority,
 );
 router.put('/curation/:curationId', authUtil.checkToken, authUtil.checkAdminToken, curationController.updateCuration);
+
+router.post('/image/change',authUtil.checkToken, authUtil.checkAdminToken, adminImageUpdate.array('adminImage',10),adminController.changeImageUrl);
 
 module.exports = router;
