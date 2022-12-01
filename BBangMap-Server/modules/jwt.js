@@ -25,12 +25,20 @@ module.exports = {
                 console.log('invalid token');
                 return TOKEN_INVALID;
             }
-            console.log('invalid token');
+
             return TOKEN_INVALID;
         }
         return decoded;
     },
     decode: async (token) => {
         return jwt.decode(token);
+    },
+    isValid: (token) => {
+        try{
+            jwt.verify(token, secretKey);
+            return true;
+        } catch(err) {
+            return false;
+        }
     }
 }
