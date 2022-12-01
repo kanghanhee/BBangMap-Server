@@ -12,6 +12,7 @@ const reviewUpload = reviewMulter({
     s3,
     bucket: bucketUrl,
     acl: 'public-read',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (req, file, cb) {
       cb(null, `images/review/` + Date.now() + '.' + file.originalname.split('.').pop());
     },
