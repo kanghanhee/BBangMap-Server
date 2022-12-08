@@ -138,9 +138,9 @@ module.exports = {
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_PUT_CURATION_PRIORITY));
         } catch (err) {
             console.log(err.message)
-            if (err.message === "Error: DUPLICATE_PRIORITY") {
+            if (err.message === "Error: INVALID_PRIORITY") {
                 slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
-                return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+                return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
             } else {
                 slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
                 return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
