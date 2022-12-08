@@ -204,7 +204,7 @@ module.exports = {
     findCurationByContentId: async () => {
         try {
             return await sequelize.query(
-                "SELECT * FROM MatchingCurationContents as M INNER  Join CurationContent as CC on CC.id = M.CurationContentId INNER Join Curation as C on C.id = M.CurationId INNER Join User as U on C.UserId = U.id Order By M.CurationContentId ASC, M.priority ASC",
+                "SELECT * FROM MatchingCurationContents as M RIGHT Join Curation C on C.id = M.CurationId LEFT Join CurationContent as CC on CC.id = M.CurationContentId INNER Join User as U on C.UserId = U.id Order By M.CurationContentId ASC, M.priority ASC",
                 {type : sequelize.QueryTypes.SELECT}
             )
         } catch (err) {

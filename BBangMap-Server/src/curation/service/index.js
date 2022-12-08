@@ -30,7 +30,6 @@ module.exports = {
     },
     getCurationListByAdmin: async()=>{
        const result = await curationUtil.findCurationByContentId();
-       // return result;
        return CurationListByAdminDto(result);
     },
     getCurationListWithCurationContent: async (user) => {
