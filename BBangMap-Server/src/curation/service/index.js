@@ -74,15 +74,16 @@ module.exports = {
     },
     updateCurationPriority: async (curationList, curationContentId) => {
         try{
-            const checkDuplicateArr = new Array(curationList.length);
+            const checkDuplicateSet = new Set();
 
-            for(let i=0;i<checkDuplicateArr.length;i++){
-                if(!checkDuplicateArr.includes(curationList[i].priority)){
-                    checkDuplicateArr[i] = curationList[i].priority
+            for(let i=0;i<curationList.length;i++){
+                if(curationList[i].priority !== null && !checkDuplicateSet.has(curationList[i].priority)){
+                    checkDuplicateSet.add(curationList[i].priority);
                 }else{
-                    throw Error("DUPLICATE_PRIORITY");
+                    throw Error("INVALID_PRIORITY");
                 }
             }
+
             await curationUtil.updateCurationPriority(curationContentId, curationList);
         }catch(err){
             throw new Error(err);

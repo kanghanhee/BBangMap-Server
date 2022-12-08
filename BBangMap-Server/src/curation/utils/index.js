@@ -187,25 +187,31 @@ module.exports = {
         )
     },
     updateCurationPriority: async (curationContentId, curationList) => {
-        try {
-            await sequelize.transaction(async (transaction) => {
+        await sequelize.transaction(async (transaction) => {
+            try {
+                await MatchingCurationContents.destroy({
+                        where: {curationContentId},
+                        transaction
+                    }
+                );
+
                 for (const curation of curationList) {
-                    MatchingCurationContents.update({
+                    await MatchingCurationContents.create({
+                        CurationId: curation.curationId,
+                        CurationContentId: curationContentId,
                         priority: curation.priority
-                    }, {
-                        where: [{CurationContentId: curationContentId}, {CurationId: curation.curationId}]
                     }, {transaction})
                 }
-            })
-        } catch (err) {
-            throw err;
-        }
+            } catch (err) {
+                throw err;
+            }
+        })
     },
     findCurationByContentId: async () => {
         try {
             return await sequelize.query(
                 "SELECT * FROM MatchingCurationContents as M RIGHT Join Curation C on C.id = M.CurationId LEFT Join CurationContent as CC on CC.id = M.CurationContentId INNER Join User as U on C.UserId = U.id Order By M.CurationContentId ASC, M.priority ASC",
-                {type : sequelize.QueryTypes.SELECT}
+                {type: sequelize.QueryTypes.SELECT}
             )
         } catch (err) {
             throw err;
