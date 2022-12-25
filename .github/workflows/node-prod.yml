@@ -103,4 +103,4 @@ jobs:
           environment_name: Sample-env-1
           region: ${{ env.AWS_REGION }}
           version_label: ${{github.SHA}}
-          deployment_package: deploy.zip
+          deployment_package: deploy1.zip
