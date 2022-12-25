@@ -99,7 +99,7 @@ jobs:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
           application_name: sample
-          environment_name: Sample-env
+          environment_name: Sample-env-1
           region: ${{ env.AWS_REGION }}
           version_label: ${{github.SHA}}
           deployment_package: deploy.zip
