@@ -26,7 +26,7 @@ jobs:
 
       # Install project dependencies, test and build
       - name: Install dependencies
-        run:  cd BBangMap-Server/BBangMap-Server && npm install
+        run:  cd BBangMap-Server && npm install
 
   deploy:
     name: CD Pipeline
@@ -102,5 +102,5 @@ jobs:
           application_name: sample
           environment_name: Sample-env-1
           region: ${{ env.AWS_REGION }}
-          version_label: ${{github.SHA}}
+          version_label: ${{github.run_number}}
           deployment_package: deploy.zip
