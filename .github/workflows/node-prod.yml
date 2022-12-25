@@ -26,7 +26,7 @@ jobs:
 
       # Install project dependencies, test and build
       - name: Install dependencies
-        run:  cd BBangMap-Server && npm install
+        run:  cd BBangMap-Server/BBangMap-Server && npm install
 
   deploy:
     name: CD Pipeline
@@ -42,6 +42,7 @@ jobs:
 
       - name: Create env file
         run: |
+          cd BBangMap-Server/BBangMap-Server
           touch .env
           echo PORT=8081 >> .env
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
@@ -49,8 +50,8 @@ jobs:
           
       - name : Create config file
         run : |
-          cd BBangMap-Server
-          mkdir config
+          mkdir config 
+          cd config
           touch config.json
           echo "${{ secrets.CONFIG }}" > config.json
           touch kakao.js
@@ -70,7 +71,7 @@ jobs:
 
       # Install project dependencies and build
       - name: Install dependencies
-        run: cd BBangMap-Server && npm install
+        run: npm install
 
       # Install AWS CLI 2
       - name: Install AWS CLI 2
