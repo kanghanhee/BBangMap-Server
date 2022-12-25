@@ -106,4 +106,4 @@ jobs:
           environment_name: Sample-env-1
           region: ${{ env.AWS_REGION }}
           version_label: ${{github.run_number}}
-          deployment_package: deploy.zip
+          deployment_package: BBangMap-Server/deploy.zip
