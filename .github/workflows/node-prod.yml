@@ -46,6 +46,22 @@ jobs:
           echo PORT=8081 >> .env
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
           cat .env
+          
+      - name : Create config file
+        run : |
+          cd BBangMap-Server
+          mkdir config
+          touch config.json
+          echo "${{ secrets.CONFIG }}" > config.json
+          touch kakao.js
+          echo "${{secrets.KAKAO }}" > kakao.js
+          touch s3.json
+          echo "${{secrets.S3}}" > s3.json
+          touch secretJwtKey.js
+          echo "${{secrets.SECRETJWTKEY}}" > secretJwtKey.js
+          touch slack.js
+          echo "${{secrets.SLACK}}" > slack.js
+          
       # Initialize Node.js
       - name: Install Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
