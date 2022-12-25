@@ -42,7 +42,7 @@ jobs:
 
       - name: Create env file
         run: |
-          cd BBangMap-Server/BBangMap-Server
+          cd BBangMap-Server
           touch .env
           echo PORT=8081 >> .env
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
@@ -62,6 +62,7 @@ jobs:
           echo "${{secrets.SECRETJWTKEY}}" > secretJwtKey.js
           touch slack.js
           echo "${{secrets.SLACK}}" > slack.js
+          cd ../
           
       # Initialize Node.js
       - name: Install Node.js ${{ matrix.node-version }}
