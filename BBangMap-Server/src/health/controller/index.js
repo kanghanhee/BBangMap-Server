@@ -10,7 +10,7 @@ module.exports = {
             .send(util.success(statusCode.OK, "OK", ""));
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR)
-            .send(util.fail(statusCode.FORBIDDEN,err,""));
+            .send(util.fail(statusCode.INTERNAL_SERVER_ERROR,err,""));
         }
     }
 };
