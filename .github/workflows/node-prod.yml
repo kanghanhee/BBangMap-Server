@@ -7,27 +7,6 @@ env:
   AWS_REGION: ap-northeast-2             
 
 jobs:
-  buildAndTest:
-    name: CI Pipeline
-    runs-on: ubuntu-18.04
-    strategy:
-
-      matrix:
-        node-version: ['16.x']
-        
-    steps:
-      - uses: actions/checkout@v2
-      
-      # Initialize Node.js
-      - name: Install Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      # Install project dependencies, test and build
-      - name: Install dependencies
-        run:  cd BBangMap-Server && npm install
-
   deploy:
     name: CD Pipeline
     runs-on: ubuntu-18.04
@@ -36,7 +15,6 @@ jobs:
       matrix:
         node-version: ['16.x']
 
-    needs: buildAndTest
     steps:
       - uses: actions/checkout@v2
 
@@ -44,7 +22,6 @@ jobs:
         run: |
           cd BBangMap-Server
           touch .env
-          echo PORT=8081 >> .env
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
           cat .env
           
@@ -62,7 +39,6 @@ jobs:
           echo "${{secrets.SECRETJWTKEY}}" > secretJwtKey.js
           touch slack.js
           echo "${{secrets.SLACK}}" > slack.js
-          cd ../
           
       # Initialize Node.js
       - name: Install Node.js ${{ matrix.node-version }}
