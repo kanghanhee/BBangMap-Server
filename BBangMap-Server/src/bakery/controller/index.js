@@ -55,27 +55,27 @@ module.exports = {
         .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
-  // /**
-  //  * @빵집_빵으로_검색하기
-  //  * @route GET /search/bread?type=&q=
-  //  * @access private
-  //  */
-  // bakerySearchByBread: async (req, res) => {
-  //   try {
-  //     const { type, q, latitude, longitude } = req.query;
-  //     const { user } = req.header;
-  //     const bakerySearchListDto = await bakeryService.getBakeryByBread(type, q, latitude, longitude, user);
-  //     return res
-  //       .status(statusCode.OK)
-  //       .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
-  //   } catch (err) {
-  //     slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-  //     return res
-  //       .status(statusCode.INTERNAL_SERVER_ERROR)
-  //       .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
-  //   }
-  // },
-  // /**
+  /**
+   * @빵집_빵이름으로_검색하기
+   * @route GET /search/bread?type=&q=
+   * @access private
+   */
+  bakerySearchByBread: async (req, res) => {
+    try {
+      const { type, q, latitude, longitude } = req.query;
+      const { user } = req.header;
+      const bakerySearchListDto = await bakeryService.getBakeryByBread(type, q, latitude, longitude, user);
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
+    } catch (err) {
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  /**
   //  * @빵집_지역으로_검색하기
   //  * @route GET /search/name?q=
   //  * @access private

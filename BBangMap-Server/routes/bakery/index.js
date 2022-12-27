@@ -7,7 +7,7 @@ router.get('/map', authUtil.checkToken, bakeryController.bakeryMap);
 router.get('/search', authUtil.checkToken, bakeryController.bakerySearch); // 기존 endpoint 추후 삭제
 //router.get('/search/integration', authUtil.checkToken, bakeryController.bakerySearch);
 router.get('/search/name', authUtil.checkToken, bakeryController.bakerySearchByName);
-//router.get('/search/bread', authUtil.checkToken, bakeryController.bakerySearchByBread);
+router.get('/search/bread', authUtil.checkToken, bakeryController.bakerySearchByBread);
 //router.get('/search/area', authUtil.checkToken, bakeryController.bakerySearchByArea);
 router.get('/detail', authUtil.checkToken, bakeryController.bakeryDetail);
 router.get('/imgs', authUtil.checkToken, bakeryController.bakeryImgList);
