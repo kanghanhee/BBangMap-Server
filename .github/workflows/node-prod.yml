@@ -79,8 +79,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
-          application_name: Bbangmap-prod-node
-          environment_name: Bbangmapprodnode-env
+          application_name: bbangmap-prod
+          environment_name: Bbangmapprod-env
           region: ${{ env.AWS_REGION }}
           version_label: ${{github.run_number}}
           deployment_package: BBangMap-Server/deploy.zip
