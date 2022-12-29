@@ -44,6 +44,9 @@ module.exports = {
     try {
       const { q, latitude, longitude } = req.query;
       const { user } = req.header;
+      // @err 1. 필요한 값이 없을 때
+      if (!q)
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
       const bakerySearchListDto = await bakeryService.getBakeryByName(q, latitude, longitude, user);
       return res
         .status(statusCode.OK)
@@ -64,6 +67,9 @@ module.exports = {
     try {
       const { type, q, latitude, longitude } = req.query;
       const { user } = req.header;
+      // @err 1. 필요한 값이 없을 때
+      if (!q)
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
       const bakerySearchListDto = await bakeryService.getBakeryByBread(type, q, latitude, longitude, user);
       return res
         .status(statusCode.OK)
@@ -76,25 +82,35 @@ module.exports = {
     }
   },
   /**
-  //  * @빵집_지역으로_검색하기
-  //  * @route GET /search/name?q=
-  //  * @access private
-  //  */
-  // bakerySearchByName: async (req, res) => {
-  //   try {
-  //     const { q, latitude, longitude } = req.query;
-  //     const { user } = req.header;
-  //     const bakerySearchListDto = await bakeryService.getBakeryByName(q, latitude, longitude, user);
-  //     return res
-  //       .status(statusCode.OK)
-  //       .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
-  //   } catch (err) {
-  //     slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-  //     return res
-  //       .status(statusCode.INTERNAL_SERVER_ERROR)
-  //       .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
-  //   }
-  // },
+   * @빵집_지역으로_검색하기
+   * @route GET /search/area?q=
+   * @access private
+   */
+  bakerySearchByArea: async (req, res) => {
+    try {
+      const { q, areaLatitude, areaLongitude, latitude, longitude } = req.query;
+      const { user } = req.header;
+      // @err 1. 필요한 값이 없을 때
+      if (!q)
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+      const bakerySearchListDto = await bakeryService.getBakeryByArea(
+        q,
+        areaLatitude,
+        areaLongitude,
+        latitude,
+        longitude,
+        user,
+      );
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
+    } catch (err) {
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
   bakeryDetail: async (req, res) => {
     try {
       const { bakeryId } = req.query;

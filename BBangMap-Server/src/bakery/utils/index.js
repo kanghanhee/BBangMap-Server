@@ -1,5 +1,5 @@
 const { Bakery, SaveBakery, VisitBakery, Review, User } = require('../../../models');
-const { Op } = require('sequelize');
+const { Op, literal } = require('sequelize');
 const { sequelize } = require('../../../models/index');
 const { defaultBgImg } = require('../../../modules/definition');
 
@@ -24,6 +24,11 @@ module.exports = {
       },
       // raw: true,
       // nest: true,
+      include: [
+        {
+          model: Review,
+        },
+      ],
       attributes: {},
     });
   },
@@ -177,5 +182,24 @@ module.exports = {
       },
     );
     return bakeryList;
+  },
+  findBakeryByArea: async (q, latitude, longitude) => {
+    const distance = sequelize.literal(
+      `(6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * 
+      cos(radians(longitude) - radians(${longitude})) +sin(radians(${latitude})) * 
+      sin(radians(latitude))))`,
+    );
+    return Bakery.findAll({
+      attributes: {
+        include: [[distance, 'distance']],
+      },
+      having: sequelize.where(distance, { [Op.lt]: q }),
+      include: [
+        {
+          model: Review,
+        },
+      ],
+      order: distance,
+    });
   },
 };

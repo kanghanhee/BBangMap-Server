@@ -21,6 +21,7 @@ module.exports = {
     let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
     let visitedBakeryList = await bakeryUtils.findUsersVisitedBakeryList(user);
     let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
+    console.log(bakeryList);
 
     await reviewUtils.findReviewByBakeryList(bakeryList);
 
@@ -51,9 +52,9 @@ module.exports = {
       const findUser = await userUtils.findUserIncludeVisitedBakery(user);
       const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
       let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(q);
-
       searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
+      console.log(searchBakeryList);
       return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
     } else {
       return null;
@@ -64,9 +65,10 @@ module.exports = {
     if (!type) type = 1;
 
     if (Number(type) === 1) {
-      const searchBakeryList = await bakeryUtils.findBakeryListByBakeryBestMenu(q);
       const findUser = await userUtils.findUserIncludeVisitedBakery(user);
       const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+      let searchBakeryList = await bakeryUtils.findBakeryListByBakeryBestMenu(q);
+      searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
       return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
     }
@@ -80,6 +82,16 @@ module.exports = {
       return bakerySearchReviewListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
     }
     return null;
+  },
+  getBakeryByArea: async (q, areaLatitude, areaLongitude, latitude, longitude, user) => {
+    // 가져온 위경도로 우리 빵집 테이블에서 검색하기
+    // const radius = 3;
+    const findUser = await userUtils.findUserIncludeVisitedBakery(user);
+    const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+    let searchBakeryList = await bakeryUtils.findBakeryByArea(q, areaLatitude, areaLongitude);
+    searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
+
+    return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
   },
   getBakeryDetail: async (bakeryId, user) => {
     let bakery = await bakeryUtils.findBakeryById(bakeryId);
