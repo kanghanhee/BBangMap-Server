@@ -21,7 +21,6 @@ module.exports = {
     let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
     let visitedBakeryList = await bakeryUtils.findUsersVisitedBakeryList(user);
     let bakeryList = await modelUtil.scopeOfTheMapRange(latitude, longitude, radius);
-    console.log(bakeryList);
 
     await reviewUtils.findReviewByBakeryList(bakeryList);
 
@@ -54,7 +53,6 @@ module.exports = {
       let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(q);
       searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
-      console.log(searchBakeryList);
       return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
     } else {
       return null;

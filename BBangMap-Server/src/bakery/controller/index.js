@@ -37,7 +37,7 @@ module.exports = {
   },
   /**
    * @빵집_가게명으로_검색하기
-   * @route GET /search/name?q=
+   * @route GET /search/name?q=&latitude=&logitude
    * @access private
    */
   bakerySearchByName: async (req, res) => {
@@ -60,7 +60,7 @@ module.exports = {
   },
   /**
    * @빵집_빵이름으로_검색하기
-   * @route GET /search/bread?type=&q=
+   * @route GET /search/bread?type=&q=&latitude=&logitude
    * @access private
    */
   bakerySearchByBread: async (req, res) => {
@@ -83,7 +83,7 @@ module.exports = {
   },
   /**
    * @빵집_지역으로_검색하기
-   * @route GET /search/area?q=
+   * @route GET /search/area?q=&areaLatitude=&areaLongitude&latitude=&logitude
    * @access private
    */
   bakerySearchByArea: async (req, res) => {
@@ -91,7 +91,7 @@ module.exports = {
       const { q, areaLatitude, areaLongitude, latitude, longitude } = req.query;
       const { user } = req.header;
       // @err 1. 필요한 값이 없을 때
-      if (!q)
+      if (!q || !areaLatitude || !areaLongitude)
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
       const bakerySearchListDto = await bakeryService.getBakeryByArea(
         q,

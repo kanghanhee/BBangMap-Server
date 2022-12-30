@@ -193,13 +193,13 @@ module.exports = {
       attributes: {
         include: [[distance, 'distance']],
       },
-      having: sequelize.where(distance, { [Op.lt]: radius }),
+      having: sequelize.where(sequelize.col('distance'), { [Op.lt]: radius }),
       include: [
         {
           model: Review,
         },
       ],
-      order: distance,
+      order: sequelize.col('distance'),
     });
   },
 };
