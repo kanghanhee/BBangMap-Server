@@ -84,11 +84,10 @@ module.exports = {
     return null;
   },
   getBakeryByArea: async (q, areaLatitude, areaLongitude, latitude, longitude, user) => {
-    // 가져온 위경도로 우리 빵집 테이블에서 검색하기
-    // const radius = 3;
+    const radius = 10;
     const findUser = await userUtils.findUserIncludeVisitedBakery(user);
     const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
-    let searchBakeryList = await bakeryUtils.findBakeryByArea(q, areaLatitude, areaLongitude);
+    let searchBakeryList = await bakeryUtils.findBakeryByArea(areaLatitude, areaLongitude, radius);
     searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
     return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);

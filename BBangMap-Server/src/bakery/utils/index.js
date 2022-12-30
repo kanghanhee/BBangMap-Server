@@ -183,7 +183,7 @@ module.exports = {
     );
     return bakeryList;
   },
-  findBakeryByArea: async (q, latitude, longitude) => {
+  findBakeryByArea: async (latitude, longitude, radius) => {
     const distance = sequelize.literal(
       `(6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * 
       cos(radians(longitude) - radians(${longitude})) +sin(radians(${latitude})) * 
@@ -193,7 +193,7 @@ module.exports = {
       attributes: {
         include: [[distance, 'distance']],
       },
-      having: sequelize.where(distance, { [Op.lt]: q }),
+      having: sequelize.where(distance, { [Op.lt]: radius }),
       include: [
         {
           model: Review,
