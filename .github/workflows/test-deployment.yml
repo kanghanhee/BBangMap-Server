@@ -19,7 +19,7 @@ jobs:
             sudo git config --global --add safe.directory ~/BBang-map-test
             sudo git config --global --add safe.directory ~/BBang-map-test/BBangMap-Server
             sudo git config --global --add safe.directory ~/BBang-map-test/BBangMap-Server/src
-            cd /home/ubuntu/BBang-map-test/BBangMap-Server/src
+            cd /home/ubuntu/BBangMap-Server/BBangMap-Server/src
             git pull https://${{secrets.GIT_USERNAME}}:${{secrets.GIT_PASSWORD}}@github.com/bbangmap/BBangMap-Server.git
             sudo npm install
             pm2 restart bbang-map-server
