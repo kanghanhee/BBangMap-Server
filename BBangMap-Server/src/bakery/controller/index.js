@@ -5,16 +5,19 @@ const bakeryService = require('../service');
 const slackSender = require('../../../other/slackSender');
 
 module.exports = {
-  
   bakeryMap: async (req, res) => {
     try {
       const { latitude, longitude, radius } = req.query;
       const { user } = req.header;
       const bakeryMapListDto = await bakeryService.getBakeryMap(user, latitude, longitude, radius);
-      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakeryMapListDto));
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakeryMapListDto));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   bakerySearch: async (req, res) => {
@@ -27,7 +30,108 @@ module.exports = {
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  /**
+   * @빵집_가게명으로_검색하기
+   * @route GET /search/name?q=&latitude=&logitude
+   * @access private
+   */
+  bakerySearchByName: async (req, res) => {
+    try {
+      const { q, latitude, longitude } = req.query;
+      const { user } = req.header;
+      // @err 1. 필요한 값이 없을 때
+      if (!q)
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+      const bakerySearchListDto = await bakeryService.getBakeryByName(q, latitude, longitude, user);
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
+    } catch (err) {
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  /**
+   * @빵집_빵이름으로_검색하기
+   * @route GET /search/bread?type=&q=&latitude=&logitude
+   * @access private
+   */
+  bakerySearchByBread: async (req, res) => {
+    try {
+      const { type, q, latitude, longitude } = req.query;
+      const { user } = req.header;
+      // @err 1. 필요한 값이 없을 때
+      if (!q)
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+      const bakerySearchListDto = await bakeryService.getBakeryByBread(type, q, latitude, longitude, user);
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
+    } catch (err) {
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  /**
+   * @빵집_지역으로_검색하기
+   * @route GET /search/area?q=&areaLatitude=&areaLongitude&latitude=&logitude
+   * @access private
+   */
+  bakerySearchByArea: async (req, res) => {
+    try {
+      const { q, areaLatitude, areaLongitude, latitude, longitude } = req.query;
+      const { user } = req.header;
+      // @err 1. 필요한 값이 없을 때
+      if (!q || !areaLatitude || !areaLongitude)
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+      const bakerySearchListDto = await bakeryService.getBakeryByArea(
+        q,
+        areaLatitude,
+        areaLongitude,
+        latitude,
+        longitude,
+        user,
+      );
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
+    } catch (err) {
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+    }
+  },
+  /**
+   * @빵집_통합_검색하기
+   * @route GET /search/bakerySearchIntegration?q=&latitude=&logitude
+   * @access private
+   */
+  bakerySearchIntegration: async (req, res) => {
+    try {
+      const { q, latitude, longitude } = req.query;
+      const { user } = req.header;
+      // @err 1. 필요한 값이 없을 때
+      if (!q)
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+      const bakerySearchListDto = await bakeryService.getBakerySearchIntegration(q, latitude, longitude, user);
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
+    } catch (err) {
+      slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   bakeryDetail: async (req, res) => {
@@ -35,10 +139,14 @@ module.exports = {
       const { bakeryId } = req.query;
       const { user } = req.header;
       const bakeryDetailDto = await bakeryService.getBakeryDetail(bakeryId, user);
-      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakeryDetailDto));
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakeryDetailDto));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   bakeryImgList: async (req, res) => {
@@ -50,7 +158,9 @@ module.exports = {
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_IMG, bakeryImgListDto));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   storedBakeryList: async (req, res) => {
@@ -62,7 +172,9 @@ module.exports = {
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_IMG, savedBakeryListDto));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   storeBakery: async (req, res) => {
@@ -73,7 +185,9 @@ module.exports = {
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_BAKERY));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   unStoreBakery: async (req, res) => {
@@ -84,7 +198,9 @@ module.exports = {
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_BAKERY));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   doBakeryVisited: async (req, res) => {
@@ -102,7 +218,9 @@ module.exports = {
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
       } else {
         slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-        return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        return res
+          .status(statusCode.INTERNAL_SERVER_ERROR)
+          .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
       }
     }
   },
@@ -121,7 +239,9 @@ module.exports = {
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
       } else {
         slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-        return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        return res
+          .status(statusCode.INTERNAL_SERVER_ERROR)
+          .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
       }
     }
   },
@@ -135,24 +255,30 @@ module.exports = {
       // if (err.message === 'SequelizeUniqueConstraintError: Validation error') {
       //   // slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
       //   // return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, 'NON_MATCHING_BAKERY_ID'));
-        //bakeryName, address, latitude, longitude 중복
+      //bakeryName, address, latitude, longitude 중복
       // } else if (err.message === 'Error: DUPLICATE_INFO') {
-      if(err.message === 'Error: DUPLICATE_INFO'){
+      if (err.message === 'Error: DUPLICATE_INFO') {
         slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, 'DUPLICATE_INFO'));
       } else {
         slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-        return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        return res
+          .status(statusCode.INTERNAL_SERVER_ERROR)
+          .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
       }
     }
   },
   bakeryListByAdmin: async (req, res) => {
     try {
       const bakeryList = await bakeryService.bakeryListByAdmin();
-      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_LIST, bakeryList));
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY_LIST, bakeryList));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
   bakeryDetailByAdmin: async (req, res) => {
@@ -169,7 +295,9 @@ module.exports = {
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
       } else {
         slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-        return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        return res
+          .status(statusCode.INTERNAL_SERVER_ERROR)
+          .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
       }
     }
   },
@@ -188,7 +316,9 @@ module.exports = {
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, 'NOT_EXIST_BAKERY'));
       } else {
         slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-        return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        return res
+          .status(statusCode.INTERNAL_SERVER_ERROR)
+          .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
       }
     }
   },
@@ -199,24 +329,30 @@ module.exports = {
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_BAKERY));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
-  bakeryMainImage: async(req, res)=>{
-        try{
-            const {bakeryId} = req.params;
+  bakeryMainImage: async (req, res) => {
+    try {
+      const { bakeryId } = req.params;
 
-            await bakeryService.updateBakeryMainImage(bakeryId, req.file);
-          return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_BAKERY_MAIN_IMAGE));
-        }catch(err){
-            if (err.message === "BAKERY_IMAGE_REQUIRE") {
-                slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
-              return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
-            }else{
-                slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-              return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
-            }
-        }
+      await bakeryService.updateBakeryMainImage(bakeryId, req.file);
+      return res
+        .status(statusCode.OK)
+        .send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_BAKERY_MAIN_IMAGE));
+    } catch (err) {
+      if (err.message === 'BAKERY_IMAGE_REQUIRE') {
+        slackSender.sendError(statusCode.BAD_REQUEST, req.method.toUpperCase(), req.originalUrl, err);
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, err.message));
+      } else {
+        slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
+        return res
+          .status(statusCode.INTERNAL_SERVER_ERROR)
+          .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      }
+    }
   },
   recentBakeryList: async (req, res) => {
     try {
@@ -227,7 +363,9 @@ module.exports = {
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_RECENT_VISITED_BAKERY, result));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
     }
   },
 };

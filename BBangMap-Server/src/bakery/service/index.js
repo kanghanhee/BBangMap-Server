@@ -14,6 +14,7 @@ const savedBakeryListDto = require('../dto/savedBakeryListDto');
 const adminBakeryListDto = require('../dto/adminBakeryListDto');
 const adminBakeryDetailDto = require('../dto/adminBakeryDetailDto');
 const recentVisitedBakeryDto = require('../dto/recentVisitedBakeryDto');
+const bakerySearchReviewListDto = require('../dto/bakerySearchReviewListDto');
 
 module.exports = {
   getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -44,6 +45,50 @@ module.exports = {
     } else {
       return null;
     }
+  },
+  getBakeryByName: async (q, latitude, longitude, user) => {
+    if (q.length > 0) {
+      const findUser = await userUtils.findUserIncludeVisitedBakery(user);
+      const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+      let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(q);
+      searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
+
+      return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
+    } else {
+      return null;
+    }
+  },
+  getBakeryByBread: async (type, q, latitude, longitude, user) => {
+    // type 1 : 검색어가 있는 빵집, type 2 : 검색어로 구매한 빵 후기
+    if (!type) type = 1;
+
+    if (Number(type) === 1) {
+      const findUser = await userUtils.findUserIncludeVisitedBakery(user);
+      const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+      let searchBakeryList = await bakeryUtils.findBakeryListByBakeryBestMenu(q);
+      searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
+
+      return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
+    }
+
+    if (Number(type) === 2) {
+      // 구매한 빵으로 검색하고 후기 포함해서 빵집 정보 불러오기
+      const searchBakeryList = await reviewUtils.findReviewByPurchaseBread(q);
+      const findUser = await userUtils.findUserIncludeVisitedBakery(user);
+      const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+
+      return bakerySearchReviewListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
+    }
+    return null;
+  },
+  getBakeryByArea: async (q, areaLatitude, areaLongitude, latitude, longitude, user) => {
+    const radius = 10;
+    const findUser = await userUtils.findUserIncludeVisitedBakery(user);
+    const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+    let searchBakeryList = await bakeryUtils.findBakeryByArea(areaLatitude, areaLongitude, radius);
+    searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
+
+    return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
   },
   getBakeryDetail: async (bakeryId, user) => {
     let bakery = await bakeryUtils.findBakeryById(bakeryId);
@@ -98,42 +143,42 @@ module.exports = {
   createBakery: async registerBakeryList => {
     try {
       await db.sequelize.transaction(async transaction => {
-          for(let i=0;i<registerBakeryList.length;i++){
-              const registerBakery = registerBakeryList[i];
-              await bakeryUtils.validateDuplicateBakeryInfo(
-                  registerBakery.bakeryName,
-                  registerBakery.address,
-                  registerBakery.latitude,
-                  registerBakery.longitude,
-              );
+        for (let i = 0; i < registerBakeryList.length; i++) {
+          const registerBakery = registerBakeryList[i];
+          await bakeryUtils.validateDuplicateBakeryInfo(
+            registerBakery.bakeryName,
+            registerBakery.address,
+            registerBakery.latitude,
+            registerBakery.longitude,
+          );
 
-              await Bakery.create(
-                  {
-                      bakeryName: registerBakery.bakeryName,
-                      openTime: registerBakery.openTime,
-                      offDay: registerBakery.offDay,
-                      seasonMenu: registerBakery.seasonMenu,
-                      isOnline: registerBakery.isOnline,
-                      isVegan: registerBakery.isVegan,
-                      isDrink: registerBakery.isDrink,
-                      bestMenu: registerBakery.bestMenu,
-                      totalMenu: registerBakery.totalMenu,
-                      address: registerBakery.address,
-                      latitude: registerBakery.latitude,
-                      longitude: registerBakery.longitude,
-                      isAllTheTime: registerBakery.isAllTheTime,
-                      isIrregularPeriod: registerBakery.isIrregularPeriod,
-                      isParkingAvailable: registerBakery.isParkingAvailable,
-                      isChildAvailable: registerBakery.isChildAvailable,
-                      isReservationAvailable: registerBakery.isReservationAvailable,
-                      isPetAvailable: registerBakery.isPetAvailable,
-                      blog: registerBakery.blog,
-                      instagram: registerBakery.instagram,
-                      bakeryImg: [],
-                  },
-                  { transaction },
-              );
-          }
+          await Bakery.create(
+            {
+              bakeryName: registerBakery.bakeryName,
+              openTime: registerBakery.openTime,
+              offDay: registerBakery.offDay,
+              seasonMenu: registerBakery.seasonMenu,
+              isOnline: registerBakery.isOnline,
+              isVegan: registerBakery.isVegan,
+              isDrink: registerBakery.isDrink,
+              bestMenu: registerBakery.bestMenu,
+              totalMenu: registerBakery.totalMenu,
+              address: registerBakery.address,
+              latitude: registerBakery.latitude,
+              longitude: registerBakery.longitude,
+              isAllTheTime: registerBakery.isAllTheTime,
+              isIrregularPeriod: registerBakery.isIrregularPeriod,
+              isParkingAvailable: registerBakery.isParkingAvailable,
+              isChildAvailable: registerBakery.isChildAvailable,
+              isReservationAvailable: registerBakery.isReservationAvailable,
+              isPetAvailable: registerBakery.isPetAvailable,
+              blog: registerBakery.blog,
+              instagram: registerBakery.instagram,
+              bakeryImg: [],
+            },
+            { transaction },
+          );
+        }
       });
     } catch (err) {
       throw new Error(err);
@@ -176,25 +221,25 @@ module.exports = {
         blog: modifyInfo.blog,
         instagram: modifyInfo.instagram,
       });
-            await bakery.save();
-        } catch (err) {
-            throw new Error(err);
-        }
-    },
-    bakeryDelete: async (bakeryId) => {
-        await Bakery.destroy({where: {id: bakeryId}})
-    },
-    updateBakeryMainImage: async (bakeryId, image) => {
-        if (image === undefined) {
-            throw new Error("BAKERY_IMAGE_REQUIRE")
-        }
+      await bakery.save();
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+  bakeryDelete: async bakeryId => {
+    await Bakery.destroy({ where: { id: bakeryId } });
+  },
+  updateBakeryMainImage: async (bakeryId, image) => {
+    if (image === undefined) {
+      throw new Error('BAKERY_IMAGE_REQUIRE');
+    }
 
-        const bakery = await Bakery.findByPk(bakeryId);
+    const bakery = await Bakery.findByPk(bakeryId);
 
-        let newBakeryImg = [];
-        newBakeryImg.push(image.location);
-        bakery.bakeryImg = newBakeryImg.concat(bakery.bakeryImg);
-        await bakery.save();
+    let newBakeryImg = [];
+    newBakeryImg.push(image.location);
+    bakery.bakeryImg = newBakeryImg.concat(bakery.bakeryImg);
+    await bakery.save();
   },
   bakeryDelete: async bakeryId => {
     await Bakery.destroy({ where: { id: bakeryId } });

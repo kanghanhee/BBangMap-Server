@@ -437,6 +437,22 @@ module.exports = {
   deleteReviewImages: imageUrls => {
     if (imageUrls != null && imageUrls.length !== 0) reviewDelete(imageUrls);
   },
+  findReviewByPurchaseBread: async breadName => {
+    return Review.findAll({
+      where: {
+        purchaseBreadList: { [Op.like]: `%${breadName}%` },
+      },
+      include: [
+        {
+          model: Bakery,
+        },
+        {
+          model: User,
+          attributes: ['nickName', 'profileImg'],
+        },
+      ],
+    });
+  },
 };
 
 const getBakeryStar = reviewList => {
