@@ -49,5 +49,12 @@ router.put(
 router.put('/curation/:curationId', authUtil.checkToken, authUtil.checkAdminToken, curationController.updateCuration);
 
 router.post('/image/change',authUtil.checkToken, authUtil.checkAdminToken, adminImageUpdate.array('adminImage',10),adminController.changeImageUrl);
+router.get('/count/research',authUtil.checkToken, authUtil.checkAdminToken, adminController.researchCount);
+router.get('/count/review/like',authUtil.checkToken, authUtil.checkAdminToken, adminController.likeCountOfReview);
+router.get('/count/review/save',authUtil.checkToken, authUtil.checkAdminToken, adminController.saveCountOfReview);
+router.get('/count/curation/like',authUtil.checkToken, authUtil.checkAdminToken, adminController.likeCountOfCuration);
+router.get('/count/bakery/save', authUtil.checkToken, authUtil.checkAdminToken, adminController.saveCountOfBakery);
+router.get('/count/bakery/visit', authUtil.checkToken, authUtil.checkAdminToken, adminController.visitCountOfBakery);
+router.get('/count/user/join', authUtil.checkToken, authUtil.checkAdminToken, adminController.joinCountOfUser);
 
 module.exports = router;

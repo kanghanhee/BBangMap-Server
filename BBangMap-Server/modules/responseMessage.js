@@ -80,5 +80,8 @@ module.exports = {
   SUCCESS_GET_IMAGE: '이미지 불러오기 성공',
 
   /*APP VERSION*/
-  INVALID_APP_VERSION: '유효하지않은 APP_VERSION 입니다.'
+  INVALID_APP_VERSION: '유효하지않은 APP_VERSION 입니다.',
+
+  /*Admin*/
+  SUCCESS_GET_RESEARCH_COUNT: '지도 재검색 횟수',
 };
