@@ -84,4 +84,10 @@ module.exports = {
 
   /*Admin*/
   SUCCESS_GET_RESEARCH_COUNT: '지도 재검색 횟수',
+  SUCCESS_GET_LIKE_REVIEW_COUNT: '리뷰 좋아요 갯수',
+  SUCCESS_GET_SAVE_REVIEW_COUNT: '리뷰 저장하기 갯수',
+  SUCCESS_GET_LIKE_CURATION_COUNT: '큐레이션 좋아요 갯수',
+  SUCCESS_GET_VISITED_BAKERY_COUNT: '방문 빵집 갯수',
+  SUCCESS_GET_SAVE_BAKERY_COUNT: '저장 빵집 갯수',
+  SUCCESS_GET_JOIN_USER_COUNT: '유저 가입 횟수',
 };

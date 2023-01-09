@@ -1,4 +1,4 @@
-const researchCountDto = (researchInfo) => {
+const countOfYearAndMonthDto = (researchInfo) => {
     return researchInfo.map(researchInfo => {
         return {
             year : researchInfo.Year,
@@ -8,4 +8,4 @@ const researchCountDto = (researchInfo) => {
     })
 }
 
-module.exports = researchCountDto;
+module.exports = countOfYearAndMonthDto;
