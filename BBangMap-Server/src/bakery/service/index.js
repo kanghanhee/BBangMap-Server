@@ -15,6 +15,7 @@ const adminBakeryListDto = require('../dto/adminBakeryListDto');
 const adminBakeryDetailDto = require('../dto/adminBakeryDetailDto');
 const recentVisitedBakeryDto = require('../dto/recentVisitedBakeryDto');
 const bakerySearchReviewListDto = require('../dto/bakerySearchReviewListDto');
+const bakerySearchIntegrationDto = require('../dto/bakerySearchIntegrationDto');
 
 module.exports = {
   getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -82,6 +83,23 @@ module.exports = {
     searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
     return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
+  },
+  getBakerySearchIntegration: async (q, latitude, longitude, user) => {
+    const findUser = await userUtils.findUserIncludeVisitedBakery(user);
+    const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+
+    // 빵집 이름 검색
+    let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(q);
+    searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
+
+    // 빵이름 검색
+    let breadList = await bakeryUtils.findBestMenu(q);
+    breadList = [...new Set(breadList.reduce((acc, it) => [...acc, ...it.bestMenu], []))];
+    const filteredBreadList = await bakeryUtils.filterItem(breadList, q);
+
+    // 지역 검색
+
+    return bakerySearchIntegrationDto(searchBakeryList, filteredBreadList, latitude, longitude, visitedBakeryList);
   },
   getBakeryDetail: async (bakeryId, user) => {
     let bakery = await bakeryUtils.findBakeryById(bakeryId);

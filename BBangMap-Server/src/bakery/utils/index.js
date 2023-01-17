@@ -202,4 +202,17 @@ module.exports = {
       order: sequelize.col('distance'),
     });
   },
+  findBestMenu: async breadName => {
+    return Bakery.findAll({
+      where: {
+        bestMenu: { [Op.like]: `%${breadName}%` },
+      },
+      attributes: ['bestMenu'],
+    });
+  },
+  filterItem: async (list, item) => {
+    return list.filter(l => {
+      return l.includes(item);
+    });
+  },
 };
