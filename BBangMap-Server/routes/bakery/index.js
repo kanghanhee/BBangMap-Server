@@ -8,6 +8,7 @@ router.get('/search', authUtil.checkToken, bakeryController.bakerySearch); // ê¸
 router.get('/search/integration', authUtil.checkToken, bakeryController.bakerySearchIntegration);
 router.get('/search/name', authUtil.checkToken, bakeryController.bakerySearchByName);
 router.get('/search/bread', authUtil.checkToken, bakeryController.bakerySearchByBread);
+router.get('/search/review', authUtil.checkToken, bakeryController.bakerySearchReviewByBread);
 router.get('/search/area', authUtil.checkToken, bakeryController.bakerySearchByArea);
 router.get('/detail', authUtil.checkToken, bakeryController.bakeryDetail);
 router.get('/imgs', authUtil.checkToken, bakeryController.bakeryImgList);

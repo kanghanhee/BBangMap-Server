@@ -2,6 +2,8 @@ const { Bakery, SaveBakery, VisitBakery, Review, User } = require('../../../mode
 const { Op, literal } = require('sequelize');
 const { sequelize } = require('../../../models/index');
 const { defaultBgImg } = require('../../../modules/definition');
+const { KAKAO_URL, KAKAO_AUTH } = require('../../../config/kakao');
+const { default: axios } = require('axios');
 
 module.exports = {
   findBakeryListByBakeryName: async bakeryName => {
@@ -201,5 +203,36 @@ module.exports = {
       ],
       order: sequelize.col('distance'),
     });
+  },
+  findBestMenu: async breadName => {
+    return Bakery.findAll({
+      where: {
+        bestMenu: { [Op.like]: `%${breadName}%` },
+      },
+      attributes: ['bestMenu'],
+    });
+  },
+  filterItem: async (list, item) => {
+    return list.filter(l => {
+      return l.includes(item);
+    });
+  },
+  findAreaByKakao: async keyword => {
+    try {
+      const response = await axios.get(`${KAKAO_URL}/local/search/keyword`, {
+        headers: {
+          Authorization: KAKAO_AUTH,
+        },
+        params: {
+          query: keyword,
+          category_group_code: 'SW8',
+          page: 1,
+          size: 15,
+        },
+      });
+      return response.data.documents;
+    } catch (error) {
+      throw error;
+    }
   },
 };
