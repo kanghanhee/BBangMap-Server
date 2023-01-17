@@ -98,8 +98,16 @@ module.exports = {
     const filteredBreadList = await bakeryUtils.filterItem(breadList, q);
 
     // 지역 검색
+    const kakaoAreaList = await bakeryUtils.findAreaByKakao(q);
 
-    return bakerySearchIntegrationDto(searchBakeryList, filteredBreadList, latitude, longitude, visitedBakeryList);
+    return bakerySearchIntegrationDto(
+      searchBakeryList,
+      filteredBreadList,
+      kakaoAreaList,
+      latitude,
+      longitude,
+      visitedBakeryList,
+    );
   },
   getBakeryDetail: async (bakeryId, user) => {
     let bakery = await bakeryUtils.findBakeryById(bakeryId);
