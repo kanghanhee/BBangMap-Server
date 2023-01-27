@@ -3,6 +3,7 @@ const userUtils = require('../../user/utils');
 const bakeryUtils = require('../utils');
 const reviewUtils = require('../../review/utils');
 const searchInfoUtils = require('../utils/searchLocation');
+const requestedBakeryUtils = require('../../requestedBakery/utils')
 const { Bakery } = require('../../../models');
 const db = require('../../../models');
 
@@ -164,6 +165,7 @@ module.exports = {
       await db.sequelize.transaction(async transaction => {
         for (let i = 0; i < registerBakeryList.length; i++) {
           const registerBakery = registerBakeryList[i];
+
           await bakeryUtils.validateDuplicateBakeryInfo(
             registerBakery.bakeryName,
             registerBakery.address,
@@ -197,6 +199,10 @@ module.exports = {
             },
             { transaction },
           );
+
+          if(registerBakery.requestId != null){
+            await requestedBakeryUtils.acceptBakeryRequest(registerBakery.requestId, true)
+          }
         }
       });
     } catch (err) {
