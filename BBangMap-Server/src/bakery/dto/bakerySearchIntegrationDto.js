@@ -12,7 +12,7 @@ const bakerySearchIntegrationDto = async (
   return {
     bakeryList: searchBakeryList.map(bakery => bakerySearchDto(bakery, latitude, longitude, visitedBakeryList)),
     breadList: filteredBreadList,
-    areaList: kakaoAreaList.map(area => areaDto(area)),
+    areaList: await Promise.all(kakaoAreaList.map(area => areaDto(area))),
     bakeryTotalCount: searchBakeryList.length,
     breadTotalCount: filteredBreadList.length,
     areaTotalCount: kakaoAreaList.length,

@@ -3,7 +3,7 @@ const userUtils = require('../../user/utils');
 const bakeryUtils = require('../utils');
 const reviewUtils = require('../../review/utils');
 const searchInfoUtils = require('../utils/searchLocation');
-const requestedBakeryUtils = require('../../requestedBakery/utils')
+const requestedBakeryUtils = require('../../requestedBakery/utils');
 const { Bakery } = require('../../../models');
 const db = require('../../../models');
 
@@ -77,7 +77,7 @@ module.exports = {
     return bakerySearchReviewListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
   },
   getBakeryByArea: async (q, areaLatitude, areaLongitude, latitude, longitude, user) => {
-    const radius = 10;
+    const radius = 3;
     const findUser = await userUtils.findUserIncludeVisitedBakery(user);
     const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
     let searchBakeryList = await bakeryUtils.findBakeryByArea(areaLatitude, areaLongitude, radius);
@@ -200,8 +200,8 @@ module.exports = {
             { transaction },
           );
 
-          if(registerBakery.requestId != null){
-            await requestedBakeryUtils.acceptBakeryRequest(registerBakery.requestId, true)
+          if (registerBakery.requestId != null) {
+            await requestedBakeryUtils.acceptBakeryRequest(registerBakery.requestId, true);
           }
         }
       });
