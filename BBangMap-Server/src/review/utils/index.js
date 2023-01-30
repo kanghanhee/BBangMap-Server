@@ -419,6 +419,7 @@ module.exports = {
   getBakeryStarOfBakeryList: async bakeryList => {
     return bakeryList.map(bakery => {
       bakery.star = getBakeryStar(bakery.Reviews);
+      //console.log(bakery);
       return bakery;
     });
   },
@@ -461,5 +462,5 @@ const getBakeryStar = reviewList => {
     return sum + currValue;
   }, 0);
 
-  return result / reviewList.length;
+  return isNaN(result / reviewList.length) ? null : (result / reviewList.length).toFixed(1);
 };
