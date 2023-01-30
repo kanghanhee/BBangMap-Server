@@ -1,8 +1,8 @@
-const areaDto = area => {
+const areaDto = async area => {
   return {
     area: area.place_name,
-    areaLongitude: area.x,
-    areaLatitude: area.y,
+    areaLongitude: parseFloat(area.x),
+    areaLatitude: parseFloat(area.y),
   };
 };
 
