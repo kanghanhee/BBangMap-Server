@@ -12,8 +12,9 @@ const bakerySearchDto = (searchBakery, latitude, longitude, visitedBakeryList) =
         : bakeryUtils.getDistance(searchBakery.latitude, searchBakery.longitude, latitude, longitude),
     isVisitedBakery: visitedBakeryList.includes(searchBakery.id),
     address: searchBakery.address,
-    star: parseFloat(searchBakery.star).toFixed(1),
+    star: searchBakery.star,
     mainImg: searchBakery.bakeryImg.length !== 0 ? searchBakery.bakeryImg[0] : null,
+    reviewTotalCount: searchBakery.Reviews.length,
   };
 };
 
