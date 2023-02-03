@@ -462,5 +462,5 @@ const getBakeryStar = reviewList => {
     return sum + currValue;
   }, 0);
 
-  return isNaN(result / reviewList.length) ? null : (result / reviewList.length).toFixed(1);
+  return isNaN(result / reviewList.length) ? null : parseFloat(result / reviewList.length);
 };
