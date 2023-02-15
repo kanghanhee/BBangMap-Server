@@ -23,27 +23,11 @@ module.exports = {
       // pagination
       offset,
       limit,
-      attributes: {
-        include: [
-          [
-            Sequelize.literal(`(
-              SELECT COUNT(lr.ReviewId)
-              FROM LikeReview AS lr
-              WHERE lr.ReviewId = Review.id
-          )`),
-            'likeReviewCount',
-          ],
-        ],
-      },
       include: [
         {
           model: Bakery,
           attributes: ['bakeryName'],
           include: [
-            {
-              model: User,
-              as: 'SaverBakery',
-            },
             {
               model: User,
               as: 'VisiterBakery',
@@ -52,10 +36,15 @@ module.exports = {
         },
         {
           model: User,
+          as: 'SaverReview',
         },
         {
           model: User,
-          as: 'SaverReview',
+          as: 'Liker',
+        },
+        {
+          model: User,
+          attributes: ['nickName'],
         },
       ],
       order: [[Sequelize.literal(order), 'DESC']],
