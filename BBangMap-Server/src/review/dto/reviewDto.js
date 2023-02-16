@@ -1,6 +1,6 @@
 const { defaultBgImg } = require('../../../modules/definition');
 
-const detailDto = (review, likedReviewList, userId) => {
+const detailDto = (review, userId) => {
   return {
     reviewId: review.id,
     bakeryName: review.Bakery.bakeryName,

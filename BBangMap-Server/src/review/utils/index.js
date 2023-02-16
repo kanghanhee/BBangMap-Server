@@ -26,10 +26,10 @@ module.exports = {
       attributes: {
         include: [
           [
-            Sequelize.literal(`(
-              SELECT COUNT(lr.ReviewId)
-              FROM LikeReview AS lr
-              WHERE lr.ReviewId = Review.id
+            sequelize.literal(`(
+            SELECT COUNT(lr.ReviewId)
+            FROM LikeReview AS lr
+            WHERE lr.ReviewId = Review.id
           )`),
             'likeReviewCount',
           ],
@@ -42,20 +42,21 @@ module.exports = {
           include: [
             {
               model: User,
-              as: 'SaverBakery',
-            },
-            {
-              model: User,
               as: 'VisiterBakery',
             },
           ],
         },
         {
           model: User,
+          as: 'SaverReview',
         },
         {
           model: User,
-          as: 'SaverReview',
+          as: 'Liker',
+        },
+        {
+          model: User,
+          attributes: ['nickName'],
         },
       ],
       order: [[Sequelize.literal(order), 'DESC']],
