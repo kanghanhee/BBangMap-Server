@@ -14,6 +14,7 @@ const bakerySearchDto = (searchBakery, latitude, longitude, visitedBakeryList) =
     address: searchBakery.address,
     star: searchBakery.star,
     mainImg: searchBakery.bakeryImg.length !== 0 ? searchBakery.bakeryImg[0] : null,
+    reviewTotalCount: searchBakery.Reviews.length,
   };
 };
 

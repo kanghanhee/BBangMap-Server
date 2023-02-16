@@ -94,10 +94,6 @@ module.exports = {
           include: [
             {
               model: User,
-              as: 'SaverBakery',
-            },
-            {
-              model: User,
               as: 'VisiterBakery',
             },
           ],
@@ -105,11 +101,15 @@ module.exports = {
         },
         {
           model: User,
-          attributes: {},
+          as: 'SaverReview',
         },
         {
           model: User,
-          as: 'SaverReview',
+          as: 'Liker',
+        },
+        {
+          model: User,
+          attributes: ['nickName'],
         },
       ],
       offset,
@@ -419,6 +419,7 @@ module.exports = {
   getBakeryStarOfBakeryList: async bakeryList => {
     return bakeryList.map(bakery => {
       bakery.star = getBakeryStar(bakery.Reviews);
+      //console.log(bakery);
       return bakery;
     });
   },
@@ -461,5 +462,5 @@ const getBakeryStar = reviewList => {
     return sum + currValue;
   }, 0);
 
-  return result / reviewList.length;
+  return isNaN(result / reviewList.length) ? null : parseFloat(result / reviewList.length);
 };

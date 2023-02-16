@@ -3,6 +3,7 @@ const userUtils = require('../../user/utils');
 const bakeryUtils = require('../utils');
 const reviewUtils = require('../../review/utils');
 const searchInfoUtils = require('../utils/searchLocation');
+const requestedBakeryUtils = require('../../requestedBakery/utils');
 const { Bakery } = require('../../../models');
 const db = require('../../../models');
 
@@ -15,6 +16,7 @@ const adminBakeryListDto = require('../dto/adminBakeryListDto');
 const adminBakeryDetailDto = require('../dto/adminBakeryDetailDto');
 const recentVisitedBakeryDto = require('../dto/recentVisitedBakeryDto');
 const bakerySearchReviewListDto = require('../dto/bakerySearchReviewListDto');
+const bakerySearchIntegrationDto = require('../dto/bakerySearchIntegrationDto');
 
 module.exports = {
   getBakeryMap: async (user, latitude, longitude, radius) => {
@@ -58,37 +60,55 @@ module.exports = {
       return null;
     }
   },
-  getBakeryByBread: async (type, q, latitude, longitude, user) => {
-    // type 1 : 검색어가 있는 빵집, type 2 : 검색어로 구매한 빵 후기
-    if (!type) type = 1;
+  getBakeryByBread: async (q, latitude, longitude, user) => {
+    const findUser = await userUtils.findUserIncludeVisitedBakery(user);
+    const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+    let searchBakeryList = await bakeryUtils.findBakeryListByBakeryBestMenu(q);
+    searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
-    if (Number(type) === 1) {
-      const findUser = await userUtils.findUserIncludeVisitedBakery(user);
-      const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
-      let searchBakeryList = await bakeryUtils.findBakeryListByBakeryBestMenu(q);
-      searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
+    return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
+  },
+  getBakeryReviewByBread: async (q, latitude, longitude, user) => {
+    // 구매한 빵으로 검색하고 후기 포함해서 빵집 정보 불러오기
+    const searchBakeryList = await reviewUtils.findReviewByPurchaseBread(q);
+    const findUser = await userUtils.findUserIncludeVisitedBakery(user);
+    const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
 
-      return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
-    }
-
-    if (Number(type) === 2) {
-      // 구매한 빵으로 검색하고 후기 포함해서 빵집 정보 불러오기
-      const searchBakeryList = await reviewUtils.findReviewByPurchaseBread(q);
-      const findUser = await userUtils.findUserIncludeVisitedBakery(user);
-      const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
-
-      return bakerySearchReviewListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
-    }
-    return null;
+    return bakerySearchReviewListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
   },
   getBakeryByArea: async (q, areaLatitude, areaLongitude, latitude, longitude, user) => {
-    const radius = 10;
+    const radius = 3;
     const findUser = await userUtils.findUserIncludeVisitedBakery(user);
     const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
     let searchBakeryList = await bakeryUtils.findBakeryByArea(areaLatitude, areaLongitude, radius);
     searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
     return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
+  },
+  getBakerySearchIntegration: async (q, latitude, longitude, user) => {
+    const findUser = await userUtils.findUserIncludeVisitedBakery(user);
+    const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
+
+    // 빵집 이름 검색
+    let searchBakeryList = await bakeryUtils.findBakeryListByBakeryName(q);
+    searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
+
+    // 빵이름 검색
+    let breadList = await bakeryUtils.findBestMenu(q);
+    breadList = [...new Set(breadList.reduce((acc, it) => [...acc, ...it.bestMenu], []))];
+    const filteredBreadList = await bakeryUtils.filterItem(breadList, q);
+
+    // 지역 검색
+    const kakaoAreaList = await bakeryUtils.findAreaByKakao(q);
+
+    return bakerySearchIntegrationDto(
+      searchBakeryList,
+      filteredBreadList,
+      kakaoAreaList,
+      latitude,
+      longitude,
+      visitedBakeryList,
+    );
   },
   getBakeryDetail: async (bakeryId, user) => {
     let bakery = await bakeryUtils.findBakeryById(bakeryId);
@@ -145,6 +165,7 @@ module.exports = {
       await db.sequelize.transaction(async transaction => {
         for (let i = 0; i < registerBakeryList.length; i++) {
           const registerBakery = registerBakeryList[i];
+
           await bakeryUtils.validateDuplicateBakeryInfo(
             registerBakery.bakeryName,
             registerBakery.address,
@@ -178,6 +199,10 @@ module.exports = {
             },
             { transaction },
           );
+
+          if (registerBakery.requestId != null) {
+            await requestedBakeryUtils.acceptBakeryRequest(registerBakery.requestId, true);
+          }
         }
       });
     } catch (err) {
