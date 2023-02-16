@@ -68,11 +68,8 @@ module.exports = {
       limit,
       orderHash[order],
     );
-
-    const findUser = await userUtils.findUserIncludeLikedReview(user);
-    const likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
-
-    const result = reviewListDto(reviewList, likedReviewList, user.id);
+    console.log(reviewList[0]);
+    const result = reviewListDto(reviewList, user.id);
 
     return result;
   },

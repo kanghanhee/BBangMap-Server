@@ -94,10 +94,6 @@ module.exports = {
           include: [
             {
               model: User,
-              as: 'SaverBakery',
-            },
-            {
-              model: User,
               as: 'VisiterBakery',
             },
           ],
@@ -105,11 +101,15 @@ module.exports = {
         },
         {
           model: User,
-          attributes: {},
+          as: 'SaverReview',
         },
         {
           model: User,
-          as: 'SaverReview',
+          as: 'Liker',
+        },
+        {
+          model: User,
+          attributes: ['nickName'],
         },
       ],
       offset,

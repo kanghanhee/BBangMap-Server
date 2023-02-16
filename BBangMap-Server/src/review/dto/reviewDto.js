@@ -11,7 +11,7 @@ const detailDto = (review, likedReviewList, userId) => {
     purchaseBreadList: review.purchaseBreadList,
     isOnline: review.Bakery.isOnline,
     isVegan: review.Bakery.isVegan,
-    isLikedReview: !!likedReviewList.includes(review.id),
+    isLikedReview: review.Liker.map(liker => liker.id).includes(userId),
     likeReviewCount: review.dataValues.likeReviewCount,
     isSaveReview: review.SaverReview.map(saver => saver.id).includes(userId),
     isVisitedBakery: review.Bakery.VisiterBakery.map(visiter => visiter.id).includes(userId),
