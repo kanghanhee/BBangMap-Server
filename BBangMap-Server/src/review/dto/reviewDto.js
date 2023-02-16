@@ -1,6 +1,6 @@
 const { defaultBgImg } = require('../../../modules/definition');
 
-const detailDto = (review, userId) => {
+const detailDto = (review, likedReviewList, userId) => {
   return {
     reviewId: review.id,
     bakeryName: review.Bakery.bakeryName,
@@ -9,6 +9,8 @@ const detailDto = (review, userId) => {
     reviewImg: review.reviewImgList.length < 1 ? defaultBgImg : review.reviewImgList[0],
     reviewCreatedDate: new Date(review.createdAt + 'z'),
     purchaseBreadList: review.purchaseBreadList,
+    isOnline: review.Bakery.isOnline,
+    isVegan: review.Bakery.isVegan,
     isLikedReview: review.Liker.map(liker => liker.id).includes(userId),
     likeReviewCount: review.dataValues.likeReviewCount,
     isSaveReview: review.SaverReview.map(saver => saver.id).includes(userId),
