@@ -47,12 +47,7 @@ module.exports = {
 
     const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
     const reviewList = await reviewUtils.findReviewAll(offset, limit, orderHash[order]);
-
-    // 사용자가 좋아요 누른 후기 리스트 불러오기
-    const findUser = await userUtils.findUserIncludeLikedReview(user);
-    const likedReviewList = findUser.Liked.map(likeReview => likeReview.id);
-
-    const result = reviewListDto(reviewList, likedReviewList, user.id);
+    const result = reviewListDto(reviewList, user.id);
 
     return result;
   },
@@ -68,7 +63,6 @@ module.exports = {
       limit,
       orderHash[order],
     );
-    console.log(reviewList[0]);
     const result = reviewListDto(reviewList, user.id);
 
     return result;
