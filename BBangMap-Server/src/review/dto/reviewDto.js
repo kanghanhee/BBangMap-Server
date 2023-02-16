@@ -10,7 +10,7 @@ const detailDto = (review, userId) => {
     reviewCreatedDate: new Date(review.createdAt + 'z'),
     purchaseBreadList: review.purchaseBreadList,
     isLikedReview: review.Liker.map(liker => liker.id).includes(userId),
-    likeReviewCount: review.Liker.length,
+    likeReviewCount: review.dataValues.likeReviewCount,
     isSaveReview: review.SaverReview.map(saver => saver.id).includes(userId),
     isVisitedBakery: review.Bakery.VisiterBakery.map(visiter => visiter.id).includes(userId),
   };
