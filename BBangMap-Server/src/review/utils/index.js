@@ -18,49 +18,31 @@ module.exports = {
       order: [['createdAt', 'DESC']],
     });
   },
-  findReviewAll: async (offset, limit, order) => {
-    return Review.findAll({
-      // pagination
-      offset,
-      limit,
-      attributes: {
-        include: [
-          [
-            sequelize.literal(`(
-            SELECT COUNT(lr.ReviewId)
-            FROM LikeReview AS lr
-            WHERE lr.ReviewId = Review.id
-          )`),
-            'likeReviewCount',
-          ],
-        ],
-      },
-      include: [
+  findReviewAll: async(customOffset, customLimit, order, userId) => {
+    return sequelize.query(
+        `SELECT Review.*, User.nickName, Bakery.*, SaveReview.*, VisitBakery.*, LikeReview.*
+         FROM (SELECT Review.*,
+                      (SELECT COUNT(lr.ReviewId)
+                       FROM LikeReview AS lr
+                       WHERE lr.ReviewId = Review.id) AS likeReviewCount
+               FROM Review
+               ORDER BY ${order} DESC) AS Review
+            LEFT OUTER JOIN (SELECT id as BakeryIdx, bakeryName, bakeryImg FROM Bakery) as Bakery
+                    ON Review.BakeryId = Bakery.BakeryIdx
+            LEFT OUTER JOIN (SELECT ReviewId, UserId as isLikedReview FROM LikeReview WHERE LikeReview.UserId = ${userId}) as LikeReview 
+                    ON Review.id = LikeReview.ReviewId
+            LEFT OUTER JOIN (SELECT BakeryId, UserId as isVisitedBakery FROM VisitBakery WHERE VisitBakery.UserId = ${userId}) as VisitBakery
+                    ON Bakery.BakeryIdx = VisitBakery.BakeryId
+            LEFT OUTER JOIN (SELECT id as UserIdx, nickName FROM User) as User
+                    ON Review.UserId = User.UserIdx
+           LEFT OUTER JOIN (SELECT ReviewId, UserId as isSaveReview FROM SaveReview where SaveReview.UserId = ${userId}) as SaveReview 
+                    ON Review.id = SaveReview.ReviewId
+           LIMIT ${customOffset}, ${customLimit}`,
         {
-          model: Bakery,
-          attributes: ['bakeryName'],
-          include: [
-            {
-              model: User,
-              as: 'VisiterBakery',
-            },
-          ],
+          type: sequelize.QueryTypes.SELECT,
+          raw: true,
         },
-        {
-          model: User,
-          as: 'SaverReview',
-        },
-        {
-          model: User,
-          as: 'Liker',
-        },
-        {
-          model: User,
-          attributes: ['nickName'],
-        },
-      ],
-      order: [[Sequelize.literal(order), 'DESC']],
-    });
+    )
   },
   findReviewSearch: async (searchWord, isOnline, isVegan, offset, limit, order) => {
     let whereClause = {

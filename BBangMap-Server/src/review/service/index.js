@@ -44,12 +44,9 @@ module.exports = {
       page = 1;
       pageSize = 500;
     }
-
     const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
-    const reviewList = await reviewUtils.findReviewAll(offset, limit, orderHash[order]);
-    const result = reviewListDto(reviewList, user.id);
-
-    return result;
+    const reviewList = await reviewUtils.findReviewAll(offset, limit, orderHash[order], user.id);
+    return reviewListDto(reviewList);
   },
   getSearchReviewList: async (order, searchWord, isOnline, isVegan, user, page, pageSize) => {
     if (!page || !pageSize) (page = 1), (pageSize = 500);
