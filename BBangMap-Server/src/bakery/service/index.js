@@ -195,7 +195,7 @@ module.exports = {
               isPetAvailable: registerBakery.isPetAvailable,
               blog: registerBakery.blog,
               instagram: registerBakery.instagram,
-              bakeryImg: [],
+              bakeryImg: registerBakery.bakeryImg,
             },
             { transaction },
           );
