@@ -6,7 +6,7 @@ const detailDto = (review) => {
     bakeryName: review.bakeryName,
     content: review.content,
     reviewer: review.nickName,
-    reviewImg: review.reviewImgList.length < 1 ? defaultBgImg : review.reviewImgList[0],
+    reviewImg: JSON.parse(review.reviewImgList).length < 1 ? defaultBgImg : review.reviewImgList[0],
     reviewCreatedDate: new Date(review.createdAt + 'z'),
     purchaseBreadList: review.purchaseBreadList,
     isOnline: review.isOnline,
