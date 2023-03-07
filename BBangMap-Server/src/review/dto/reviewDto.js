@@ -1,12 +1,13 @@
 const { defaultBgImg } = require('../../../modules/definition');
 
 const detailDto = (review) => {
+  review.reviewImgList = JSON.parse(review.reviewImgList);
   return {
     reviewId: review.id,
     bakeryName: review.bakeryName,
     content: review.content,
     reviewer: review.nickName,
-    reviewImg: JSON.parse(review.reviewImgList).length < 1 ? defaultBgImg : review.reviewImgList[0],
+    reviewImg: review.reviewImgList.length < 1 ? defaultBgImg : review.reviewImgList[0],
     reviewCreatedDate: new Date(review.createdAt + 'z'),
     purchaseBreadList: review.purchaseBreadList,
     isOnline: review.isOnline,
