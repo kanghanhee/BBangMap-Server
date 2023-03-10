@@ -100,7 +100,7 @@ module.exports = {
   getRequestedBakeryList: async () => {
     const requestedBakery = await RequestedBakery.findAll({
       where: {
-        status: 'REQUESTED',
+        [Op.or]: [{ status: 'REQUESTED' }, { status: 'VERIFYED_BY_WORKER' }],
       },
       raw: true,
     });
