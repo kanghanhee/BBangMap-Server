@@ -1,7 +1,7 @@
 const reviewUtils = require('../utils');
 const userUtils = require('../../user/utils');
 
-const reviewListDto = require('../dto/reviewListDto');
+const { reviewListDto, reviewAllListDto } = require('../dto/reviewListDto');
 const reviewDetailDto = require('../dto/reviewDetailDto');
 const reviewDetailWithAddressDto = require('../dto/reviewDetailWithAddressDto');
 const savedReviewOfBakeryListDto = require('../dto/savedReviewOfBakeryListDto');
@@ -46,7 +46,7 @@ module.exports = {
     }
     const { offset, limit } = calculateOffsetAndLimit(page, pageSize);
     const reviewList = await reviewUtils.findReviewAll(offset, limit, orderHash[order], user.id);
-    return reviewListDto(reviewList);
+    return reviewAllListDto(reviewList);
   },
   getSearchReviewList: async (order, searchWord, isOnline, isVegan, user, page, pageSize) => {
     if (!page || !pageSize) (page = 1), (pageSize = 500);

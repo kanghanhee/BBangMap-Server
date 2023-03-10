@@ -1,18 +1,24 @@
 const { defaultBgImg } = require('../../../modules/definition');
 
-const detailDto = (review, userId) => {
+// 후기 전체보기 raw query로 불러온 데이터들
+const detailDto = review => {
+  if (typeof review.reviewImgList === 'string') {
+    review.reviewImgList = JSON.parse(review.reviewImgList);
+  }
   return {
     reviewId: review.id,
-    bakeryName: review.Bakery.bakeryName,
+    bakeryName: review.bakeryName,
     content: review.content,
-    reviewer: review.User.nickName,
+    reviewer: review.nickName,
     reviewImg: review.reviewImgList.length < 1 ? defaultBgImg : review.reviewImgList[0],
     reviewCreatedDate: new Date(review.createdAt + 'z'),
     purchaseBreadList: review.purchaseBreadList,
-    isLikedReview: review.Liker.map(liker => liker.id).includes(userId),
-    likeReviewCount: review.dataValues.likeReviewCount,
-    isSaveReview: review.SaverReview.map(saver => saver.id).includes(userId),
-    isVisitedBakery: review.Bakery.VisiterBakery.map(visiter => visiter.id).includes(userId),
+    isOnline: review.isOnline,
+    isVegan: review.isVegan,
+    isLikedReview: review.isLikedReview != null,
+    likeReviewCount: review.likeReviewCount,
+    isSaveReview: review.isSaveReview != null,
+    isVisitedBakery: review.isVisitedBakery != null,
   };
 };
 
