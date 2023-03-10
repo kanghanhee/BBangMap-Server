@@ -6,7 +6,7 @@ const detailDto = review => {
   }
   return {
     reviewId: review.id,
-    bakeryName: review.Bakery.bakeryName,
+    bakeryName: review.bakeryName,
     content: review.content,
     reviewer: review.nickName,
     reviewImg: review.reviewImgList.length < 1 ? defaultBgImg : review.reviewImgList[0],
