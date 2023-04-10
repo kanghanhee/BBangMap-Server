@@ -91,4 +91,16 @@ module.exports = {
   changeRequestBakeryStatus: async (user, bakeryId, isAccept) => {
     await requestedBakeryUtils.acceptBakeryRequest(bakeryId, isAccept);
   },
+  requestBakeryVerifiedToRequest: async (placeId) => {
+    const status = "VERIFYED_BY_WORKER";
+    const findRequestBakery = await requestedBakeryUtils.findRequestedBakeryByPlaceId(placeId, status);
+
+    if(findRequestBakery !== null) {
+      const changeStatus = "REGISTERED";
+      await requestedBakeryUtils.updateRequestBakeryStatus(placeId, changeStatus);
+      return true;
+    }
+
+    return false;
+  }
 };

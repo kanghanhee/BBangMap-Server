@@ -90,4 +90,16 @@ module.exports = {
       return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
     }
   },
+  requestBakeryVerifiedToRequest: async (req,res) => {
+    try{
+      const {placeId} = req.params;
+      if( await bakeryService.requestBakeryVerifiedToRequest(placeId) ){
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REQUEST_BAKERY_STATUS));
+      } else {
+        return res.status(statusCode.OK).send(util.fail(statusCode.BAD_REQUEST, responseMessage.FAIL_UPDATE_REQUEST_BAKERY_STATUS));
+      }
+    } catch (err) {
+      return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
+    }
+  }
 };
