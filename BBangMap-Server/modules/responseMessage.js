@@ -34,6 +34,7 @@ module.exports = {
   DUPLICATE_BAKERY: '이미 요청된 빵집입니다.',
   SUCCESS_GET_REQUEST_BAKERY: '요청 빵집 불러오기 성공',
   SUCCESS_UPDATE_REQUEST_BAKERY_STATUS: '요청 빵집 상태 변경 성공',
+  FAIL_UPDATE_REQUEST_BAKERY_STATUS: '요청 빵집 상태 변경 실패',
   SUCCESS_UPDATE_BAKERY_MAIN_IMAGE: '빵집 대문 사진 수정 성공',
 
   /*후기*/

@@ -106,4 +106,19 @@ module.exports = {
     });
     return requestedBakery;
   },
+  findRequestedBakeryByPlaceId: async (placeId, status) => {
+    return RequestedBakery.findOne({
+      where: {
+        [Op.and]: [{placeId : placeId},{status: status}]
+      }
+    })
+  },
+  updateRequestBakeryStatus: async (placeId, status) => {
+    await RequestedBakery.update(
+        {
+          status: status
+        },
+        {where : { placeId }}
+    )
+  }
 };
