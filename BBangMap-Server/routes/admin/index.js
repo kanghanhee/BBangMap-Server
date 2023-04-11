@@ -28,6 +28,7 @@ router.post(
   imageUpload.single('bakeryImage'),
   bakeryController.bakeryMainImage,
 );
+router.put('/bakery/request/:placeId',authUtil.checkToken, authUtil.checkAdminToken, requestBakeryController.requestBakeryVerifiedToRequest);
 
 router.get('/reviewer', authUtil.checkToken, authUtil.checkAdminToken, userController.getUserInfo);
 router.get('/review/user/:userId', authUtil.checkToken, authUtil.checkAdminToken, reviewController.getUserReview);
