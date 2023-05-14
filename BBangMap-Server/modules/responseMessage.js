@@ -58,6 +58,8 @@ module.exports = {
   ALREADY_USER: '이미 존재하는 회원입니다.',
   ALREADY_NICKNAME: '이미 존재하는 닉네임입니다.',
   INVALID_USER: '유효하지 않는 회원입니다.',
+  SUCCESS_UPDATE_REWARD: '리워드 업데이트 성공',
+  FAIL_UPDATE_REWARD: '리워드 업데이트 실패',
 
     SUCCESS_USER_INFO: '사용자 정보 불러오기 성공',
   /*미션*/

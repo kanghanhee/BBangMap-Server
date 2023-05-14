@@ -112,5 +112,8 @@ module.exports = {
     const review = await userUtil.getMyReview(user);
     const reward = rewardUtil.reward(user.reward);
     return myPageDtoV2(user, reward, review.count);
+  },
+  updateVisitReward: async user => {
+    return await userUtil.updateDefaultReward(user);
   }
 };

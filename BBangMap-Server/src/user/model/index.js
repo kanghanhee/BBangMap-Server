@@ -50,6 +50,9 @@ module.exports = (sequelize, DataTypes) => {
       reward: {
         type: DataTypes.INTEGER,
         define: 0
+      },
+      previousCheck: {
+        type: DataTypes.DATE,
       }
     },
     {

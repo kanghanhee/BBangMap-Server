@@ -171,4 +171,33 @@ module.exports = {
       },
     );
   },
+  updateDefaultReward: async (user) => {
+    const now = new Date();
+    const currentDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()+9, now.getMinutes());
+
+    let previousCheck = user.previousCheck;
+
+    if(previousCheck === null) {
+      previousCheck = currentDateTime;
+
+    } else if(new Date(previousCheck.getFullYear(), previousCheck.getMonth(), previousCheck.getDate()) < new Date(currentDateTime.getFullYear(), currentDateTime.getMonth(), currentDateTime.getDate())){
+      previousCheck = currentDateTime;
+    }
+    else{
+      return false;
+    }
+
+    await User.update(
+      {
+        previousCheck: previousCheck,
+        reward: user.reward+10
+      },
+      {
+        where : {
+          id: user.id
+        }
+      }
+    )
+    return true;
+  }
 };
