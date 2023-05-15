@@ -132,11 +132,11 @@ module.exports = {
             const {user} = req.header;
             const result = await userService.updateVisitReward(user);
             if(!result) {
-                return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.FAIL_UPDATE_REWARD))
+                return res.status(statusCode.OK).send(util.success(statusCode.BAD_REQUEST, responseMessage.FAIL_UPDATE_REWARD))
             }
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REWARD));
         } catch (err) {
-            // slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+            slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
         }
     }
