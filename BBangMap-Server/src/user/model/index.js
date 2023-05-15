@@ -47,6 +47,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(500),
         allowNull: true,
       },
+      reward: {
+        type: DataTypes.INTEGER,
+        define: 0
+      },
+      previousCheck: {
+        type: DataTypes.DATE,
+      }
     },
     {
       freezeTableName: true,
