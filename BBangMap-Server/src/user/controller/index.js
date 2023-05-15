@@ -116,5 +116,28 @@ module.exports = {
             slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
         }
+    },
+    getMyPageV2: async (req, res) => {
+        try{
+            const {user} = req.header;
+            const result = await userService.readMyPageV2(user);
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MY_PAGE, result))
+        } catch (err) {
+            slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+            return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
+        }
+    },
+    updateVisitReward: async (req, res) => {
+        try{
+            const {user} = req.header;
+            const result = await userService.updateVisitReward(user);
+            if(!result) {
+                return res.status(statusCode.OK).send(util.success(statusCode.BAD_REQUEST, responseMessage.FAIL_UPDATE_REWARD))
+            }
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REWARD));
+        } catch (err) {
+            slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+            return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
+        }
     }
 };

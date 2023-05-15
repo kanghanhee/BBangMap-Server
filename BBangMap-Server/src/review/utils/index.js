@@ -183,36 +183,44 @@ module.exports = {
     });
   },
   addReviewExcludeVeganAndOnline: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
-    return await sequelize
-      .transaction(async transaction => {
-        const review = await Review.create(
-          {
-            UserId: user.id,
-            BakeryId: bakeryId,
-            purchaseBreadList: purchaseBreadList,
-            star: star,
-            content: content,
-            reviewImgList: reviewImgList,
-          },
-          { transaction },
-        );
+    let t = await sequelize.transaction();
+    try{
+      const review = await Review.create(
+        {
+          UserId: user.id,
+          BakeryId: bakeryId,
+          purchaseBreadList: purchaseBreadList,
+          star: star,
+          content: content,
+          reviewImgList: reviewImgList,
+        },
+        t,
+      );
 
-        await VisitBakery.findOrCreate({
-          where: { [Op.and]: [{ UserId: user.id }, { BakeryId: bakeryId }] },
-          defaults: {
-            UserId: user.id,
-            BakeryId: bakeryId,
-          },
-          transaction,
-        });
-        return review;
-      })
-      .then(function (result) {
-        return result.dataValues;
-      })
-      .catch(function (err) {
-        throw err;
+      await VisitBakery.findOrCreate({
+        where: { [Op.and]: [{ UserId: user.id }, { BakeryId: bakeryId }] },
+        defaults: {
+          UserId: user.id,
+          BakeryId: bakeryId,
+        },
+        t
       });
+
+      await User.update(
+        {
+          reward : user.reward+500
+        },
+        {
+          where: { id: user.id }
+        },
+        t
+      )
+      await t.commit();
+
+      return review
+    } catch(err){
+      await t.rollback();
+    }
   },
   updateReview: async (
     reviewId,

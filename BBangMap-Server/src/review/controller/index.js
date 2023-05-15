@@ -133,7 +133,7 @@ module.exports = {
   addReview: async (req, res) => {
     let user = req.header.user;
 
-    const appVersion = req.header.appVersion;
+    const appVersion = req.header.appVersion.split(".");
 
     if (appVersion === -1) {
       return res
@@ -152,7 +152,7 @@ module.exports = {
     }
     try {
       let result = '';
-      if (appVersion != null && appVersion >= 1.3) {
+      if (appVersion != null && appVersion[0]>=1 && appVersion[1]>=3) {
         let { bakeryId, purchaseBreadList, star, content } = req.body;
 
         if (bakeryId == null || star == null || content == null)
