@@ -7,7 +7,7 @@ const bakeryLocationInfoDto = (bakery, userId) =>{
         bakeryAddress : bakery.address,
         latitude : bakery.latitude,
         longitude : bakery.longitude,
-        star : bakeryUtils.getBakeryStar(bakery.Reviews),
+        star : 5,
         isSaveBakery : bakery.SaverBakery.map(user => user.id).includes(userId)
     }
 }
