@@ -23,8 +23,8 @@ const summaryDto = review => {
     bakeryId: parseInt(review.BakeryId, 10),
     star: parseInt(review.star, 10),
     content: review.content,
-    reviewImgList: review.reviewImgList,
-    purchaseBreadList: review.purchaseBreadList,
+    reviewImgList: JSON.stringify(review.reviewImgList),
+    purchaseBreadList: JSON.stringify(review.purchaseBreadList),
   };
 };
 

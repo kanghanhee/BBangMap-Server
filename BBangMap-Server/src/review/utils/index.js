@@ -188,11 +188,13 @@ module.exports = {
       const review = await Review.create(
         {
           UserId: user.id,
-          BakeryId: bakeryId,
-          purchaseBreadList: purchaseBreadList,
-          star: star,
-          content: content,
-          reviewImgList: reviewImgList,
+            BakeryId: bakeryId,
+            purchaseBreadList: purchaseBreadList,
+            star: star,
+            content: content,
+            reviewImgList: reviewImgList,
+            isVegan: false,
+            isOnline: false
         },
         t,
       );
