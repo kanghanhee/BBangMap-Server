@@ -133,6 +133,7 @@ module.exports = {
   },
   addReview: async (req, res) => {
     let user = req.header.user;
+    let appVersion = req.header.appVersion
 
     if (appVersion === -1) {
       return res
