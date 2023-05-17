@@ -64,10 +64,11 @@ module.exports = {
     try {
       const { reviewId } = req.query;
       const { user } = req.header;
-      const { appVersion } = req.header;
+      // const { appVersion } = req.header;
 
       let reviewDetailDto = '';
-      if (appVersion != null && appVersion >= 1.3) {
+      const appVersion = req.header.appVersion.split(".");
+      if (appVersion != null && appVersion[0]>=1 && appVersion[1]>=3) {
         reviewDetailDto = await reviewService.getReviewDetailWithAddress(reviewId, user);
       } else {
         reviewDetailDto = await reviewService.getReviewDetail(reviewId, user);
@@ -133,8 +134,6 @@ module.exports = {
   addReview: async (req, res) => {
     let user = req.header.user;
 
-    const appVersion = req.header.appVersion.split(".");
-
     if (appVersion === -1) {
       return res
         .status(statusCode.BAD_REQUEST)
@@ -152,9 +151,9 @@ module.exports = {
     }
     try {
       let result = '';
+      const appVersion = req.header.appVersion.split(".");
       if (appVersion != null && appVersion[0]>=1 && appVersion[1]>=3) {
         let { bakeryId, purchaseBreadList, star, content } = req.body;
-
         if (bakeryId == null || star == null || content == null)
           return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
 
@@ -191,7 +190,7 @@ module.exports = {
   updateReview: async (req, res) => {
     let user = req.header.user;
     let { reviewId } = req.params;
-    const appVersion = req.header.appVersion;
+    // const appVersion = req.header.appVersion;
 
     let files = [];
     if (req.files['reviewImgList']) files = req.files['reviewImgList'];
@@ -204,7 +203,8 @@ module.exports = {
     }
 
     try {
-      if (appVersion != null && appVersion >= 1.3) {
+      const appVersion = req.header.appVersion.split(".");
+      if (appVersion != null && appVersion[0]>=1 && appVersion[1]>=3) {
         let { purchaseBreadList, star, content } = req.body;
 
         if (star == null || content == null)

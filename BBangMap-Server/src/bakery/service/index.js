@@ -245,6 +245,7 @@ module.exports = {
         isPetAvailable: modifyInfo.isPetAvailable,
         blog: modifyInfo.blog,
         instagram: modifyInfo.instagram,
+        bakeryImg: modifyInfo.bakeryImg
       });
       await bakery.save();
     } catch (err) {
