@@ -183,6 +183,7 @@ module.exports = {
     });
   },
   addReviewExcludeVeganAndOnline: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
+<<<<<<< HEAD
     let t = await sequelize.transaction();
     try{
       const review = await Review.create(
@@ -196,6 +197,23 @@ module.exports = {
         },
         t,
       );
+=======
+    return await sequelize
+      .transaction(async transaction => {
+        const review = await Review.create(
+          {
+            UserId: user.id,
+            BakeryId: bakeryId,
+            purchaseBreadList: purchaseBreadList,
+            star: star,
+            content: content,
+            reviewImgList: reviewImgList,
+            isVegan: false,
+            isOnline: false
+          },
+          { transaction },
+        );
+>>>>>>> 61fddc7 (후기 작성시 version check 변경)
 
       await VisitBakery.findOrCreate({
         where: { [Op.and]: [{ UserId: user.id }, { BakeryId: bakeryId }] },

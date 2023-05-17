@@ -68,8 +68,10 @@ module.exports = {
 
       let reviewDetailDto = '';
       if (appVersion != null && appVersion >= 1.3) {
+        console.log("up")
         reviewDetailDto = await reviewService.getReviewDetailWithAddress(reviewId, user);
       } else {
+        console.log("down")
         reviewDetailDto = await reviewService.getReviewDetail(reviewId, user);
       }
       return res
@@ -152,9 +154,14 @@ module.exports = {
     }
     try {
       let result = '';
+<<<<<<< HEAD
       if (appVersion != null && appVersion[0]>=1 && appVersion[1]>=3) {
+=======
+      let appVersionArr = appVersion.split(".")
+      // if (appVersion != null && appVersion>=1.3) {
+      if (appVersion != null && appVersionArr[0]>=1 && appVersionArr[1]>=3) {
+>>>>>>> 61fddc7 (후기 작성시 version check 변경)
         let { bakeryId, purchaseBreadList, star, content } = req.body;
-
         if (bakeryId == null || star == null || content == null)
           return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
 
