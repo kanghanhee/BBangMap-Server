@@ -28,7 +28,8 @@ const authUtil = {
         if(user == null)
             return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.INVALID_USER));
 
-        req.header.user = user;
+        // req.header.user = user;
+        res.locals.user = user;
         next();
     },
     checkAdminToken: async(req,res,next)=>{

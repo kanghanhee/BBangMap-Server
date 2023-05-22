@@ -24,7 +24,7 @@ module.exports = {
     // 프로필 수정
     updateUser: async (req, res) => {
         try {
-            const {user} = req.header;
+            const user = res.locals.user;
 
             let profileImgName = '';
             let bgImgName = '';
@@ -50,7 +50,7 @@ module.exports = {
     // 프로필 삭제
     deleteUser: async (req, res) => {
         try {
-            const {user} = req.header;
+            const user = res.locals.user;
             const result = await userService.deleteUser(user);
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_DELETE_USER, result));
         } catch (err) {
@@ -80,7 +80,7 @@ module.exports = {
     // 랜덤 닉네임
     randomNickname: async (req, res) => {
         try {
-            const {user} = req.header;
+            const user = res.locals.user;
             const result = await userService.createRandomNickname(user);
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_NICKNAME, result));
         } catch (err) {
@@ -95,7 +95,7 @@ module.exports = {
     // 마이페이지
     getMyPage: async (req, res) => {
         try {
-            const {user} = req.header;
+            const user = res.locals.user;
             const result = await userService.readMyPage(user);
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MY_PAGE, result));
         } catch (err) {
@@ -119,7 +119,7 @@ module.exports = {
     },
     getMyPageV2: async (req, res) => {
         try{
-            const {user} = req.header;
+            const user = res.locals.user;
             const result = await userService.readMyPageV2(user);
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MY_PAGE, result))
         } catch (err) {
@@ -129,7 +129,7 @@ module.exports = {
     },
     updateVisitReward: async (req, res) => {
         try{
-            const {user} = req.header;
+            const user = res.locals.user;
             const result = await userService.updateVisitReward(user);
             if(!result) {
                 return res.status(statusCode.OK).send(util.success(statusCode.BAD_REQUEST, responseMessage.FAIL_UPDATE_REWARD))
