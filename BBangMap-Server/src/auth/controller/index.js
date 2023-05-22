@@ -22,7 +22,7 @@ module.exports = {
   },
   logout: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       await authService.logout(user);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LOGOUT));
     } catch (err) {

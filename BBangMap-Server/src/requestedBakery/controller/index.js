@@ -23,7 +23,7 @@ module.exports = {
   },
   requestedBakery: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       const { bakeryId, bakeryName, reason } = req.body;
       if (reason == null)
         throw {
@@ -44,7 +44,7 @@ module.exports = {
   },
   getRequestedBakeryList: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       const result = await bakeryService.getRequestedBakeryList();
       return res
         .status(statusCode.OK)
@@ -60,7 +60,7 @@ module.exports = {
   },
   getRequestedBakeryListByUserId: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       const result = await bakeryService.getRequestedBakeryListByUserId(user);
       return res
         .status(statusCode.OK)

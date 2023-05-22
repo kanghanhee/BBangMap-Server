@@ -21,7 +21,7 @@ module.exports = {
   },
   missionMain: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       const result = await missionService.getMissionMain(user);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MONTHLY_MISSION, result));
     } catch (err) {
@@ -35,7 +35,7 @@ module.exports = {
   },
   missionSucceeded: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       const { missionId } = req.params;
       const result = await missionService.getUserSucceededMission(user, missionId);
       return res
@@ -52,7 +52,7 @@ module.exports = {
   },
   userRank: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       const result = await missionService.getUserRank(user);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_USER_RANK, result));
     } catch (err) {
@@ -64,7 +64,7 @@ module.exports = {
   },
   checkRank: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       const { bakeryId } = req.params;
       const { reviewId } = req.body;
       const result = await missionService.checkSucceededMission(user, bakeryId, reviewId);
