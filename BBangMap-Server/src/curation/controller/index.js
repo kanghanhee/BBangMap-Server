@@ -22,7 +22,7 @@ module.exports = {
 
     curationListByCurationContents: async (req, res) => {
         try {
-            const user = req.header.user;
+            const user = res.locals.user;
             const result = await curationService.getCurationListWithCurationContent(user);
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_CURATION, result));
         } catch (err) {
@@ -32,7 +32,7 @@ module.exports = {
     },
     curationDetail: async (req, res) => {
         try {
-            const user = req.header.user;
+            const user = res.locals.user;
             const {curationId} = req.query;
             const result = await curationService.getCurationDetail(user.id, curationId);
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_CURATION, result));
@@ -47,7 +47,7 @@ module.exports = {
         }
     },
     likeCuration: async (req, res) => {
-        const user = req.header.user;
+        const user = res.locals.user;
         const {curationId} = req.params;
         try {
             await curationService.likeCuration(user.id, curationId);
@@ -66,7 +66,7 @@ module.exports = {
         }
     },
     cancelLikeCuration: async (req, res) => {
-        const user = req.header.user;
+        const user = res.locals.user;
         const {curationId} = req.params;
         try {
             await curationService.cancelLikeCuration(user.id, curationId);
@@ -85,7 +85,7 @@ module.exports = {
         }
     },
     bakeryLocationInfo: async (req, res) => {
-        const {user} = req.header;
+        const user = res.locals.user;
         const {curationId} = req.params;
         try {
             const result = await curationService.getBakeryLocationInfo(user.id, curationId);

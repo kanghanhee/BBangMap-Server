@@ -8,7 +8,7 @@ module.exports = {
   bakeryMap: async (req, res) => {
     try {
       const { latitude, longitude, radius } = req.query;
-      const { user } = req.header;
+      const user = res.locals.user;
       const bakeryMapListDto = await bakeryService.getBakeryMap(user, latitude, longitude, radius);
       return res
         .status(statusCode.OK)
@@ -23,7 +23,7 @@ module.exports = {
   bakerySearch: async (req, res) => {
     try {
       const { bakeryName, latitude, longitude } = req.query;
-      const { user } = req.header;
+      const user = res.locals.user;
       const bakerySearchListDto = await bakeryService.getSearchBakeryList(bakeryName, latitude, longitude, user);
       return res
         .status(statusCode.OK)
@@ -43,7 +43,7 @@ module.exports = {
   bakerySearchByName: async (req, res) => {
     try {
       const { q, latitude, longitude } = req.query;
-      const { user } = req.header;
+      const user = res.locals.user;
       // @err 1. 필요한 값이 없을 때
       if (!q)
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
@@ -66,7 +66,7 @@ module.exports = {
   bakerySearchByBread: async (req, res) => {
     try {
       const { q, latitude, longitude } = req.query;
-      const { user } = req.header;
+      const user = res.locals.user;
       // @err 1. 필요한 값이 없을 때
       if (!q)
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
@@ -89,7 +89,7 @@ module.exports = {
   bakerySearchReviewByBread: async (req, res) => {
     try {
       const { q, latitude, longitude } = req.query;
-      const { user } = req.header;
+      const user = res.locals.user;
       // @err 1. 필요한 값이 없을 때
       if (!q)
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
@@ -112,7 +112,7 @@ module.exports = {
   bakerySearchByArea: async (req, res) => {
     try {
       const { q, areaLatitude, areaLongitude, latitude, longitude } = req.query;
-      const { user } = req.header;
+      const user = res.locals.user;
       // @err 1. 필요한 값이 없을 때
       if (!q || !areaLatitude || !areaLongitude)
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
@@ -142,7 +142,7 @@ module.exports = {
   bakerySearchIntegration: async (req, res) => {
     try {
       const { q, latitude, longitude } = req.query;
-      const { user } = req.header;
+      const user = res.locals.user;
       // @err 1. 필요한 값이 없을 때
       if (!q)
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
@@ -160,7 +160,7 @@ module.exports = {
   bakeryDetail: async (req, res) => {
     try {
       const { bakeryId } = req.query;
-      const { user } = req.header;
+      const user = res.locals.user;
       const bakeryDetailDto = await bakeryService.getBakeryDetail(bakeryId, user);
       return res
         .status(statusCode.OK)
@@ -188,7 +188,7 @@ module.exports = {
   },
   storedBakeryList: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       const savedBakeryListDto = await bakeryService.getSavedBakeryList(user);
       return res
         .status(statusCode.OK)
@@ -203,7 +203,7 @@ module.exports = {
   storeBakery: async (req, res) => {
     try {
       const { bakeryId } = req.params;
-      const { user } = req.header;
+      const user = res.locals.user;
       await bakeryService.savedBakery(bakeryId, user);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_BAKERY));
     } catch (err) {
@@ -216,7 +216,7 @@ module.exports = {
   unStoreBakery: async (req, res) => {
     try {
       const { bakeryId } = req.params;
-      const { user } = req.header;
+      const user = res.locals.user;
       await bakeryService.deleteSaveBakery(bakeryId, user);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_BAKERY));
     } catch (err) {
@@ -229,7 +229,7 @@ module.exports = {
   doBakeryVisited: async (req, res) => {
     try {
       const { bakeryId } = req.params;
-      const { user } = req.header;
+      const user = res.locals.user;
       await bakeryService.doBakeryVisited(bakeryId, user);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_VISITED_BAKERY));
     } catch (err) {
@@ -250,7 +250,7 @@ module.exports = {
   cancelBakeryVisited: async (req, res) => {
     try {
       const { bakeryId } = req.params;
-      const { user } = req.header;
+      const user = res.locals.user;
       await bakeryService.cancelBakeryVisited(bakeryId, user);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_CANCEL_VISITED_BAKERY));
     } catch (err) {
@@ -379,7 +379,7 @@ module.exports = {
   },
   recentBakeryList: async (req, res) => {
     try {
-      const { user } = req.header;
+      const user = res.locals.user;
       const result = await bakeryService.getRecentBakeryList(user);
       return res
         .status(statusCode.OK)
