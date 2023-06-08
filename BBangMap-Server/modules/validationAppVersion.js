@@ -14,6 +14,7 @@ module.exports = {
     } else {
       appVersion = null;
     }
+    console.log("appVersion module : ",appVersion);
 
     req.header.appVersion = appVersion;
     next();
