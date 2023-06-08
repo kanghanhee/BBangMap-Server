@@ -1,12 +1,15 @@
-const myPageDto = (user, grade, reviewCount, savedBakeryCount, savedReviewCount) => {
+//reward는 마이페이지 개편버전에서만 제공하는 파라미터
+const myPageDto = (user, grade, reviewCount, savedBakeryCount, savedReviewCount, reward) => {
   return {
     profileImg: user.profileImg,
     nickname: user.nickName,
-    rank: grade,
-    backgroundImg: user.backgroundImg,
+    rank: grade,  //v1
+    backgroundImg: reward == null ? user.backgroundImg : null,  //v1
     myReviewCount: reviewCount,
-    savedBakeryCount,
-    savedReviewCount,
+    savedBakeryCount, //v1
+    savedReviewCount, //v1
+    point: reward == null ? null : user.reward, //v2
+    reward: reward  //v2
   };
 };
 

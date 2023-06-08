@@ -96,7 +96,15 @@ module.exports = {
     getMyPage: async (req, res) => {
         try {
             const user = res.locals.user;
-            const result = await userService.readMyPage(user);
+            const appVersion = req.header.appVersion.split(".");
+
+            let result
+            if(appVersion != null && appVersion[0]>=1 && appVersion[1]>=7) {
+                result = await userService.readMyPageV2(user);
+            } else{
+                result = await userService.readMyPage(user);
+            }
+
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_MY_PAGE, result));
         } catch (err) {
             if (err.statusCode == null) {
