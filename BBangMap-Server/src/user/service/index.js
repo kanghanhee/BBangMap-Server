@@ -9,7 +9,6 @@ const statusCode = require('../../../modules/statusCode');
 const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
 const myPageDto = require('../dto/myPageDto');
 const reviewerInfoListDto = require('../dto/ReviewerInfoListDto')
-const myPageDtoV2 = require("../dto/myPageDtoV2")
 const rewardUtil = require("../../../modules/rewardUtil")
 
 module.exports = {
@@ -111,7 +110,7 @@ module.exports = {
   readMyPageV2: async user => {
     const review = await userUtil.getMyReview(user);
     const reward = rewardUtil.reward(user.reward);
-    // return myPageDtoV2(user, reward, review.count);
+    
     return myPageDto(user, null, review.count, null, null, reward);
   },
   updateVisitReward: async user => {
