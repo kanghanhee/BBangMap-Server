@@ -217,7 +217,7 @@ module.exports = {
       RewardHistory.create({
         UserId : user.id,
         reward : 10,
-        acquisitionMethod : "출근"
+        acquisitionMethod : "출석"
       },t)
 
       await t.commit();
