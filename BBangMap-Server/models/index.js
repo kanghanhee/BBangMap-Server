@@ -29,6 +29,7 @@ db.CurationContent = require('../src/curation/model/CurationContent')(sequelize,
 db.MatchingCurationContents = require('../src/curation/model/MatchingCurationContents')(sequelize, Sequelize);
 db.RequestedBakery = require('../src/requestedBakery/model')(sequelize, Sequelize);
 db.SearchLocation = require('../src/bakery/model/searchLocation')(sequelize, Sequelize);
+db.RewardHistory = require('../src/user/model/RewardHistory')(sequelize, Sequelize);
 /* 보관한 빵집 리스트 user:bakery(1:N) */
 db.User.belongsToMany(db.Bakery, { through: 'SaveBakery', as: 'SavedBakery' });
 db.Bakery.belongsToMany(db.User, { through: 'SaveBakery', as: 'SaverBakery' });
@@ -104,5 +105,9 @@ db.CurationContent.belongsToMany(db.Curation, { through: 'MatchingCurationConten
 /*요청 빵집과 유저(작성자) requestedBakery:user(N:1)*/
 db.User.hasMany(db.RequestedBakery);
 db.RequestedBakery.belongsTo(db.User);
+
+/* 유저와 포인트 내역 User:RewardHistory(1:1) */
+db.User.hasMany(db.RewardHistory, { onDelete: 'cascade' });
+db.RewardHistory.belongsTo(db.User);
 
 module.exports = db;

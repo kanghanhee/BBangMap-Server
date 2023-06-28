@@ -1,6 +1,6 @@
 const { Op, Sequelize } = require('sequelize');
 const { sequelize } = require('../../../models/index');
-const { Bakery, Review, User, SaveReview, LikeReview, VisitBakery } = require('../../../models');
+const { Bakery, Review, User, SaveReview, LikeReview, VisitBakery, RewardHistory } = require('../../../models');
 const { reviewDelete } = require('../../../modules/multer/reviewMulter');
 
 module.exports = {
@@ -217,6 +217,10 @@ module.exports = {
         },
         t
       )
+      
+      await RewardHistory.create({
+        UserId : user.id, reward : 500, acquisitionMethod: "리뷰 작성"})
+
       await t.commit();
 
       return review

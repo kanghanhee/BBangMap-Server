@@ -9,7 +9,7 @@ const statusCode = require('../../../modules/statusCode');
 const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
 const myPageDto = require('../dto/myPageDto');
 const reviewerInfoListDto = require('../dto/ReviewerInfoListDto')
-const rewardUtil = require("../../../modules/rewardUtil")
+const rewardUtil = require("../../../modules/rewardUtil");
 
 module.exports = {
   // 회원가입
