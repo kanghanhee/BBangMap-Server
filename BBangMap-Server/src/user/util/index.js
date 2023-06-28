@@ -2,7 +2,7 @@
 /* eslint-disable no-return-await */
 const fs = require('fs');
 const { sequelize } = require('../../../models');
-const { User, Review, SaveBakery, SaveReview } = require('../../../models');
+const { User, Review, SaveBakery, SaveReview, RewardHistory } = require('../../../models');
 const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
 const { Op } = require('sequelize');
 
@@ -172,6 +172,8 @@ module.exports = {
     );
   },
   updateDefaultReward: async (user) => {
+    let t = await sequelize.transaction();
+
     const now = new Date();
     const currentDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()+9, now.getMinutes());
     
@@ -198,17 +200,30 @@ module.exports = {
       return false;
     }
 
-    await User.update(
-      {
-        previousCheck: previousCheck,
-        reward: user.reward+10
-      },
-      {
-        where : {
-          id: user.id
-        }
-      }
-    )
+    try{
+      await User.update(
+        {
+          previousCheck: previousCheck,
+          reward: user.reward+10
+        },
+        {
+          where : {
+            id: user.id
+          }
+        },
+        t
+      )
+
+      RewardHistory.create({
+        UserId : user.id,
+        reward : 10,
+        acquisitionMethod : "출석"
+      },t)
+
+      await t.commit();
+    } catch(err) {
+      await t.rollback();
+    }
     return true;
   }
 };

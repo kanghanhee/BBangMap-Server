@@ -2,6 +2,11 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
     'User',
     {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+      },
       // 닉네임
       nickName: {
         type: DataTypes.STRING(30),

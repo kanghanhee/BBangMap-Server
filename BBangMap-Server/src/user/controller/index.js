@@ -17,7 +17,8 @@ module.exports = {
                 err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
                 err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
             }
-            slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+            //닉네임 중복 이슈
+            // slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
         }
     },
@@ -140,7 +141,7 @@ module.exports = {
             const user = res.locals.user;
             const result = await userService.updateVisitReward(user);
             if(!result) {
-                return res.status(statusCode.OK).send(util.success(statusCode.BAD_REQUEST, responseMessage.FAIL_UPDATE_REWARD))
+                return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.FAIL_UPDATE_REWARD))
             }
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REWARD));
         } catch (err) {
