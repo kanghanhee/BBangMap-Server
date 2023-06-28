@@ -141,7 +141,7 @@ module.exports = {
             const user = res.locals.user;
             const result = await userService.updateVisitReward(user);
             if(!result) {
-                return res.status(statusCode.OK).send(util.success(statusCode.BAD_REQUEST, responseMessage.FAIL_UPDATE_REWARD))
+                return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.FAIL_UPDATE_REWARD))
             }
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REWARD));
         } catch (err) {
