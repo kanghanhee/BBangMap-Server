@@ -112,7 +112,7 @@ module.exports = {
                 err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
                 err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
             }
-            slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+            // slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
         }
     },
@@ -144,6 +144,16 @@ module.exports = {
                 return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.FAIL_UPDATE_REWARD))
             }
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REWARD));
+        } catch (err) {
+            slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+            return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
+        }
+    },
+    getRewardHistory: async (req, res) => {
+        try{
+            const user = res.locals.user;
+            const result = await userService.getRewardHistory(user);
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UPDATE_REWARD,result));
         } catch (err) {
             slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
