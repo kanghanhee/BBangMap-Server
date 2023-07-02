@@ -179,17 +179,21 @@ module.exports = {
     
     let previousCheck = user.previousCheck;
 
+    const offset = 1000 * 60 * 60 * 9
     let previousCheckDateTime;
     if(previousCheck != null){
       const previousCheckArr = previousCheck.split(" ")[0].split("-");
       const previousYear = Number(previousCheckArr[0])
       const previousMonth = Number(previousCheckArr[1])-1
-      //split로 구한 date를 그대로 넣으면 new Date에서 -1이 된 date로 반환되어 +1로 구현
-      const previousDate = Number(previousCheckArr[2])+1
-      previousCheckDateTime = new Date(previousYear,previousMonth,previousDate)
+      const previousDate = Number(previousCheckArr[2])
+      previousCheckDateTime = new Date()
+      previousCheckDateTime.setFullYear(previousYear)
+      previousCheckDateTime.setMonth(previousMonth)
+      previousCheckDateTime.setDate(previousDate)
+      previousCheck = new Date((new Date(previousCheckDateTime)).getTime() + offset)
     }
 
-    const currentCheckDateTime = new Date(currentDateTime.getFullYear(), currentDateTime.getMonth(), currentDateTime.getDate()+1)
+    const currentCheckDateTime = new Date((new Date()).getTime() + offset)
     if(previousCheck === null) {
       previousCheck = currentDateTime;
     }
@@ -225,5 +229,13 @@ module.exports = {
       await t.rollback();
     }
     return true;
+  },
+  getRewardHistory: async(user) => {
+    return await RewardHistory.findAll({
+      where: {
+        UserId: user.id,
+      },
+      order: [['createdAt', 'DESC']],
+    });
   }
 };
