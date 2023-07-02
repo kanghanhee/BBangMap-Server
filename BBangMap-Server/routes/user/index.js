@@ -22,5 +22,6 @@ router.post('/nickname', userController.checkNickname); // 닉네임 중복검�
 router.get('/random-nickname', userController.randomNickname); // 랜덤 닉네임
 router.get('/mypage', authUtil.checkToken, validationAppVersion.getAppVersion, userController.getMyPage); // 마이페이지
 router.put('/reward/visit', authUtil.checkToken, userController.updateVisitReward);
+router.get('/reward/history', authUtil.checkToken, userController.getRewardHistory);
 
 module.exports = router;

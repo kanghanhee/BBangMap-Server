@@ -79,6 +79,9 @@ module.exports = {
     SUCCESS_PUT_CURATION: '큐레이션 수정하기 성공',
     SUCCESS_PUT_CURATION_PRIORITY: '큐레이션 우선순위 수정 성공',
 
+  /* 리워드 */
+  SUCCESS_GET_REWARD_HISTORY: '리워드 내역 불러오기 성공',
+
   /*공통*/
   SUCCESS_GET_IMAGE: '이미지 불러오기 성공',
 

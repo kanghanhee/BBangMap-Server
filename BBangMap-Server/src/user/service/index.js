@@ -9,7 +9,9 @@ const statusCode = require('../../../modules/statusCode');
 const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
 const myPageDto = require('../dto/myPageDto');
 const reviewerInfoListDto = require('../dto/ReviewerInfoListDto')
+const rewardHistoryDto = require('../dto/RewardHistoryDto')
 const rewardUtil = require("../../../modules/rewardUtil");
+const RewardHistory = require('../model/RewardHistory');
 
 module.exports = {
   // 회원가입
@@ -101,7 +103,7 @@ module.exports = {
     if (user.grade === 1) grade = '중력분';
     else if (user.grade === 2) grade = '강력분';
     else grade = '박력분';
-    return myPageDto(user, grade, review.count, savedBakery.count, savedReview.count, null);
+    return myPageDto(user, grade, review.count, savedBakery.count, savedReview.count, null, null);
   },
   getUserInfo: async (nickname)=>{
     const userList = await userUtil.findUserByNickName(nickname);
@@ -110,10 +112,29 @@ module.exports = {
   readMyPageV2: async user => {
     const review = await userUtil.getMyReview(user);
     const reward = rewardUtil.reward(user.reward);
+
+    const offset = 1000 * 60 * 60 * 9
+    const previousCheckArr = user.previousCheck.split(" ")[0].split("-");
+    const previousYear = Number(previousCheckArr[0])
+    const previousMonth = Number(previousCheckArr[1])-1
+    const previousDate = Number(previousCheckArr[2])
+    previousCheckDateTime = new Date()
+    previousCheckDateTime.setFullYear(previousYear)
+    previousCheckDateTime.setMonth(previousMonth)
+    previousCheckDateTime.setDate(previousDate)
+    previousCheck = new Date((new Date(previousCheckDateTime)).getTime() + offset)
+
+    const now = new Date((new Date()).getTime() + offset)
     
-    return myPageDto(user, null, review.count, null, null, reward);
+    const isUniqueAttendence = previousCheck < now;
+    
+    return myPageDto(user, null, review.count, null, null, reward, isUniqueAttendence);
   },
   updateVisitReward: async user => {
     return await userUtil.updateDefaultReward(user);
+  },
+  getRewardHistory: async user => {
+    const history = await userUtil.getRewardHistory(user);
+    return history.map(h => rewardHistoryDto(h));
   }
 };
