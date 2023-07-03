@@ -187,23 +187,25 @@ module.exports = {
   },
 
   savedReview: async (reviewId, user) => {
-    let userId = user.id;
+    const userId = user.id;
     await reviewUtils.savedReview(userId, reviewId);
   },
-  likedReview: async (reviewId, user) => {
-    let userId = user.id;
+  likedReview: async (reviewId, user, redis) => {
+    const userId = user.id;
     await reviewUtils.likedReview(userId, reviewId);
+    redis.zincrby('popularReview', 1, JSON.stringify({ reviewId }));
   },
   deleteSavedReview: async (reviewId, user) => {
-    let userId = user.id;
+    const userId = user.id;
     await reviewUtils.deleteSavedReview(userId, reviewId);
   },
-  deleteLikedReview: async (reviewId, user) => {
-    let userId = user.id;
+  deleteLikedReview: async (reviewId, user, redis) => {
+    const userId = user.id;
     await reviewUtils.deleteLikedReview(userId, reviewId);
+    redis.zincrby('popularReview', -1, JSON.stringify({ reviewId }));
   },
   deleteMyReview: async (reviewId, user) => {
-    let userId = user.id;
+    const userId = user.id;
     const deletedReview = await reviewUtils.deleteMyReview(userId, reviewId);
     reviewUtils.deleteReviewImages(deletedReview.reviewImgList);
   },
