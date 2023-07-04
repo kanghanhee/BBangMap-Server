@@ -5,6 +5,7 @@ const authUtil = require('../../middlewares/authUtil');
 const { reviewUpload } = require('../../modules/multer/reviewMulter');
 const reviewController = require('../../src/review/controller');
 const validationAppVersion = require('../../modules/validationAppVersion');
+const redisMiddleware = require('../../middlewares/redisMiddleware');
 
 const reviewImgUpload = reviewUpload.fields([{ name: 'reviewImgList', maxCount: 10 }]);
 
@@ -24,7 +25,7 @@ router.post(
   reviewController.addReview,
 );
 router.post('/storage/:reviewId', authUtil.checkToken, reviewController.saveReview);
-router.post('/like/:reviewId', authUtil.checkToken, reviewController.likeReview);
+router.post('/like/:reviewId', authUtil.checkToken, redisMiddleware, reviewController.likeReview);
 
 router.put(
   '/my/:reviewId',
@@ -36,6 +37,6 @@ router.put(
 
 router.delete('/my/:reviewId', authUtil.checkToken, reviewController.deleteMyReview);
 router.delete('/storage/:reviewId', authUtil.checkToken, reviewController.unSaveReview);
-router.delete('/unlike/:reviewId', authUtil.checkToken, reviewController.unLikeReview);
+router.delete('/unlike/:reviewId', authUtil.checkToken, redisMiddleware, reviewController.unLikeReview);
 
 module.exports = router;
