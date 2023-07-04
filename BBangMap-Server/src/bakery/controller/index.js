@@ -149,6 +149,9 @@ module.exports = {
       // @err 1. 필요한 값이 없을 때
       if (!q)
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+      if (req.redis.status === 'ready') {
+        req.redis.zincrby('popularKeyword', 1, q);
+      }
       const bakerySearchListDto = await bakeryService.getBakerySearchIntegration(q, latitude, longitude, user);
       return res
         .status(statusCode.OK)
