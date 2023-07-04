@@ -60,11 +60,13 @@ module.exports = {
       return null;
     }
   },
-  getBakeryByBread: async (q, latitude, longitude, user) => {
+  getBakeryByBread: async (q, latitude, longitude, user, redis) => {
     const findUser = await userUtils.findUserIncludeVisitedBakery(user);
     const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
     let searchBakeryList = await bakeryUtils.findBakeryListByBakeryBestMenu(q);
     searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
+
+    redis.zincrby('popularBread', 1, JSON.stringify({ breadName: q }));
 
     return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
   },
@@ -76,12 +78,14 @@ module.exports = {
 
     return bakerySearchReviewListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
   },
-  getBakeryByArea: async (q, areaLatitude, areaLongitude, latitude, longitude, user) => {
+  getBakeryByArea: async (q, areaLatitude, areaLongitude, latitude, longitude, user, redis) => {
     const radius = 3;
     const findUser = await userUtils.findUserIncludeVisitedBakery(user);
     const visitedBakeryList = findUser.map(visitedBakery => visitedBakery.id);
     let searchBakeryList = await bakeryUtils.findBakeryByArea(areaLatitude, areaLongitude, radius);
     searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
+
+    redis.zincrby('popularArea', 1, JSON.stringify({ areaName: q }));
 
     return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
   },
@@ -110,11 +114,14 @@ module.exports = {
       visitedBakeryList,
     );
   },
-  getBakeryDetail: async (bakeryId, user) => {
+  getBakeryDetail: async (bakeryId, user, redis) => {
     let bakery = await bakeryUtils.findBakeryById(bakeryId);
     let imgUpdateBakery = await bakeryUtils.addBakeryImg(bakery);
     let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
     let visitedBakeryList = await bakeryUtils.findUsersVisitedBakeryList(user);
+
+    redis.zincrby('popularBakery', 1, JSON.stringify(bakery));
+
     return bakeryDetailDto(imgUpdateBakery, savedBakeryList, visitedBakeryList, user.id);
   },
   getBakeryImgList: async bakeryId => {
@@ -245,7 +252,7 @@ module.exports = {
         isPetAvailable: modifyInfo.isPetAvailable,
         blog: modifyInfo.blog,
         instagram: modifyInfo.instagram,
-        bakeryImg: modifyInfo.bakeryImg
+        bakeryImg: modifyInfo.bakeryImg,
       });
       await bakery.save();
     } catch (err) {
