@@ -10,6 +10,7 @@ router.use('/review', require('./review'));
 router.use('/curation', require('./curation'));
 router.use('/admin', require('./admin'));
 router.use('/slack', require('./slack'));
-router.use('/health',require('./health'));
+router.use('/health', require('./health'));
+router.use('/home', require('./home'));
 
 module.exports = router;
