@@ -66,11 +66,12 @@ module.exports = {
   bakerySearchByBread: async (req, res) => {
     try {
       const { q, latitude, longitude } = req.query;
+      const { redis } = req;
       const user = res.locals.user;
       // @err 1. 필요한 값이 없을 때
       if (!q)
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
-      const bakerySearchListDto = await bakeryService.getBakeryByBread(q, latitude, longitude, user);
+      const bakerySearchListDto = await bakeryService.getBakeryByBread(q, latitude, longitude, user, redis);
       return res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakerySearchListDto));
@@ -112,6 +113,7 @@ module.exports = {
   bakerySearchByArea: async (req, res) => {
     try {
       const { q, areaLatitude, areaLongitude, latitude, longitude } = req.query;
+      const { redis } = req;
       const user = res.locals.user;
       // @err 1. 필요한 값이 없을 때
       if (!q || !areaLatitude || !areaLongitude)
@@ -123,6 +125,7 @@ module.exports = {
         latitude,
         longitude,
         user,
+        redis,
       );
       return res
         .status(statusCode.OK)
@@ -146,6 +149,9 @@ module.exports = {
       // @err 1. 필요한 값이 없을 때
       if (!q)
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+      if (req.redis.status === 'ready') {
+        req.redis.zincrby('popularKeyword', 1, q);
+      }
       const bakerySearchListDto = await bakeryService.getBakerySearchIntegration(q, latitude, longitude, user);
       return res
         .status(statusCode.OK)
@@ -160,8 +166,9 @@ module.exports = {
   bakeryDetail: async (req, res) => {
     try {
       const { bakeryId } = req.query;
+      const { redis } = req;
       const user = res.locals.user;
-      const bakeryDetailDto = await bakeryService.getBakeryDetail(bakeryId, user);
+      const bakeryDetailDto = await bakeryService.getBakeryDetail(bakeryId, user, redis);
       return res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, responseMessage.SUCCESS_GET_BAKERY, bakeryDetailDto));

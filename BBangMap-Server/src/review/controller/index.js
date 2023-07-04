@@ -67,8 +67,8 @@ module.exports = {
       // const { appVersion } = req.header;
 
       let reviewDetailDto = '';
-      const appVersion = req.header.appVersion.split(".");
-      if (appVersion != null && appVersion[0]>=1 && appVersion[1]>=3) {
+      const appVersion = req.header.appVersion.split('.');
+      if (appVersion != null && appVersion[0] >= 1 && appVersion[1] >= 3) {
         reviewDetailDto = await reviewService.getReviewDetailWithAddress(reviewId, user);
       } else {
         reviewDetailDto = await reviewService.getReviewDetail(reviewId, user);
@@ -133,7 +133,7 @@ module.exports = {
   },
   addReview: async (req, res) => {
     const user = res.locals.user;
-    let appVersion = req.header.appVersion
+    let appVersion = req.header.appVersion;
 
     if (appVersion === -1) {
       return res
@@ -152,8 +152,8 @@ module.exports = {
     }
     try {
       let result = '';
-      const appVersion = req.header.appVersion.split(".");
-      if (appVersion != null && appVersion[0]>=1 && appVersion[1]>=3) {
+      const appVersion = req.header.appVersion.split('.');
+      if (appVersion != null && appVersion[0] >= 1 && appVersion[1] >= 3) {
         let { bakeryId, purchaseBreadList, star, content } = req.body;
         if (bakeryId == null || star == null || content == null)
           return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
@@ -204,8 +204,8 @@ module.exports = {
     }
 
     try {
-      const appVersion = req.header.appVersion.split(".");
-      if (appVersion != null && appVersion[0]>=1 && appVersion[1]>=3) {
+      const appVersion = req.header.appVersion.split('.');
+      if (appVersion != null && appVersion[0] >= 1 && appVersion[1] >= 3) {
         let { purchaseBreadList, star, content } = req.body;
 
         if (star == null || content == null)
@@ -258,8 +258,9 @@ module.exports = {
   likeReview: async (req, res) => {
     try {
       let { reviewId } = req.params;
+      const { redis } = req;
       const user = res.locals.user;
-      await reviewService.likedReview(reviewId, user);
+      await reviewService.likedReview(reviewId, user, redis);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_LIKED_REVIEW));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
@@ -284,8 +285,9 @@ module.exports = {
   unLikeReview: async (req, res) => {
     try {
       let { reviewId } = req.params;
+      const { redis } = req;
       const user = res.locals.user;
-      await reviewService.deleteLikedReview(reviewId, user);
+      await reviewService.deleteLikedReview(reviewId, user, redis);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_UNLIKED_REVIEW));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);
