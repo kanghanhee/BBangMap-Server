@@ -9,7 +9,7 @@ const redisMiddleware = (req, res, next) => {
 
   redisClient.on('error', error => {
     console.error('Redis 연결 에러:', error);
-    slackSender.sendError('500', 'Redis 연결 에러', req.originalUrl, error);
+    //slackSender.sendError('500', 'Redis 연결 에러', req.originalUrl, error);
   });
   req.redis = redisClient;
 
