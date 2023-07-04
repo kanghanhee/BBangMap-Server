@@ -193,7 +193,8 @@ module.exports = {
   likedReview: async (reviewId, user, redis) => {
     const userId = user.id;
     await reviewUtils.likedReview(userId, reviewId);
-    redis.zincrby('popularReview', 1, JSON.stringify({ reviewId }));
+    const review = await reviewUtils.findReviewById(reviewId);
+    redis.zincrby('popularReview', 1, JSON.stringify(review));
   },
   deleteSavedReview: async (reviewId, user) => {
     const userId = user.id;
@@ -202,7 +203,8 @@ module.exports = {
   deleteLikedReview: async (reviewId, user, redis) => {
     const userId = user.id;
     await reviewUtils.deleteLikedReview(userId, reviewId);
-    redis.zincrby('popularReview', -1, JSON.stringify({ reviewId }));
+    const review = await reviewUtils.findReviewById(reviewId);
+    redis.zincrby('popularReview', -1, JSON.stringify(review));
   },
   deleteMyReview: async (reviewId, user) => {
     const userId = user.id;
