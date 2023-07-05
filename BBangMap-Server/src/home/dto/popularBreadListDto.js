@@ -1,15 +1,16 @@
-const popularBreadListDto = popularBreadList => {
-  return popularBreadList
-    .map((item, index) => {
-      if (index % 2 === 0) {
-        return {
-          breadName: item.breadName,
-          breadImg: item.breadImg,
-          searchCount: popularBreadList[index + 1],
-        };
-      }
-    })
-    .filter(Boolean);
+const { findBreadImage } = require('../../review/utils');
+
+const popularBreadListDto = async popularBreadList => {
+  const transformedBreadList = await Promise.all(
+    popularBreadList
+      .filter((item, index) => index % 2 === 0)
+      .map(async item => ({
+        breadName: item.breadName,
+        breadImg: await findBreadImage(item.breadName),
+        searchCount: popularBreadList[popularBreadList.indexOf(item) + 1],
+      })),
+  );
+  return transformedBreadList;
 };
 
 module.exports = { popularBreadListDto };
