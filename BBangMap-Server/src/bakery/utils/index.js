@@ -1,4 +1,4 @@
-const { Bakery, SaveBakery, VisitBakery, Review, User } = require('../../../models');
+const { Bakery, SaveBakery, VisitBakery, Review, User, RequestedBakery } = require('../../../models');
 const { Op, literal } = require('sequelize');
 const { sequelize } = require('../../../models/index');
 const { defaultBgImg } = require('../../../modules/definition');
@@ -234,5 +234,20 @@ module.exports = {
     } catch (error) {
       throw error;
     }
+  },
+  findBakeryByCreatedAt: async () => {
+    return Bakery.findAll({
+      order: [['createdAt', 'DESC']],
+      limit: 10,
+    });
+  },
+  findRequestedBakeryByBakeryName: async bakeryName => {
+    const result = await RequestedBakery.findOne({
+      where: {
+        bakeryName: bakeryName,
+      },
+      attributes: ['reason'],
+    });
+    return result ? result.reason : '';
   },
 };
