@@ -1,8 +1,8 @@
 const { findLikeReviewCount } = require('../../review/utils');
 
-const popularReviewListDto = async reviewList => {
-  const popularReviewList = await Promise.all(
-    reviewList.map(async item => {
+const popularReviewListDto = async popularReviewList => {
+  const transformedReviewList = await Promise.all(
+    popularReviewList.map(async item => {
       const likeReviewCount = await findLikeReviewCount(item.id);
       return {
         reviewId: item.id,
@@ -15,7 +15,7 @@ const popularReviewListDto = async reviewList => {
       };
     }),
   );
-  return popularReviewList;
+  return transformedReviewList;
 };
 
 module.exports = { popularReviewListDto };
