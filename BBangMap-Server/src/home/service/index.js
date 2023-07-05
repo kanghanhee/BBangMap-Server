@@ -11,8 +11,7 @@ module.exports = {
     const popularBakeryList = await redis.zrevrange('popularBakery', 0, 9, 'WITHSCORES');
     const popularBreadList = await redis.zrevrange('popularBread', 0, 9, 'WITHSCORES');
     const popularAreaList = await redis.zrevrange('popularArea', 0, 9, 'WITHSCORES');
-    const popularReviewList = await redis.zrevrange('popularReview', 0, 9, 'WITHSCORES');
-
+    const popularReviewList = await redis.zrevrange('popularReview', 0, 9);
     const bakeryList = await bakeryUtils.findBakeryByCreatedAt();
     const reviewList = await getReviewAll('latest', user);
 

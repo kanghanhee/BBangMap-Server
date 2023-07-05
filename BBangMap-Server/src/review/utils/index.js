@@ -18,9 +18,9 @@ module.exports = {
       order: [['createdAt', 'DESC']],
     });
   },
-  findReviewAll: async(customOffset, customLimit, order, userId) => {
+  findReviewAll: async (customOffset, customLimit, order, userId) => {
     return sequelize.query(
-        `SELECT Review.*, User.nickName, Bakery.*, SaveReview.*, VisitBakery.*, LikeReview.*
+      `SELECT Review.*, User.nickName, Bakery.*, SaveReview.*, VisitBakery.*, LikeReview.*
          FROM (SELECT Review.*,
                       (SELECT COUNT(lr.ReviewId)
                        FROM LikeReview AS lr
@@ -38,11 +38,11 @@ module.exports = {
            LEFT OUTER JOIN (SELECT ReviewId, UserId as isSaveReview FROM SaveReview where SaveReview.UserId = ${userId}) as SaveReview 
                     ON Review.id = SaveReview.ReviewId
            LIMIT ${customOffset}, ${customLimit}`,
-        {
-          type: sequelize.QueryTypes.SELECT,
-          raw: true,
-        },
-    )
+      {
+        type: sequelize.QueryTypes.SELECT,
+        raw: true,
+      },
+    );
   },
   findReviewSearch: async (searchWord, isOnline, isVegan, offset, limit, order) => {
     let whereClause = {
@@ -184,17 +184,17 @@ module.exports = {
   },
   addReviewExcludeVeganAndOnline: async (user, bakeryId, purchaseBreadList, star, content, reviewImgList) => {
     let t = await sequelize.transaction();
-    try{
+    try {
       const review = await Review.create(
         {
           UserId: user.id,
-            BakeryId: bakeryId,
-            purchaseBreadList: purchaseBreadList,
-            star: star,
-            content: content,
-            reviewImgList: reviewImgList,
-            isVegan: false,
-            isOnline: false
+          BakeryId: bakeryId,
+          purchaseBreadList: purchaseBreadList,
+          star: star,
+          content: content,
+          reviewImgList: reviewImgList,
+          isVegan: false,
+          isOnline: false,
         },
         t,
       );
@@ -205,26 +205,29 @@ module.exports = {
           UserId: user.id,
           BakeryId: bakeryId,
         },
-        t
+        t,
       });
 
       await User.update(
         {
-          reward : user.reward+500
+          reward: user.reward + 500,
         },
         {
-          where: { id: user.id }
+          where: { id: user.id },
         },
-        t
-      )
-      
+        t,
+      );
+
       await RewardHistory.create({
-        UserId : user.id, reward : 500, acquisitionMethod: "리뷰 작성"})
+        UserId: user.id,
+        reward: 500,
+        acquisitionMethod: '리뷰 작성',
+      });
 
       await t.commit();
 
-      return review
-    } catch(err){
+      return review;
+    } catch (err) {
       await t.rollback();
     }
   },
@@ -450,6 +453,29 @@ module.exports = {
         },
       ],
     });
+  },
+  findBreadImage: async breadName => {
+    try {
+      const review = await Review.findOne({
+        where: {
+          purchaseBreadList: {
+            [Op.like]: `%${breadName}%`,
+          },
+          reviewImgList: {
+            [Op.not]: `[]`, // reviewImgList가 빈 배열이 아닌 경우를 필터링
+          },
+        },
+        attributes: ['reviewImgList'],
+      });
+
+      if (review && review.reviewImgList.length > 0) {
+        const randomImage = review.reviewImgList[Math.floor(Math.random() * review.reviewImgList.length)];
+        return randomImage;
+      }
+      return '';
+    } catch (error) {
+      throw new Error('finding bread image error');
+    }
   },
 };
 

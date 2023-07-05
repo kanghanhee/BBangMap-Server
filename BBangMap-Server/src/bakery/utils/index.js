@@ -241,7 +241,7 @@ module.exports = {
       limit: 10,
     });
   },
-  findRequestedBakeryByBakeryName: async bakeryName => {
+  findRequestedBakeryReasonByBakeryName: async bakeryName => {
     const result = await RequestedBakery.findOne({
       where: {
         bakeryName: bakeryName,
