@@ -1,15 +1,15 @@
 const popularBreadListDto = popularBreadList => {
-  return popularBreadList.reduce((result, item, index) => {
-    if (index % 2 === 0) {
-      const bread = {
-        breadName: item.breadName,
-        breadImg: item.breadImg,
-        searchCount: popularBreadList[index + 1],
-      };
-      result.push(bread);
-    }
-    return result;
-  }, []);
+  return popularBreadList
+    .map((item, index) => {
+      if (index % 2 === 0) {
+        return {
+          breadName: item.breadName,
+          breadImg: item.breadImg,
+          searchCount: popularBreadList[index + 1],
+        };
+      }
+    })
+    .filter(Boolean);
 };
 
 module.exports = { popularBreadListDto };
