@@ -41,7 +41,7 @@ const homeListDto = async (
         },
         item: {
           type: 'horizontalBreadList',
-          itemList: popularBreadListDto(popularBreadList),
+          itemList: await popularBreadListDto(popularBreadList),
         },
       },
       {
