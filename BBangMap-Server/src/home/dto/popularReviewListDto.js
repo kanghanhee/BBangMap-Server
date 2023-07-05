@@ -1,10 +1,10 @@
 const { findLikeReviewCount } = require('../../review/utils');
 
-const popularReviewListDto = async popularReviewList => {
-  return popularReviewList.reduce(async (result, item, index) => {
-    if (index % 2 === 0) {
+const popularReviewListDto = async reviewList => {
+  const popularReviewList = await Promise.all(
+    reviewList.map(async item => {
       const likeReviewCount = await findLikeReviewCount(item.id);
-      const review = {
+      return {
         reviewId: item.id,
         reviewImg: item.reviewImgList.length !== 0 ? item.reviewImgList[0] : '',
         reviewer: item.User.nickName,
@@ -13,10 +13,9 @@ const popularReviewListDto = async popularReviewList => {
         bakeryName: item.Bakery.bakeryName,
         likeReviewCount: likeReviewCount.count,
       };
-      result.push(review);
-    }
-    return result;
-  }, []);
+    }),
+  );
+  return popularReviewList;
 };
 
 module.exports = { popularReviewListDto };

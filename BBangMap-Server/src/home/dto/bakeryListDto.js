@@ -1,4 +1,4 @@
-const { findRequestedBakeryByBakeryName } = require('../../bakery/utils');
+const { findRequestedBakeryReasonByBakeryName } = require('../../bakery/utils');
 
 const bakeryListDto = async latestBakeryList => {
   const bakeryList = await Promise.all(
@@ -7,12 +7,11 @@ const bakeryListDto = async latestBakeryList => {
         bakeryId: item.id,
         bakeryName: item.bakeryName,
         address: item.address,
-        subtitle: await findRequestedBakeryByBakeryName(item.bakeryName),
+        subtitle: await findRequestedBakeryReasonByBakeryName(item.bakeryName),
         registeredAt: item.createdAt,
       };
     }),
   );
-
   return bakeryList;
 };
 
