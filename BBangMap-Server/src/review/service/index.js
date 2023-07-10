@@ -186,9 +186,11 @@ module.exports = {
     reviewUtils.deleteReviewImages(preUpdatedReview.reviewImgList);
   },
 
-  savedReview: async (reviewId, user) => {
+  savedReview: async (reviewId, user, redis) => {
     const userId = user.id;
     await reviewUtils.savedReview(userId, reviewId);
+    const review = await reviewUtils.findReviewById(reviewId);
+    redis.zincrby('saveReview', 1, JSON.stringify(review));
   },
   likedReview: async (reviewId, user, redis) => {
     const userId = user.id;
