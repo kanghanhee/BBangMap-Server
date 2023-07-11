@@ -1,5 +1,6 @@
 const reviewUtils = require('../utils');
 const userUtils = require('../../user/utils');
+const slackSender = require('../../../other/slackSender');
 
 const { reviewListDto, reviewAllListDto } = require('../dto/reviewListDto');
 const reviewDetailDto = require('../dto/reviewDetailDto');
@@ -190,13 +191,23 @@ module.exports = {
     const userId = user.id;
     await reviewUtils.savedReview(userId, reviewId);
     const review = await reviewUtils.findReviewById(reviewId);
-    redis.zincrby('saveReview', 1, JSON.stringify(review));
+    redis.zincrby('saveReview', 1, JSON.stringify(review), error => {
+      if (error) {
+        slackSender.sendError(503, 'Fail', 'redis.zincrby saveReview', error.message);
+      }
+      redis.quit();
+    });
   },
   likedReview: async (reviewId, user, redis) => {
     const userId = user.id;
     await reviewUtils.likedReview(userId, reviewId);
     const review = await reviewUtils.findReviewById(reviewId);
-    redis.zincrby('popularReview', 1, JSON.stringify(review));
+    redis.zincrby('popularReview', 1, JSON.stringify(review), error => {
+      if (error) {
+        slackSender.sendError(503, 'Fail', 'redis.zincrby saveReview', error.message);
+      }
+      redis.quit();
+    });
   },
   deleteSavedReview: async (reviewId, user) => {
     const userId = user.id;
@@ -206,7 +217,12 @@ module.exports = {
     const userId = user.id;
     await reviewUtils.deleteLikedReview(userId, reviewId);
     const review = await reviewUtils.findReviewById(reviewId);
-    redis.zincrby('popularReview', -1, JSON.stringify(review));
+    redis.zincrby('popularReview', -1, JSON.stringify(review), error => {
+      if (error) {
+        slackSender.sendError(503, 'Fail', 'redis.zincrby saveReview', error.message);
+      }
+      redis.quit();
+    });
   },
   deleteMyReview: async (reviewId, user) => {
     const userId = user.id;

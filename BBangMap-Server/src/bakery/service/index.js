@@ -6,6 +6,7 @@ const searchInfoUtils = require('../utils/searchLocation');
 const requestedBakeryUtils = require('../../requestedBakery/utils');
 const { Bakery } = require('../../../models');
 const db = require('../../../models');
+const slackSender = require('../../../other/slackSender');
 
 const bakeryMapListDto = require('../dto/bakeryMapListDto');
 const bakerySearchListDto = require('../dto/bakerySearchListDto');
@@ -66,7 +67,12 @@ module.exports = {
     let searchBakeryList = await bakeryUtils.findBakeryListByBakeryBestMenu(q);
     searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
-    redis.zincrby('popularBread', 1, JSON.stringify({ breadName: q }));
+    redis.zincrby('popularBread', 1, JSON.stringify({ breadName: q }), error => {
+      if (error) {
+        slackSender.sendError(503, 'Fail', 'redis.zincrby popularBread', error.message);
+      }
+      redis.quit();
+    });
 
     return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
   },
@@ -85,7 +91,12 @@ module.exports = {
     let searchBakeryList = await bakeryUtils.findBakeryByArea(areaLatitude, areaLongitude, radius);
     searchBakeryList = await reviewUtils.getBakeryStarOfBakeryList(searchBakeryList);
 
-    redis.zincrby('popularArea', 1, JSON.stringify({ areaName: q }));
+    redis.zincrby('popularArea', 1, JSON.stringify({ areaName: q }), error => {
+      if (error) {
+        slackSender.sendError(503, 'Fail', 'redis.zincrby popularArea', error.message);
+      }
+      redis.quit();
+    });
 
     return bakerySearchListDto(searchBakeryList, latitude, longitude, visitedBakeryList);
   },
@@ -120,7 +131,12 @@ module.exports = {
     let savedBakeryList = await bakeryUtils.findUsersSavedBakeryList(user);
     let visitedBakeryList = await bakeryUtils.findUsersVisitedBakeryList(user);
 
-    redis.zincrby('popularBakery', 1, JSON.stringify(bakery));
+    redis.zincrby('popularBakery', 1, JSON.stringify(bakery), error => {
+      if (error) {
+        slackSender.sendError(503, 'Fail', 'redis.zincrby popularBakery', error.message);
+      }
+      redis.quit();
+    });
 
     return bakeryDetailDto(imgUpdateBakery, savedBakeryList, visitedBakeryList, user.id);
   },
