@@ -481,7 +481,7 @@ module.exports = {
     return Review.findAll({
       where: {
         id: {
-          [Op.gt]: cursor,
+          [Op.lt]: cursor,
         },
       },
       include: [
@@ -494,8 +494,14 @@ module.exports = {
           attributes: ['nickName', 'profileImg'],
         },
       ],
-      order: [['id', 'ASC']],
+      order: [['id', 'DESC']],
       limit: 30,
+    });
+  },
+  findLatestReviewId: async () => {
+    return Review.findOne({
+      attributes: ['id'],
+      order: [['id', 'DESC']],
     });
   },
 };
