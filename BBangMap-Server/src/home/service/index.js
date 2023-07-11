@@ -1,8 +1,7 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('../../../modules/jwt');
 const bakeryUtils = require('../../bakery/utils');
 const reviewUtils = require('../../review/utils');
 const { homeListDto } = require('../dto/homeListDto');
-const { secretKey } = require('../../../config/secretJwtKey');
 
 const parseList = list => {
   return list.map(item => JSON.parse(item));
@@ -10,7 +9,13 @@ const parseList = list => {
 
 module.exports = {
   getHomeDataList: async (redis, nextToken) => {
-    const lastReviewId = jwt.verify(nextToken, secretKey);
+    let lastReviewId;
+    if (nextToken) {
+      lastReviewId = await jwt.verify(nextToken);
+    } else {
+      const latestReviewId = await reviewUtils.findLatestReviewId();
+      lastReviewId = latestReviewId.id + 1;
+    }
     const popularBakeryList = await redis.zrevrange('popularBakery', 0, 9, 'WITHSCORES');
     const popularBreadList = await redis.zrevrange('popularBread', 0, 9, 'WITHSCORES');
     const popularAreaList = await redis.zrevrange('popularArea', 0, 9, 'WITHSCORES');
