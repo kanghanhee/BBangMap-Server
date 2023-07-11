@@ -245,8 +245,9 @@ module.exports = {
   saveReview: async (req, res) => {
     try {
       let { reviewId } = req.params;
+      const { redis } = req;
       const user = res.locals.user;
-      await reviewService.savedReview(reviewId, user);
+      await reviewService.savedReview(reviewId, user, redis);
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SUCCESS_SAVED_REVIEW));
     } catch (err) {
       slackSender.sendError(statusCode.INTERNAL_SERVER_ERROR, req.method.toUpperCase(), req.originalUrl, err);

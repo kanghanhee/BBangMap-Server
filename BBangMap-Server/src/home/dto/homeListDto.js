@@ -71,7 +71,7 @@ const homeListDto = async (
         },
         item: {
           type: 'verticalReviewList',
-          itemList: reviewList,
+          itemList: await popularReviewListDto(reviewList),
         },
       },
     ],
