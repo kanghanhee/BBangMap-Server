@@ -477,6 +477,27 @@ module.exports = {
       throw new Error('finding bread image error');
     }
   },
+  findReviewAllByCursor: async cursor => {
+    return Review.findAll({
+      where: {
+        id: {
+          [Op.gt]: cursor,
+        },
+      },
+      include: [
+        {
+          model: Bakery,
+          attributes: ['bakeryName'],
+        },
+        {
+          model: User,
+          attributes: ['nickName', 'profileImg'],
+        },
+      ],
+      order: [['id', 'ASC']],
+      limit: 30,
+    });
+  },
 };
 
 const getBakeryStar = reviewList => {
