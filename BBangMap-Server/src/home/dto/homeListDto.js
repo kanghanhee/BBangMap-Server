@@ -1,8 +1,10 @@
+const jwt = require('jsonwebtoken');
 const { bakeryListDto } = require('./bakeryListDto');
 const { popularAreaListDto } = require('./popularAreaListDto');
 const { popularBakeryListDto } = require('./popularBakeryListDto');
 const { popularBreadListDto } = require('./popularBreadListDto');
 const { popularReviewListDto } = require('./popularReviewListDto');
+const { secretKey } = require('../../../config/secretJwtKey');
 
 const homeListDto = async (
   popularBakeryList,
@@ -12,6 +14,8 @@ const homeListDto = async (
   bakeryList,
   reviewList,
 ) => {
+  const lastReviewId = reviewList.length > 0 ? reviewList[reviewList.length - 1].id : null;
+
   return {
     sectionList: [
       {
@@ -75,6 +79,7 @@ const homeListDto = async (
         },
       },
     ],
+    nextToken: lastReviewId ? jwt.sign(reviewList[reviewList.length - 1].id, secretKey) : null,
   };
 };
 

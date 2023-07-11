@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const bakeryUtils = require('../../bakery/utils');
 const reviewUtils = require('../../review/utils');
 const { homeListDto } = require('../dto/homeListDto');
@@ -13,7 +14,7 @@ module.exports = {
     const popularAreaList = await redis.zrevrange('popularArea', 0, 9, 'WITHSCORES');
     const popularReviewList = await redis.zrevrange('popularReview', 0, 9);
     const bakeryList = await bakeryUtils.findBakeryByCreatedAt();
-    const reviewList = await reviewUtils.findReviewAllByCursor(lastId);
+    const reviewList = await reviewUtils.findReviewAllByCursor(jwt.decode(lastId));
 
     redis.quit();
 
