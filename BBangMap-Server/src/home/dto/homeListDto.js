@@ -14,7 +14,7 @@ const homeListDto = async (
   bakeryList,
   reviewList,
 ) => {
-  const lastReviewId = reviewList.length > 0 ? reviewList[reviewList.length - 1].id : null;
+  const lastReview = reviewList.length > 0 ? reviewList[reviewList.length - 1] : null;
 
   return {
     sectionList: [
@@ -79,7 +79,7 @@ const homeListDto = async (
         },
       },
     ],
-    nextToken: lastReviewId ? jwt.sign(reviewList[reviewList.length - 1].id, secretKey) : null,
+    nextToken: lastReview ? jwt.sign(lastReview.id, secretKey) : null,
   };
 };
 
