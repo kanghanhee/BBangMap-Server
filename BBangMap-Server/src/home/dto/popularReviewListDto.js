@@ -9,7 +9,7 @@ const popularReviewListDto = async popularReviewList => {
         reviewImg: item.reviewImgList.length !== 0 ? item.reviewImgList[0] : '',
         reviewer: item.User.nickName,
         content: item.content,
-        createdAt: item.createdAt,
+        createdAt: new Date(`${item.createdAt}z`),
         bakeryName: item.Bakery.bakeryName,
         likeReviewCount: likeReviewCount.count,
       };
