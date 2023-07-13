@@ -8,7 +8,7 @@ const bakeryListDto = async latestBakeryList => {
         bakeryName: item.bakeryName,
         address: item.address,
         subtitle: await findRequestedBakeryReasonByBakeryName(item.bakeryName),
-        registeredAt: item.createdAt,
+        registeredAt: new Date(`${item.createdAt}z`),
       };
     }),
   );
