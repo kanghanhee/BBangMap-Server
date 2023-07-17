@@ -1,6 +1,7 @@
 const bakeryUtils = require('../utils');
 
-const bakerySearchDto = (searchBakery, latitude, longitude, visitedBakeryList) => {
+const bakerySearchDto = async (searchBakery, latitude, longitude, visitedBakeryList) => {
+  const updateBakeryImg = await bakeryUtils.addBakeryImg(searchBakery);
   return {
     bakeryId: searchBakery.id,
     bakeryName: searchBakery.bakeryName,
@@ -13,7 +14,7 @@ const bakerySearchDto = (searchBakery, latitude, longitude, visitedBakeryList) =
     isVisitedBakery: visitedBakeryList.includes(searchBakery.id),
     address: searchBakery.address,
     star: searchBakery.star,
-    mainImg: searchBakery.bakeryImg.length !== 0 ? searchBakery.bakeryImg[0] : null,
+    mainImg: updateBakeryImg.bakeryImg[0],
     reviewTotalCount: searchBakery.Reviews.length,
   };
 };
