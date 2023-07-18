@@ -74,7 +74,7 @@ module.exports = {
                 err.statusCode = statusCode.INTERNAL_SERVER_ERROR;
                 err.responseMessage = responseMessage.INTERNAL_SERVER_ERROR;
             }
-            slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
+            // slackSender.sendError(err.statusCode, req.method.toUpperCase(), req.originalUrl, err);
             return res.status(err.statusCode).send(util.fail(err.statusCode, err.responseMessage));
         }
     },
