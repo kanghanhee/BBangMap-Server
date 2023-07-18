@@ -113,20 +113,23 @@ module.exports = {
     const review = await userUtil.getMyReview(user);
     const reward = rewardUtil.reward(user.reward);
 
-    const offset = 1000 * 60 * 60 * 9
-    const previousCheckArr = user.previousCheck.split(" ")[0].split("-");
-    const previousYear = Number(previousCheckArr[0])
-    const previousMonth = Number(previousCheckArr[1])-1
-    const previousDate = Number(previousCheckArr[2])
-    previousCheckDateTime = new Date()
-    previousCheckDateTime.setFullYear(previousYear)
-    previousCheckDateTime.setMonth(previousMonth)
-    previousCheckDateTime.setDate(previousDate)
-    previousCheck = new Date((new Date(previousCheckDateTime)).getTime() + offset)
+    const isUniqueAttendence = true;
+    if(user.previousCheck != null) {
+      const offset = 1000 * 60 * 60 * 9
+      const previousCheckArr = user.previousCheck.split(" ")[0].split("-");
+      const previousYear = Number(previousCheckArr[0])
+      const previousMonth = Number(previousCheckArr[1])-1
+      const previousDate = Number(previousCheckArr[2])
+      previousCheckDateTime = new Date()
+      previousCheckDateTime.setFullYear(previousYear)
+      previousCheckDateTime.setMonth(previousMonth)
+      previousCheckDateTime.setDate(previousDate)
+      previousCheck = new Date((new Date(previousCheckDateTime)).getTime() + offset)
 
-    const now = new Date((new Date()).getTime() + offset)
+      const now = new Date((new Date()).getTime() + offset)
     
-    const isUniqueAttendence = previousCheck < now;
+      isUniqueAttendence = previousCheck < now;
+    }
     
     return myPageDto(user, null, review.count, null, null, reward, isUniqueAttendence);
   },
