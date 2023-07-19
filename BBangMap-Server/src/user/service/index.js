@@ -8,9 +8,9 @@ const responseMessage = require('../../../modules/responseMessage');
 const statusCode = require('../../../modules/statusCode');
 const { defaultBgImg, defaultProfileImg } = require('../../../modules/definition');
 const myPageDto = require('../dto/myPageDto');
-const reviewerInfoListDto = require('../dto/ReviewerInfoListDto')
-const rewardHistoryDto = require('../dto/RewardHistoryDto')
-const rewardUtil = require("../../../modules/rewardUtil");
+const reviewerInfoListDto = require('../dto/ReviewerInfoListDto');
+const rewardHistoryDto = require('../dto/RewardHistoryDto');
+const rewardUtil = require('../../../modules/rewardUtil');
 const RewardHistory = require('../model/RewardHistory');
 
 module.exports = {
@@ -105,7 +105,7 @@ module.exports = {
     else grade = '박력분';
     return myPageDto(user, grade, review.count, savedBakery.count, savedReview.count, null, null);
   },
-  getUserInfo: async (nickname)=>{
+  getUserInfo: async nickname => {
     const userList = await userUtil.findUserByNickName(nickname);
     return reviewerInfoListDto(userList);
   },
@@ -113,24 +113,24 @@ module.exports = {
     const review = await userUtil.getMyReview(user);
     const reward = rewardUtil.reward(user.reward);
 
-    const isUniqueAttendence = true;
-    if(user.previousCheck != null) {
-      const offset = 1000 * 60 * 60 * 9
-      const previousCheckArr = user.previousCheck.split(" ")[0].split("-");
-      const previousYear = Number(previousCheckArr[0])
-      const previousMonth = Number(previousCheckArr[1])-1
-      const previousDate = Number(previousCheckArr[2])
-      previousCheckDateTime = new Date()
-      previousCheckDateTime.setFullYear(previousYear)
-      previousCheckDateTime.setMonth(previousMonth)
-      previousCheckDateTime.setDate(previousDate)
-      previousCheck = new Date((new Date(previousCheckDateTime)).getTime() + offset)
+    let isUniqueAttendence = true;
+    if (user.previousCheck != null) {
+      const offset = 1000 * 60 * 60 * 9;
+      const previousCheckArr = user.previousCheck.split(' ')[0].split('-');
+      const previousYear = Number(previousCheckArr[0]);
+      const previousMonth = Number(previousCheckArr[1]) - 1;
+      const previousDate = Number(previousCheckArr[2]);
+      let previousCheckDateTime = new Date();
+      previousCheckDateTime.setFullYear(previousYear);
+      previousCheckDateTime.setMonth(previousMonth);
+      previousCheckDateTime.setDate(previousDate);
+      const previousCheck = new Date(new Date(previousCheckDateTime).getTime() + offset);
 
-      const now = new Date((new Date()).getTime() + offset)
-    
+      const now = new Date(new Date().getTime() + offset);
+
       isUniqueAttendence = previousCheck < now;
     }
-    
+
     return myPageDto(user, null, review.count, null, null, reward, isUniqueAttendence);
   },
   updateVisitReward: async user => {
@@ -139,5 +139,5 @@ module.exports = {
   getRewardHistory: async user => {
     const history = await userUtil.getRewardHistory(user);
     return history.map(h => rewardHistoryDto(h));
-  }
+  },
 };
