@@ -7,6 +7,8 @@ const popularBakeryListDto = popularBakeryList => {
           bakeryName: item.bakeryName,
           bakeryImg: item.bakeryImg.length !== 0 ? item.bakeryImg[0] : '',
           address: item.address,
+          latitude: item.latitude,
+          longitude: item.longitude,
           searchCount: popularBakeryList[index + 1],
         };
       }

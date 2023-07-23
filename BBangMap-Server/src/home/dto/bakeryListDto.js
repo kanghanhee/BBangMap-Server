@@ -7,6 +7,8 @@ const bakeryListDto = async latestBakeryList => {
         bakeryId: item.id,
         bakeryName: item.bakeryName,
         address: item.address,
+        latitude: item.latitude,
+        longitude: item.longitude,
         subtitle: await findRequestedBakeryReasonByBakeryName(item.bakeryName),
         registeredAt: new Date(`${item.createdAt}z`),
       };
