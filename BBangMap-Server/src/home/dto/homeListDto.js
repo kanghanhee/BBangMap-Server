@@ -79,8 +79,28 @@ const homeListDto = async (
         },
       },
     ],
-    nextToken: lastReview ? jwt.sign(lastReview.id, secretKey) : null,
+    nextToken: lastReview ? jwt.sign(lastReview.id - 1, secretKey) : null,
   };
 };
 
-module.exports = { homeListDto };
+const nextReviewListDto = async reviewList => {
+  const lastReview = reviewList.length > 0 ? reviewList[reviewList.length - 1] : null;
+
+  return {
+    sectionList: [
+      {
+        header: {
+          type: 'header',
+          title: '최근 리뷰',
+        },
+        item: {
+          type: 'verticalReviewList',
+          itemList: await popularReviewListDto(reviewList),
+        },
+      },
+    ],
+    nextToken: lastReview ? jwt.sign(lastReview.id - 1, secretKey) : null,
+  };
+};
+
+module.exports = { homeListDto, nextReviewListDto };
