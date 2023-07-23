@@ -481,7 +481,7 @@ module.exports = {
     return Review.findAll({
       where: {
         id: {
-          [Op.lt]: cursor,
+          [Op.lte]: cursor,
         },
       },
       include: [
