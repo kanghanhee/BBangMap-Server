@@ -89,6 +89,10 @@ const nextReviewListDto = async reviewList => {
   return {
     sectionList: [
       {
+        header: {
+          type: 'header',
+          title: '최근 리뷰',
+        },
         item: {
           type: 'verticalReviewList',
           itemList: await popularReviewListDto(reviewList),
