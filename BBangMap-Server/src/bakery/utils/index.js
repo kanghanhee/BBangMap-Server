@@ -62,6 +62,7 @@ module.exports = {
           as: 'SaverBakery',
         },
       ],
+      order: [[Review, 'createdAt', 'DESC']],
     });
     if (findBakery == null) {
       throw new Error('NOT_EXIST_BAKERY');
