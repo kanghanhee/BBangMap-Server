@@ -1,1 +1,1 @@
-Forked by Private BBangMap-Server Repository
+Forked by BBangMap-Server Private Repository
